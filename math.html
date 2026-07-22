@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;family=Public+Sans:wght@400;500;600&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #f4efe0; }
+  a { color: #4d2e57; text-decoration: none; }
+  a:hover { color: #38213f; }
+  ::selection { background: #e7dcec; }
+
+  /* --- mobile responsiveness --- */
+  html, body { overflow-x: hidden; max-width: 100%; }
+  img { max-width: 100%; height: auto; }
+  @media (max-width: 760px) {
+    [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+    [style*="margin:0 auto"] { padding-left: 22px !important; padding-right: 22px !important; }
+    header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
+    h1 { font-size: clamp(34px, 9vw, 60px) !important; }
+    h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
+    [style*="min-height: 118px"] { height: 180px !important; min-height: 0 !important; max-width: 180px !important; }
+    .icon-nav { grid-template-columns: repeat(5, 1fr) !important; }
+  }
+</style>
+</helmet>
+<div style="background:#f4efe0; color:#241c28; font-family:'Public Sans',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh;">
+
+  <header style="position:sticky; top:0; z-index:50; background:rgba(244,239,224,0.86); backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid #e3dbcb;">
+    <div style="max-width:1140px; margin:0 auto; padding:18px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
+      <a href="index.html" style="font-family:'Space Mono',monospace; font-size:14px; letter-spacing:0.22em; text-transform:uppercase; color:#241c28; font-weight:700;">Francis&nbsp;Su</a>
+      <nav style="display:flex; align-items:center; gap:30px; font-size:15px; color:#5f5749;">
+        <a href="bio.html" style="color:#5f5749;" style-hover="color:#241c28;">Bio</a>
+        <a href="books.html" style="color:#5f5749;" style-hover="color:#241c28;">Books</a>
+        <a href="essays.html" style="color:#5f5749;" style-hover="color:#241c28;">Essays</a>
+        <a href="talks.html" style="color:#5f5749;" style-hover="color:#241c28;">Talks</a>
+        <a href="math.html" style="color:#241c28; font-weight:600;">Math</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <figure style="position:relative; margin:0; overflow:hidden; max-height:460px; border-bottom:1px solid #e3dbcb;">
+      <img src="su-teaching.png" alt="Francis Su teaching at the chalkboard with students" style="display:block; width:100%; height:100%; max-height:460px; object-fit:cover; object-position:center 30%;">
+      <figcaption style="position: absolute; left: 14px; font-family: 'Space Mono',monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.9); background: rgba(20,14,30,0.4); padding: 5px 10px; border-radius: 2px; top: 341px">Photo courtesy of Harvey Mudd College</figcaption>
+    </figure>
+    <section style="max-width:900px; margin:0 auto; padding:43px 40px 35px;">
+      <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.26em; text-transform:uppercase; color:#4d2e57; margin-bottom:22px;">Professor</div>
+      <h1 style="font-family:'Newsreader',serif; font-weight:400; font-size:52px; line-height:1.06; letter-spacing:-0.01em; margin:0 0 24px;">Math creations</h1>
+      <p style="font-size:19px; line-height:1.65; color:#413546; max-width:36em; margin:0;">A selection of mathematical things that I've created — for teaching, for research, for fun, and for the curious. A more extensive collection of my scholarly work (including college courses and research papers) lives at my Harvey Mudd College website.</p>
+      <div style="display:flex; justify-content:flex-end; margin-top:24px;">
+      <a href="http://math.hmc.edu/su/" style="display:inline-flex; align-items:center; padding:13px 26px; background:#4d2e57; color:#f4efe0; font-size:15px; font-weight:500; border-radius:2px; white-space:nowrap;" style-hover="background:#241c28;">my College website ↗</a>
+      </div>
+    </section>
+
+    <!-- ============ TEACHING ============ -->
+    <section style="background:#efe8d7; border-top:1px solid #e3dbcb;">
+    <div style="max-width:900px; margin:0 auto; padding:46px 40px 3px;">
+      <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.24em; text-transform:uppercase; color:#8f8172; margin-bottom:16px;">Teaching</div>
+      <h2 style="font-family:'Newsreader',serif; font-weight:400; font-size:38px; line-height:1.1; letter-spacing:-0.01em; margin:0 0 16px;">Sparking curiosity in the classroom</h2>
+      <p style="font-size:18px; line-height:1.66; color:#413546; max-width:38em; margin:0;">Things I've made to help students fall in love with mathematics — a web archive of surprises, video lecture series, pop song parodies, and a topology text built around guided discovery.</p>
+    </div>
+    <div style="max-width:900px; margin:0 auto; padding:14px 40px 20px;">
+
+      <a href="http://math.hmc.edu/funfacts" style="display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start; padding:32px 0; border-top:1px solid #e3dbcb; color:#241c28;" style-hover="opacity:0.92;">
+        <div style="border-radius:3px; border:1px solid #e3dbcb; overflow:hidden; align-self:stretch; min-height:118px;"><img src="math-fun-facts.png" alt="Math Fun Facts" style="width:100%; height:100%; object-fit:cover; display:block; image-rendering:pixelated;"></div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:12px;">WEB ARCHIVE&nbsp;<span style="letter-spacing: 1.54px;">·&nbsp;SURPRISE</span></div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:28px; line-height:1.15; margin:0 0 10px;">Math Fun Facts</h2>
+          <p style="font-size:16px; line-height:1.62; color:#5f5749; margin:0 0 12px; max-width:44em;">My web archive of cool math ideas I've used to whet students' appetite for math. Browse or use the Random Fun Fact feature. Start each class with one!</p>
+          <span style="font-size:14px; font-weight:600; color:#4d2e57;">Explore ↗</span>
+        </div>
+      </a><a href="https://shop.thegreatcourses.com/mastering-linear-algebra-an-introduction-to-applications" style="display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start; padding:32px 0; border-top:1px solid #e3dbcb; color:#241c28;" style-hover="opacity:0.92;">
+        <div style="border-radius:3px; border:1px solid #e3dbcb; overflow:hidden; align-self:stretch; min-height:118px;"><img src="linear-algebra.png" alt="Mastering Linear Algebra" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:12px;">VIDEO SERIES · THE GREAT COURSES</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:28px; line-height:1.15; margin:0 0 10px;">Mastering Linear Algebra</h2>
+          <p style="font-size:16px; line-height:1.62; color:#5f5749; margin:0 0 12px; max-width:44em;">Twenty-four 30-minute lectures on linear algebra, made for the Great Courses series. They can supplement any linear algebra text.</p>
+          <span style="font-size:14px; font-weight:600; color:#4d2e57;">More info &amp; order ↗</span>
+        </div>
+      </a>
+
+      
+
+      <a href="https://www.youtube.com/watch?v=O4KCoNvRi6Y" style="display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start; padding:32px 0; border-top:1px solid #e3dbcb; color:#241c28;" style-hover="opacity:0.92;">
+        <div style="border-radius:3px; border:1px solid #e3dbcb; overflow:hidden; align-self:stretch; min-height:118px;"><img src="invertible.png" alt="That Makes It Invertible" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:12px;">VIDEO · CLASSROOM</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:28px; line-height:1.15; margin:0 0 10px;">That Makes It Invertible</h2>
+          <p style="font-size:16px; line-height:1.62; color:#5f5749; margin:0 0 12px; max-width:44em;">A pop-song parody performed as a surprise on the last day of a linear algebra class.</p>
+          <span style="font-size:14px; font-weight:600; color:#4d2e57;">Watch ↗</span>
+        </div>
+      </a>
+
+      <a href="https://analysisyawp.blogspot.com/" style="display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start; padding:32px 0; border-top:1px solid #e3dbcb; color:#241c28;" style-hover="opacity:0.92;">
+        <div style="border-radius:3px; border:1px solid #e3dbcb; overflow:hidden; align-self:stretch; min-height:118px;"><img src="real-analysis.png" alt="Real Analysis" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:12px;">COURSE · YOUTUBE</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:28px; line-height:1.15; margin:0 0 10px;">Real Analysis</h2>
+          <p style="font-size:16px; line-height:1.62; color:#5f5749; margin:0 0 12px; max-width:44em;">My full Real Analysis course, recorded in 2010. Yes, they're grainy and hard to see, but people still tell me they find them useful. Viewed 2M+ times.</p>
+          <span style="font-size:14px; font-weight:600; color:#4d2e57;">Watch ↗</span>
+        </div>
+      </a>
+
+      <a href="https://math.hmc.edu/su/topology-through-inquiry/" style="display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start; padding:32px 0; border-top:1px solid #e3dbcb; color:#241c28;" style-hover="opacity:0.92;">
+        <div style="border-radius:3px; border:1px solid #e3dbcb; overflow:hidden; align-self:stretch; min-height:118px;"><img src="topology-cover.png" alt="Topology Through Inquiry cover" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:12px;">TEXTBOOK · WITH MICHAEL STARBIRD</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:28px; line-height:1.15; margin:0 0 10px;">Topology Through Inquiry</h2>
+          <p style="font-size:16px; line-height:1.62; color:#5f5749; margin:0 0 12px; max-width:44em;">An inquiry-based textbook for self-study or use in a course. Guided discovery covering point-set and algebraic topology.</p>
+          <span style="font-size:14px; font-weight:600; color:#4d2e57;">More info ↗</span>
+        </div>
+      </a>
+
+      <div style="border-top:1px solid #e3dbcb;"></div>
+
+      <p style="font-size:15.5px; line-height:1.6; color:#5f5749; margin:28px 0 0; max-width:42em;">At my academic page you can see the <a href="https://math.hmc.edu/su/courses/" style="border-bottom:1px solid #d3c4de;"><b>courses I've taught</b></a>.&nbsp;<a href="https://math.hmc.edu/su/courses/" style="border-bottom:1px solid #d3c4de;"><b>↗</b></a></p>
+    </div>
+    </section>
+
+    <!-- ============ RESEARCH ============ -->
+    <section style="background:#eae2f0; border-top:1px solid #dccfe6;">
+    <div style="max-width:900px; margin:0 auto; padding:46px 40px 3px;">
+      <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.24em; text-transform:uppercase; color:#7a6790; margin-bottom:16px;">Research</div>
+      <h2 style="font-family:'Newsreader',serif; font-weight:400; font-size:38px; line-height:1.1; letter-spacing:-0.01em; margin:0 0 16px;">The mathematics of shape and fairness</h2>
+      <p style="font-size:18px; line-height:1.66; color:#3a3147; max-width:40em; margin:0;">My research is a mixture of geometry, topology, and combinatorics — you can think of these as the mathematics of shape, stretching, and counting, respectively. I often study problems motivated by the social sciences, and my work intersects game theory and the mathematical modeling of decision-making.</p>
+    </div>
+    <div style="max-width:900px; margin:0 auto; padding:14px 40px 20px;">
+
+      <a href="https://www.nytimes.com/2014/04/29/science/to-divide-the-rent-start-with-a-triangle.html" style="display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start; padding:32px 0; border-top:1px solid #dccfe6; border-bottom:1px solid #dccfe6; color:#241c28;" style-hover="opacity:0.92;">
+        <div style="border-radius:3px; border:1px solid #e3dbcb; overflow:hidden; align-self:stretch; min-height:118px;"><img src="divide-the-rent.png" alt="Sperner's Lemma rental-harmony triangle" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:12px;">RESEARCH · THE NEW YORK TIMES</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:28px; line-height:1.15; margin:0 0 10px;">To Divide the Rent, Start With a Triangle</h2>
+          <p style="font-size:16px; line-height:1.62; color:#5f5749; margin:0 0 12px; max-width:44em;">A reporter used my research to solve his roommate problem — then wrote a story and built an NYT interactive around it.</p>
+          <span style="font-size:14px; font-weight:600; color:#4d2e57;">Read the article ↗</span>
+        </div>
+      </a>
+
+      <p style="font-size:15.5px; line-height:1.6; color:#5f5749; margin:28px 0 0; max-width:42em;">At my academic page you can find the <a href="https://math.hmc.edu/su/research-papers-and-preprints/" style="border-bottom:1px solid #d3c4de;"><b>research papers</b></a> I've written.&nbsp;<a href="https://math.hmc.edu/su/research-papers-and-preprints/" style="border-bottom:1px solid #d3c4de;"><b>↗</b></a></p>
+
+    </div>
+    </section>
+
+    <!-- ============ SCHOLARLY WORK BAND ============ -->
+    <section style="background:#f4efe0; border-top:1px solid #e3dbcb;">
+    <div style="max-width:900px; margin:0 auto; padding:36px 40px;">
+      <div style="background:#faf7f0; border:1px solid #e3dbcb; border-radius:6px; padding:26px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
+        <div>
+          <h3 style="font-family:'Newsreader',serif; font-weight:500; font-size:23px; margin:0 0 6px;">To learn more about my scholarly mathematical work...</h3>
+          <p style="font-size:15.5px; color:#5f5749; margin:0;">You can see my full CV and go down rabbit holes on my academic website at Harvey Mudd College.</p>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <a href="cv.pdf" target="_blank" style="display:inline-flex; align-items:center; padding:13px 26px; background:#e2d8ec; color:#241c28; font-size:15px; font-weight:500; border:1px solid #241c28; border-radius:2px; white-space:nowrap;" style-hover="background:#d3c4de;">Curriculum vitae ↗</a>
+          <a href="http://math.hmc.edu/su/" style="display:inline-flex; align-items:center; padding:13px 26px; background:#4d2e57; color:#f4efe0; font-size:15px; font-weight:500; border-radius:2px; white-space:nowrap;" style-hover="background:#241c28;">my College website ↗</a>
+        </div>
+      </div>
+    </div>
+    </section>
+
+    <footer id="contact" style="background:#241c28; color:#e8e4dc;">
+      <div style="max-width:1140px; margin:0 auto; padding:76px 40px 40px;">
+        <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:48px; padding-bottom:56px; border-bottom:1px solid #33302b;">
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:14px; letter-spacing:0.22em; text-transform:uppercase; font-weight:700; margin-bottom:18px;">Francis Su</div>
+            <p style="font-family:'Newsreader',serif; font-style:italic; font-size:20px; line-height:1.45; color:#c8c3b8; max-width:22em; margin:0;">Author, teacher, and mathematical explorer.</p>
+            <div style="display:flex; gap:16px; align-items:flex-start; max-width:24em; margin-top:18px;">
+              <a href="flourishing/index.html" style="flex-shrink:0; display:block;"><img src="flourishing-cover.jpg" alt="Mathematics for Human Flourishing cover" style="width:70px; height:auto; border-radius:2px; display:block; box-shadow:0 6px 16px -8px rgba(0,0,0,0.6);"></a>
+              <p style="font-family:'Newsreader',serif; font-style:italic; font-size:15px; line-height:1.5; color:#b6b0a5; margin:0;">I don't much like the word 'inspiring,' but damned if I can think of a more suitable word for this book. <span style="font-style:normal; color:#8f887b;">—Inside Higher Ed</span></p>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8f887b; margin-bottom:18px;">Explore</div>
+            <div style="display:flex; flex-direction:column; gap:12px; font-size:15px;">
+              <a href="bio.html" style="color:#c8c3b8;" style-hover="color:#fff;">Bio</a>
+              <a href="books.html" style="color:#c8c3b8;" style-hover="color:#fff;">Books</a>
+              <a href="essays.html" style="color:#c8c3b8;" style-hover="color:#fff;">Essays</a>
+              <a href="talks.html" style="color:#c8c3b8;" style-hover="color:#fff;">Talks</a>
+              <a href="math.html" style="color:#c8c3b8;" style-hover="color:#fff;">Math</a>
+              <a href="https://francissu.substack.com/" style="color:#c8c3b8;" style-hover="color:#fff;">Blog ↗</a>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#8f887b; margin-bottom:18px;">Contact</div>
+            <div style="display:flex; flex-direction:column; gap:12px; font-size:15px; color:#c8c3b8;">
+              <span>[mylastname] @ math.hmc.edu</span>
+              <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+                <a href="https://www.linkedin.com/in/francissu/" style="color:#c8c3b8;" style-hover="color:#fff;">LinkedIn</a>
+                <a href="https://bsky.app/profile/mathyawp.bsky.social" style="color:#c8c3b8;" style-hover="color:#fff;">Bluesky</a>
+                <a href="http://www.facebook.com/francis.su" style="color:#c8c3b8;" style-hover="color:#fff;">Facebook</a>
+                <a href="https://www.instagram.com/mathyawp" style="color:#c8c3b8;" style-hover="color:#fff;">Instagram</a>
+                <a href="https://x.com/mathyawp" style="color:#c8c3b8;" style-hover="color:#fff;">X</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="padding-top:28px; display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; font-size:13px; color:#8f887b;">
+          <span>© 2026 Francis Edward Su</span>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>
+</x-dc>
+</body>
+</html>

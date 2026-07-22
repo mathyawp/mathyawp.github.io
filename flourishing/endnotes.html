@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;family=Public+Sans:wght@400;500;600&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #eeeefa; }
+  a { color: #5459a3; text-decoration: none; }
+  a:hover { color: #3c3f78; }
+  ::selection { background: #e2e2f4; }
+  ol.n > li { margin-bottom: 12px; padding-left: 6px; }
+  @media (max-width: 640px) { .icon-nav span { display: none; } }
+
+  /* --- mobile responsiveness --- */
+  html, body { overflow-x: hidden; max-width: 100%; }
+  img { max-width: 100%; height: auto; }
+  @media (max-width: 760px) {
+    [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+    [style*="margin:0 auto"] { padding-left: 22px !important; padding-right: 22px !important; }
+    header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
+    h1 { font-size: clamp(34px, 9vw, 60px) !important; }
+    h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
+    .icon-nav { grid-template-columns: repeat(5, 1fr) !important; }
+  }
+</style>
+</helmet>
+<div style="background:#eeeefa; color:#1c1d2b; font-family:'Public Sans',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh;">
+
+  <header style="position:sticky; top:0; z-index:50; background:rgba(238,238,250,0.9); backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid #dcdcef;">
+    <div style="max-width:1140px; margin:0 auto; padding:16px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
+      <a href="../index.html" style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:#1c1d2b; font-weight:700;">Francis&nbsp;Su</a>
+      <nav style="display:flex; align-items:center; gap:26px; font-size:14.5px; color:#55566f;">
+        <a href="index.html" style="color:#5459a3;" style-hover="color:#3c3f78;">↑ The book</a>
+        <a href="discuss.html" style="color:#55566f;" style-hover="color:#1c1d2b;">Discuss</a><a href="endnotes.html" style="color:#5459a3; font-weight:600;">Endnotes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section style="max-width:800px; margin:0 auto; padding:52px 40px 26px;">
+      <a href="index.html" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#6b70b0;">Mathematics for Human Flourishing</a>
+      <h1 style="font-family:'Newsreader',serif; font-weight:400; font-size:52px; line-height:1.05; letter-spacing:-0.01em; margin:16px 0 22px;">Endnotes</h1>
+      <p style="font-size:19px; line-height:1.65; color:#3b3c54; max-width:34em; margin:0;">The book's endnotes, grouped by chapter, with hyperlinks to references. Page numbers and full citations follow the printed edition.</p>
+
+      <div style="margin-top:34px; padding-top:30px; border-top:1px solid #dcdcef;">
+        <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:16px;">Click icons to navigate quickly to chapter headings</div>
+        <div class="icon-nav" style="display:grid; grid-template-columns:repeat(7,1fr); gap:14px;">
+          <a href="#n1" title="Ch 1 · Flourishing" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch01.jpg" alt="Flourishing" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">1 · Flourishing</span></a>
+          <a href="#n2" title="Ch 2 · Exploration" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch02.jpg" alt="Exploration" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">2 · Exploration</span></a>
+          <a href="#n3" title="Ch 3 · Meaning" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch03.jpg" alt="Meaning" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">3 · Meaning</span></a>
+          <a href="#n4" title="Ch 4 · Play" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch04.jpg" alt="Play" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">4 · Play</span></a>
+          <a href="#n5" title="Ch 5 · Beauty" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch05.jpg" alt="Beauty" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">5 · Beauty</span></a>
+          <a href="#n6" title="Ch 6 · Permanence" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch06.jpg" alt="Permanence" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">6 · Permanence</span></a>
+          <a href="#n7" title="Ch 7 · Truth" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch07.jpg" alt="Truth" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">7 · Truth</span></a>
+          <a href="#n8" title="Ch 8 · Struggle" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch08.jpg" alt="Struggle" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">8 · Struggle</span></a>
+          <a href="#n9" title="Ch 9 · Power" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch09.jpg" alt="Power" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">9 · Power</span></a>
+          <a href="#n10" title="Ch 10 · Justice" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch10.jpg" alt="Justice" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">10 · Justice</span></a>
+          <a href="#n11" title="Ch 11 · Freedom" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch11.jpg" alt="Freedom" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">11 · Freedom</span></a>
+          <a href="#n12" title="Ch 12 · Community" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch12.jpg" alt="Community" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">12 · Community</span></a>
+          <a href="#n13" title="Ch 13 · Love" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="icon-ch13.jpg" alt="Love" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">13 · Love</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 -->
+    <section id="n1" style="background:#f1eff9; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch01.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 1</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Flourishing</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraph. Simone Weil, <a href="https://amzn.to/2V0YK2W">Gravity and Grace</a> (Putnam's Sons, 1952), 188.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>Simone Weil, <a href="https://amzn.to/2Ygz3h0">Waiting for God</a> (Routledge &amp; K. Paul, 1951), 64.</li>
+        <li>Scott Taylor, "Mathematics and the Love of God: An Introduction to the Thought of Simone Weil," <a href="http://colby.edu/~sataylor/SimoneWeil.pdf">colby.edu</a>.</li>
+        <li>Maurice Mashaal, <a href="https://amzn.to/37MKCiZ">Bourbaki: A Secret Society of Mathematicians</a> (AMS, 2006), 109–13.</li>
+        <li>Sylvie Weil, <a href="https://amzn.to/2YMiIzq">At Home with André and Simone Weil</a> (Northwestern University Press, 2010).</li>
+        <li>Throughout 2018 the top four public companies by market cap were technology companies — Apple, Alphabet, Microsoft, Amazon; the top ten included Tencent, Alibaba, and Facebook.</li>
+        <li>Michael Barany, <a href="https://blogs.scientificamerican.com/guest-blog/mathematicians-are-overselling-the-idea-that-math-is-everywhere/">"Mathematicians Are Overselling the Idea That 'Math Is Everywhere,'"</a> Scientific American, Aug 16, 2016.</li>
+        <li>Andrew Hacker, <a href="https://www.nytimes.com/2012/07/29/opinion/sunday/is-algebra-necessary.html">"Is Algebra Necessary?,"</a> NYT, 2012; E. O. Wilson, "Great Scientist ≠ Good at Math," WSJ, 2013. Both rely on flawed understandings of what mathematics really is.</li>
+        <li>MAA, <a href="https://www.maa.org/sites/default/files/pdf/CommonVisionFinal.pdf">A Common Vision</a> (2015); NCTM, <a href="https://amzn.to/2Ykqi5i">Catalyzing Change in High School Mathematics</a> (2018).</li>
+        <li>Christopher J. Phillips, <a href="https://amzn.to/310GEln">The New Math: A Political History</a> (University of Chicago Press, 2015).</li>
+        <li>Robert P. Moses and Charles E. Cobb Jr., <a href="https://amzn.to/2zP2TQ9">Radical Equations</a> (Beacon, 2002), ch. 1.</li>
+        <li>Cathy O'Neil, <a href="https://amzn.to/2NeEiHB">Weapons of Math Destruction</a> (Crown, 2016).</li>
+        <li>Erin A. Maloney et al., <a href="https://doi.org/10.1177/0956797615592630">"Intergenerational Effects of Parents' Math Anxiety…"</a> Psychological Science 26, no. 9 (2015): 1480–88.</li>
+        <li>"Definitions," trans. D. S. Hutchinson, in <a href="https://amzn.to/2NgKIGo">Plato, Complete Works</a> (Hackett, 1997), 1680.</li>
+        <li>See Ubiratan D'Ambrosio on ethno-mathematics; Reuben Hersh, <a href="https://amzn.to/3140fkK">What Is Mathematics, Really?</a> (Oxford, 1997); Rochelle Gutiérrez, "The Need to Rehumanize Mathematics," in <a href="https://www.nctm.org/Store/Products/Annual-Perspectives-in-Math-Ed-2018-(Download)/">Rehumanizing Mathematics</a> (NCTM, 2018), 1–10.</li>
+        <li>Joshua Wilkerson, <a href="https://digital.library.txstate.edu/handle/10877/6611">"Cultivating Mathematical Affections"</a> (PhD thesis, Texas State University, 2017), 1.</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 2 -->
+    <section id="n2" style="background:#e7e5f3; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch02.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 2</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Exploration</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. Maryam Mirzakhani, quoted in Bjorn Carey, <a href="https://news.stanford.edu/news/2014/august/fields-medal-mirzakhani-081214.html">"Stanford's Maryam Mirzakhani Wins Fields Medal"</a> (2014); Eugenia Cheng, <a href="https://amzn.to/2Yj5hbx">How to Bake Pi</a> (Basic Books, 2015), 2.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>John Joseph Fahie, Galileo: His Life and Work (James Pott, 1903), 114.</li>
+        <li>Blaine Friedlander, <a href="http://news.cornell.edu/stories/2017/10/keep-saturns-ring-contained-its-moons-stand-united">"To Keep Saturn's A Ring Contained…"</a> Cornell Chronicle (2017).</li>
+        <li>Paul Lockhart, "A Mathematician's Lament" (2002), in Keith Devlin, <a href="https://www.maa.org/external_archive/devlin/devlin_03_08.html">"Lockhart's Lament"</a> (2008).</li>
+        <li>Achi and other games appear in the MIND Research Institute's <a href="https://www.mindresearch.org/mathminds-games">South of the Sahara game box</a>.</li>
+        <li>I have not seen any definitive source that resolves these ambiguities.</li>
+        <li>Claudia Zaslavsky, <a href="https://amzn.to/31dqe9J">Math Games &amp; Activities from Around the World</a> (Chicago Review Press, 1998).</li>
+        <li>Fawn Nguyen, <a href="http://fawnnguyen.com/these-twenty-things/">"These Twenty Things,"</a> Finding Ways (2016).</li>
+        <li>Kevin Hartnett, <a href="https://www.quantamagazine.org/mathematicians-seal-back-door-to-breaking-rsa-encryption-20181217/">"Mathematicians Seal Back Door to Breaking RSA Encryption,"</a> Quanta (2018); Mishra &amp; Bhushan, <a href="https://link.springer.com/article/10.1007/s00285-011-0488-3">"Knot Theory in Understanding Proteins"</a> (2012); Budd &amp; Mitchell, <a href="https://plus.maths.org/content/saving-lives-mathematics-tomography">"Saving Lives: The Mathematics of Tomography"</a> (2008).</li>
+        <li>The <a href="https://artofproblemsolving.com/">Art of Problem Solving</a> website.</li>
+        <li>Ben Orlin, <a href="https://amzn.to/3dhp1k0">Math with Bad Drawings</a> (Black Dog &amp; Leventhal, 2018), 10–12.</li>
+        <li>Wayfinding was featured in Disney's <a href="https://amzn.to/2Ni0qRk">Moana</a> (2016). "Star of gladness" refers to Arcturus.</li>
+        <li>Richard Schiffman, <a href="https://www.scientificamerican.com/article/fantastic-voyage-polynesian-seafaring-canoe-completes-its-globe-circling-journey/">"Fantastic Voyage…"</a> Scientific American (2017).</li>
+        <li>Cheryl Ernst, <a href="http://www.hawaii.edu/malamalama/2010/07/ethnomathematics/">"Ethnomathematics Makes Difficult Subject Relevant,"</a> Mālamalama (2010).</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 3 -->
+    <section id="n3" style="background:#ece5f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch03.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 3</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Meaning</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. Sónya Kovalévsky, Recollections of Childhood (Century, 1895), 316; Jorge Luis Borges, <a href="https://amzn.to/2NlC9K5">This Craft of Verse</a> (Harvard, 2002), 22.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>For an amusing parallel, search news coverage of President Obama's <a href="https://www.youtube.com/watch?v=ep9bomhKXt8">car getting stuck</a> at the US Embassy in Dublin (2011).</li>
+        <li>Henri Poincaré, <a href="https://www.gutenberg.org/files/37157/37157-pdf.pdf">Science and Hypothesis</a> (Walter Scott, 1905), 141.</li>
+        <li>Jo Boaler, <a href="https://hechingerreport.org/memorizers-are-the-lowest-achievers-and-other-common-core-math-surprises/">"Memorizers Are the Lowest Achievers,"</a> Hechinger Report (2015).</li>
+        <li>Robert P. Moses and Charles E. Cobb Jr., <a href="https://amzn.to/312QL9s">Radical Equations</a> (Beacon, 2002), 119–22.</li>
+        <li>Cassius Jackson Keyser, Mathematics as a Culture Clue (Scripta Mathematica, 1947), 218.</li>
+        <li>William Byers, <a href="https://amzn.to/3hLH8lt">How Mathematicians Think</a> (Princeton, 2007).</li>
+        <li>Keith Devlin, <a href="https://amzn.to/2Ygc8Cq">Mathematics: The Science of Patterns</a> (1997); Lynn Steen, <a href="https://science.sciencemag.org/content/240/4852/611">"The Science of Patterns,"</a> Science 240 (1988): 611–16.</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 4 -->
+    <section id="n4" style="background:#e4e7f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch04.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 4</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Play</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. Martin Buber, <a href="https://amzn.to/3hPvmX9">Pointing the Way</a> (Harper &amp; Row, 1963), 21; Sophie Germain, in Ioan James, <a href="https://amzn.to/3eltaET">Remarkable Mathematicians</a> (Cambridge, 2002), 58.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>Johan Huizinga, <a href="https://amzn.to/2Bu0yKM">Homo Ludens: A Study in the Play-Element of Culture</a> (Routledge &amp; Kegan Paul, 1949).</li>
+        <li>G. K. Chesterton, <a href="https://www.gutenberg.org/files/11505/11505-h/11505-h.htm">All Things Considered</a> (Methuen, 1908), 96.</li>
+        <li>Huizinga, <a href="https://amzn.to/2Bu0yKM">Homo Ludens</a>, 8.</li>
+        <li>Paul Lockhart, "A Mathematician's Lament" (2002), 4, via Keith Devlin, <a href="https://www.maa.org/external_archive/devlin/devlin_03_08.html">"Lockhart's Lament"</a> (2008).</li>
+        <li>On the modeling cycle, see <a href="https://www.siam.org/Publications/Reports/Detail/guidelines-for-assessment-and-instruction-in-mathematical-modeling-education">GAIMME</a>, 2nd ed. (COMAP/SIAM, 2019).</li>
+        <li>Blaise Pascal, <a href="https://www.gutenberg.org/ebooks/18269">Pensées</a>, trans. Trotter (E. P. Dutton, 1958), 4, no. 10.</li>
+        <li>A hint for the "stubborn endings" puzzle: only the last two digits of each number affect the last two digits of the product; a stubborn two-digit ending must end in 0, 1, 5, or 6.</li>
+        <li>Among all 10^15 fifteen-digit endings, only four are stubborn: …000000000000000, …000000000000001, …259918212890625, …740081787109376. What patterns do you notice?</li>
+        <li>These are known as automorphic numbers, related to p-adic numbers when the base is prime.</li>
+        <li>Simone Weil, <a href="https://amzn.to/2V2GAhb">Waiting for God</a> (Routledge &amp; K. Paul, 1951), 106.</li>
+        <li>G. H. Hardy, <a href="https://amzn.to/3djzI5x">A Mathematician's Apology</a> (Cambridge, 1940).</li>
+        <li>See PM Lee Hsien Loong's remarks in <a href="https://www.washingtonpost.com/news/reliable-source/wp/2016/08/02/full-transcript-prime-minister-lee-hsien-loongs-toast-at-the-singapore-state-dinner/">"Full Transcript… Singapore State Dinner"</a> (2016).</li>
+        <li>"Republic," trans. Shorey, in <a href="https://amzn.to/3elgGgu">The Collected Dialogues of Plato</a> (Princeton, 1961), 768 (7.536e).</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 5 -->
+    <section id="n5" style="background:#f1eff9; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch05.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 5</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Beauty</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. "Autobiography of Olga Taussky-Todd" (Caltech Archives, 1980), 6; David Blackwell, in <a href="https://amzn.to/2zSYc86">Mathematical People</a> (A. K. Peters, 2008), 21.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li><a href="https://www.claymath.org/library/annual_report/ar2008/08Interview.pdf">"Interview with Research Fellow Maryam Mirzakhani,"</a> Clay Mathematics Institute (2008), 13.</li>
+        <li>Semir Zeki et al., <a href="https://doi.org/10.3389/fnhum.2014.00068">"The Experience of Mathematical Beauty and Its Neural Correlates,"</a> Frontiers in Human Neuroscience 8 (2014): 68.</li>
+        <li>G. H. Hardy, <a href="https://amzn.to/3dqPwnf">A Mathematician's Apology</a> (1940); Harold Osborne, <a href="https://doi.org/10.1093/bjaesthetics/24.4.291">"Mathematical Beauty and Physical Science"</a> (1984); William Byers, <a href="https://amzn.to/37JkK7M">How Mathematicians Think</a> (2007).</li>
+        <li>Paul Erdős, in Paul Hoffman, <a href="https://amzn.to/3hIh7nf">The Man Who Loved Only Numbers</a> (Fourth Estate, 1998), 44.</li>
+        <li>Martin Gardner, "The Remarkable Lore of the Prime Numbers," Scientific American 210 (1964): 120–28.</li>
+        <li>Aigner &amp; Ziegler, <a href="https://amzn.to/2AXEQ1U">Proofs from THE BOOK</a> (Springer, 2010).</li>
+        <li>Sydney Opera House Trust, <a href="https://www.sydneyoperahouse.com/our-story/sydney-opera-house-history/spherical-solution.html">"The Spherical Solution."</a></li>
+        <li>Jordan Ellenberg, <a href="https://amzn.to/3dgJHbH">How Not to Be Wrong</a> (Penguin, 2014), 436–37.</li>
+        <li>Albert Einstein, <a href="https://amzn.to/37QhVBY">Ideas and Opinions</a> (Crown, 1954), 233.</li>
+        <li>Erica Klarreich, <a href="https://www.quantamagazine.org/mathematicians-chase-moonshine-string-theory-connections-20150312/">"Mathematicians Chase Moonshine's Shadow,"</a> Quanta (2015).</li>
+        <li>Simon Singh, <a href="https://simonsingh.net/media/articles/maths-and-science/interview-with-richard-borcherds/">"Interview with Richard Borcherds,"</a> The Guardian (1998).</li>
+        <li>C. S. Lewis, <a href="https://amzn.to/3dkeeW3">The Weight of Glory</a> (Macmillan, 1949), 7.</li>
+        <li>Barbara Oakley, <a href="https://www.nytimes.com/2018/08/07/opinion/stem-girls-math-practice.html">"Make Your Daughter Practice Math…"</a> NYT (2018).</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 6 -->
+    <section id="n6" style="background:#e7e5f3; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch06.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 6</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Permanence</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. Bernhard Riemann, <a href="https://doi.org/10.5840/monist19001029">"On the Psychology of Metaphysics"</a> (1900), 198; Tai-Danae Bradley, <a href="http://mathematicallygiftedandblack.com/rising-stars/tai-danae-bradley/">Mathematically Gifted and Black</a>.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>The word "law" is sometimes used for empirically observed patterns validated by a theorem (e.g., the law of large numbers) or for axioms (e.g., the commutative law).</li>
+        <li>David Eugene Smith, <a href="https://www.jstor.org/stable/2972153">"Religio Mathematici,"</a> American Mathematical Monthly 28, no. 10 (1921): 341.</li>
+        <li>Morris Kline, <a href="https://amzn.to/3en177V">Mathematics for the Nonmathematician</a> (Dover, 1985), 9.</li>
+        <li>On The Art of Gaman, see Susan Stamberg, <a href="https://www.npr.org/templates/story/story.php?storyId=126557553">"The Creative Art of Coping in Japanese Internment,"</a> NPR (2010).</li>
+        <li>An 81-step solution appears in Martin Gardner, "The Hypnotic Fascination of Sliding Block Puzzles," Scientific American 210 (1964): 122–30.</li>
+        <li>George Orwell, <a href="https://amzn.to/2V2XeO1">1984</a> (Houghton Mifflin Harcourt, 1949), 76.</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 7 -->
+    <section id="n7" style="background:#ece5f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch07.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 7</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Truth</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. John 18:38 (Good News Translation); Blaise Pascal, <a href="https://www.gutenberg.org/ebooks/18269">Pensées</a> (1958), 259, no. 864.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>Hannah Arendt, "Truth and Politics," New Yorker (1967), reprinted in <a href="https://amzn.to/2V3SDuH">Between Past and Future</a> (Penguin, 1968), 257.</li>
+        <li>Michael P. Lynch, <a href="https://amzn.to/37MD5k9">True to Life: Why Truth Matters</a> (MIT Press, 2004).</li>
+        <li>The correct calculation is 777 × 1,144 = 888,888; the mistyped 777 × 144 = 111,888 also has a noteworthy pattern.</li>
+        <li>Gian-Carlo Rota, <a href="https://www.jstor.org/stable/20129055">"The Concept of Mathematical Truth,"</a> Review of Metaphysics 44, no. 3 (1991): 486.</li>
+        <li>Eugene Wigner, <a href="https://doi.org/10.1002/cpa.3160130102">"The Unreasonable Effectiveness of Mathematics in the Natural Sciences,"</a> Comm. Pure Appl. Math. 13 (1960): 14.</li>
+        <li>Kenneth Burke, "Literature as Equipment for Living," in <a href="https://amzn.to/2YgfJQW">The Philosophy of Literary Form</a> (LSU Press, 1941), 293–304.</li>
+        <li>Quoted in David Brewster, The Life of Sir Isaac Newton (J. &amp; J. Harper, 1832), 300–301.</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 8 -->
+    <section id="n8" style="background:#e4e7f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch08.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 8</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Struggle</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. Simone Weil, <a href="https://amzn.to/2V2GAhb">Waiting for God</a> (1951), 107; Martha Graham, "An Athlete of God," in This I Believe (Holt, 2006), 84.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>Alasdair MacIntyre, <a href="https://amzn.to/37Msx4u">After Virtue</a>, 3rd ed. (Notre Dame, 2007), 188.</li>
+        <li>Ibid.</li>
+        <li>Eric M. Anderman, <a href="https://theconversation.com/students-cheat-for-good-grades-why-not-make-the-classroom-about-learning-and-not-testing-39556">"Students Cheat for Good Grades…"</a> The Conversation (2015).</li>
+        <li>Carol Dweck, <a href="https://www.scientificamerican.com/article/the-secret-to-raising-smart-kids1/">"The Secret to Raising Smart Kids,"</a> Scientific American (2015).</li>
+        <li>Jo Boaler, <a href="https://amzn.to/3enHsVA">Mathematical Mindsets</a> (Jossey-Bass, 2016).</li>
+        <li><a href="https://www.claymath.org/library/annual_report/ar2008/08Interview.pdf">"Interview with Maryam Mirzakhani,"</a> Clay Math Institute (2008).</li>
+        <li>David Richeson, <a href="https://doi.org/10.4169/mathhorizons.23.1.10">"A Conversation with Timothy Gowers,"</a> Math Horizons 23, no. 1 (2015): 10–11.</li>
+        <li>Laurent Schwartz, <a href="https://amzn.to/2DVJTBx">A Mathematician Grappling with His Century</a> (Birkhäuser, 2001), 30.</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 9 -->
+    <section id="n9" style="background:#f1eff9; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch09.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 9</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Power</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. Quoted in Stephen Winsten, Days with Bernard Shaw (Vanguard, 1949), 291; Augustus de Morgan, in Graves, The Life of Sir William Rowan Hamilton (1889), 219.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>Isidor Wallimann et al., <a href="https://doi.org/10.1177/003803858001400204">"Misreading Weber: The Concept of 'Macht,'"</a> Sociology 14, no. 2 (1980): 261–75.</li>
+        <li>Andy Crouch, <a href="https://amzn.to/2NdyH4b">Playing God: Redeeming the Gift of Power</a> (InterVarsity, 2014), 17.</li>
+        <li>Thanks to my friend Lew Ludwig for pointing this out.</li>
+        <li>Dave Bayer and Persi Diaconis, <a href="https://statweb.stanford.edu/~cgates/PERSI/papers/bayer92.pdf">"Trailing the Dovetail Shuffle to Its Lair,"</a> Annals of Applied Probability 2 (1992): 294–313.</li>
+        <li>Karen D. Rappaport, <a href="https://www.jstor.org/stable/2320506">"S. Kovalevsky: A Mathematical Lesson,"</a> American Mathematical Monthly 88, no. 8 (1981): 564–74.</li>
+        <li>Erica N. Walker, <a href="https://amzn.to/2NeAbeF">Beyond Banneker: Black Mathematicians and the Paths to Excellence</a> (SUNY, 2014).</li>
+        <li>Cathy O'Neil, <a href="https://amzn.to/2NeEiHB">Weapons of Math Destruction</a> (Crown, 2016).</li>
+        <li>Parker J. Palmer, <a href="https://amzn.to/3fKaU8s">The Courage to Teach</a>, 10th anniv. ed. (Jossey-Bass, 2007), 7.</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 10 -->
+    <section id="n10" style="background:#e7e5f3; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch10.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 10</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Justice</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraph. Simone Weil, <a href="https://amzn.to/2V0YK2W">Gravity and Grace</a> (1952), 188.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>Timothy Keller, <a href="https://amzn.to/2YR836R">Generous Justice</a> (Penguin, 2012).</li>
+        <li>Take the tests at <a href="https://implicit.harvard.edu/implicit/">implicit.harvard.edu</a>.</li>
+        <li>Victor Lavy and Edith Sands, <a href="https://doi.org/10.1016/j.jpubeco.2018.09.007">"On the Origins of Gender Gaps in Human Capital,"</a> Journal of Public Economics 167 (2018): 263–79.</li>
+        <li>Michela Carlana, <a href="https://doi.org/10.1093/qje/qjz008">"Implicit Stereotypes: Evidence from Teachers' Gender Bias,"</a> Quarterly Journal of Economics.</li>
+        <li>Kevin Eagan et al., <a href="https://sites.nationalacademies.org/cs/groups/dbassesite/documents/webpage/dbasse_088834.pdf">"Examining STEM Pathways…"</a> (National Academies Press, 2014).</li>
+        <li>Jennifer Engle and Vincent Tinto, <a href="https://files.eric.ed.gov/fulltext/ED504448.pdf">Moving Beyond Access</a> (Pell Institute, 2008).</li>
+        <li>William Yslas Vélez et al., <a href="https://www.ams.org/publications/journals/notices/201607/rnoti-p754.pdf">"Report on the 2014–2015 New Doctoral Recipients,"</a> Notices of the AMS 63, no. 7 (2016): 754–65.</li>
+        <li><a href="http://blog.angryasianman.com/2016/01/finally-asian-guy-whos-good-at-math.html">"Finally, an Asian Guy Who's Good at Math (Part Two),"</a> Angry Asian Man (2016).</li>
+        <li>Rochelle Gutiérrez, <a href="https://doi.org/10.1207/S15327833MTL04023_4">"Enabling the Practice of Mathematics Teachers in Context,"</a> Mathematical Thinking and Learning 4 (2002): 147.</li>
+        <li>NCTM, <a href="https://amzn.to/2BrStq0">Catalyzing Change in High School Mathematics</a> (2018); Jo Boaler, "Changing Students' Lives through the De-tracking of Urban Mathematics Classrooms," JUME 4, no. 1 (2011): 7–14.</li>
+        <li>William F. Tate, <a href="https://www.jstor.org/stable/20405144">"Race, Retrenchment, and the Reform of School Mathematics,"</a> Phi Delta Kappan 75, no. 6 (1994): 477–84.</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 11 -->
+    <section id="n11" style="background:#ece5f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch11.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 11</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Freedom</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. Helen Keller, The Story of My Life (Grosset &amp; Dunlap, 1905), 39; Eleanor Roosevelt, You Learn by Living (Harper &amp; Row, 1960), 152.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>Arthur Benjamin and Michael Shermer, <a href="https://amzn.to/3ejMOBd">Secrets of Mental Math</a> (Three Rivers, 2006).</li>
+        <li>The "multiply by 11" shortcut requires a carry when the digit sum is 10 or more; using algebra, (10a + b) × 11 = 100a + 10(a + b) + b.</li>
+        <li>Georg Cantor, "Foundations of a General Theory of Manifolds," in <a href="https://amzn.to/37OJ3ks">From Kant to Hilbert</a>, ed. Ewald (Oxford, 1996), vol. 2, 896.</li>
+        <li>Evelyn Lamb, <a href="https://blogs.scientificamerican.com/roots-of-unity/a-few-of-my-favorite-spaces-the-infinite-earring/">"A Few of My Favorite Spaces: The Infinite Earring,"</a> Scientific American (2015).</li>
+        <li>J. W. Alexander, <a href="https://doi.org/10.1073/pnas.10.1.8">"An Example of a Simply Connected Surface…"</a> PNAS 10, no. 1 (1924): 8–10.</li>
+        <li>Rosenthal and Jacobson, "Teachers' Expectancies" (1966); see also Katherine Ellison, "Being Honest about the Pygmalion Effect," Discover (2015).</li>
+        <li>bell hooks, <a href="https://amzn.to/3hK4tE5">Teaching to Transgress</a> (Routledge, 1994), 3.</li>
+        <li>Ibid.</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 12 -->
+    <section id="n12" style="background:#e4e7f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch12.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 12</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Community</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. Bill Thurston, <a href="https://mathoverflow.net/questions/43690/whats-a-mathematician-to-do">Math Overflow</a> (2010); Deanna Haunsperger, <a href="https://www.youtube.com/watch?v=jwAE3iHi4vM">"The Inclusion Principle"</a> (JMM, 2019).</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>Parker Palmer, <a href="https://amzn.to/3hQs4TQ">To Know as We Are Known</a> (Harper Collins, 1993), 9.</li>
+        <li>Gina Kolata, <a href="https://www.nytimes.com/1993/06/29/science/scientist-at-work-andrew-wiles-math-whiz-who-battled-350-year-old-problem.html">"Andrew Wiles: Math Whiz Who Battled a 350-Year-Old Problem,"</a> NYT (1993).</li>
+        <li>Dennis Overbye, <a href="https://www.nytimes.com/2006/08/15/science/15math.html">"Elusive Proof, Elusive Prover,"</a> NYT (2006).</li>
+        <li>Thomas Lin, <a href="https://www.quantamagazine.org/yitang-zhang-and-the-mystery-of-numbers-20150402/">"After Prime Proof, an Unlikely Star Rises,"</a> Quanta (2015).</li>
+        <li>Jerrold W. Grossman, <a href="https://archive.siam.org/pdf/news/485.pdf">"Patterns of Collaboration in Mathematical Research,"</a> SIAM News 35, no. 9 (2002): 8–9.</li>
+        <li>Programs that may appeal widely: <a href="http://www.mathcircles.org/">math circles</a>, <a href="https://www.beammath.org/">BEAM</a>, <a href="http://www.mathpath.org/">MathPath</a>, and the <a href="https://www.ias.edu/pcmi">Park City Mathematics Institute</a>.</li>
+        <li>Talithia Williams, <a href="https://amzn.to/37KowO2">Power in Numbers</a> (Race Point, 2018); <a href="https://amzn.to/2YhK1CH">101 Careers in Mathematics</a>, 3rd ed. (MAA, 2014).</li>
+        <li>Simone Weil, letter to Father Perrin, in <a href="https://amzn.to/2V2GAhb">Waiting for God</a> (1951), 64.</li>
+        <li>The <a href="https://www.maa.org/programs-and-communities/curriculum%20resources/instructional-practices-guide">MAA Instructional Practices Guide</a> (2017).</li>
+        <li>Darryl Yong, <a href="https://profteacher.com/2017/08/30/active-learning-2-0-making-it-inclusive/">"Active Learning 2.0: Making It Inclusive"</a> (2017).</li>
+        <li>Ilana Seidel Horn, <a href="https://amzn.to/3dnEezU">Motivated</a> (Heinemann, 2017).</li>
+        <li>Justin Wolfers, <a href="https://www.nytimes.com/2016/01/10/upshot/when-teamwork-doesnt-work-for-women.html">"When Teamwork Doesn't Work for Women,"</a> NYT (2016).</li>
+        <li>AWIS–MAA Joint Task Force, <a href="https://www.maa.org/sites/default/files/pdf/ABOUTMAA/AvoidingImplicitBias_revisionMarch2018.pdf">"Avoiding Implicit Bias"</a> (2012).</li>
+        <li>Karen Uhlenbeck, <a href="https://www.jstor.org/stable/25678066">"Coming to Grips with Success,"</a> Math Horizons 3, no. 4 (1996): 17.</li>
+      </ol>
+    </div>
+    </section>
+
+    <!-- 13 -->
+    <section id="n13" style="background:#f1eff9; padding:48px 0; border-top:1px solid #cfc9e4;">
+      <div style="max-width:800px; margin:0 auto; padding:0 40px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+        <img src="icon-ch13.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 13</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Love</h2>
+        </div>
+      </div>
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#55566f; margin:0 0 20px;">Epigraphs. 1 Corinthians 13:1 (Good News Translation); <a href="https://amzn.to/311mAzB">The Papers of Martin Luther King, Jr.</a>, vol. 1 (California, 1992), 124.</p>
+      <ol class="n" style="font-size:16px; line-height:1.55; color:#33344a; padding-left:24px; margin:0;">
+        <li>Hannah Fry, <a href="https://amzn.to/2YgiMIS">The Mathematics of Love</a> (Simon &amp; Schuster, 2015).</li>
+        <li>Simone Weil, letter to Father Perrin, in <a href="https://amzn.to/2V2GAhb">Waiting for God</a> (1951), 64.</li>
+        <li>Francis Edward Su, "The Lesson of Grace in Teaching," in <a href="https://amzn.to/2zO8KFo">The Best Writing on Mathematics 2014</a> (Princeton, 2014), 188–97; also on <a href="https://francissu.substack.com/p/the-lesson-of-grace-in-teaching">my blog</a>.</li>
+        <li>Simone Weil, "Reflections on the Right Use of School Studies…," in <a href="https://amzn.to/2V2GAhb">Waiting for God</a> (1951), 115.</li>
+      </ol>
+      <p style="font-size:15px; line-height:1.55; color:#55566f; margin:22px 0 0;"><strong style="font-weight:600;">Acknowledgments.</strong> Simone Weil's original quote is "L'attention est la forme la plus rare et la plus pure de la générosité." See Weil and Jo. Bousquet, Correspondance (Editions l'Age d'Homme, 1982), 18.</p>
+    </div>
+    </section>
+
+    <section style="max-width:800px; margin:0 auto; padding:26px 40px 14px;">
+      <p style="font-size:15px; line-height:1.6; color:#55566f; margin:0;">Learn more about <a href="index.html">Mathematics for Human Flourishing</a>, or explore the <a href="discuss.html">discussion questions</a>.</p>
+    </section>
+
+    <footer id="contact" style="background:#1f2036; color:#d3d3ee;">
+      <div style="max-width:1140px; margin:0 auto; padding:76px 40px 40px;">
+        <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:48px; padding-bottom:56px; border-bottom:1px solid #343552;">
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:14px; letter-spacing:0.22em; text-transform:uppercase; font-weight:700; color:#eeeefa; margin-bottom:18px;">Francis Su</div>
+            <p style="font-family:'Newsreader',serif; font-style:italic; font-size:20px; line-height:1.45; color:#b3b4e2; max-width:22em; margin:0 0 18px;">Author, teacher, and mathematical explorer.</p>
+            <div style="display:flex; gap:16px; align-items:flex-start; max-width:24em;">
+              <a href="index.html" style="flex-shrink:0; display:block;"><img src="flourishing-cover.jpg" alt="Mathematics for Human Flourishing cover" style="width:70px; height:auto; border-radius:2px; display:block; box-shadow:0 6px 16px -8px rgba(0,0,0,0.6);"></a>
+              <p style="font-family:'Newsreader',serif; font-style:italic; font-size:15px; line-height:1.5; color:#b3b4e2; margin:0;">I don't much like the word 'inspiring,' but damned if I can think of a more suitable word for this book. <span style="font-style:normal; color:#9092c4;">—Inside Higher Ed</span></p>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9092c4; margin-bottom:18px;">Explore</div>
+            <div style="display:flex; flex-direction:column; gap:12px; font-size:15px;">
+              <a href="index.html" style="color:#c4c6e6;" style-hover="color:#fff;">About the book</a>
+              <a href="endnotes.html" style="color:#c4c6e6;" style-hover="color:#fff;">Endnotes</a>
+              <a href="discuss.html" style="color:#c4c6e6;" style-hover="color:#fff;">Discuss with Friends</a>
+              <a href="../books.html" style="color:#c4c6e6;" style-hover="color:#fff;">All books</a>
+              <a href="../index.html" style="color:#c4c6e6;" style-hover="color:#fff;">Home</a>
+              <a href="https://francissu.substack.com/" style="color:#c4c6e6;" style-hover="color:#fff;">Blog ↗</a>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#9092c4; margin-bottom:18px;">Contact</div>
+            <div style="display:flex; flex-direction:column; gap:12px; font-size:15px; color:#c4c6e6;">
+              <span>[mylastname] @ math.hmc.edu</span>
+              <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+                <a href="https://www.linkedin.com/in/francissu/" style="color:#c4c6e6;" style-hover="color:#fff;">LinkedIn</a>
+                <a href="https://bsky.app/profile/mathyawp.bsky.social" style="color:#c4c6e6;" style-hover="color:#fff;">Bluesky</a>
+                <a href="http://www.facebook.com/francis.su" style="color:#c4c6e6;" style-hover="color:#fff;">Facebook</a>
+                <a href="https://www.instagram.com/mathyawp" style="color:#c4c6e6;" style-hover="color:#fff;">Instagram</a>
+                <a href="https://x.com/mathyawp" style="color:#c4c6e6;" style-hover="color:#fff;">X</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="padding-top:28px; display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; font-size:13px; color:#9092c4;">
+          <span>© 2026 Francis Edward Su</span>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>
+</x-dc>
+</body>
+</html>

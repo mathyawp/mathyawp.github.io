@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&amp;family=Public+Sans:wght@400;500;600&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--paper,#eeeefa); }
+  a { color: var(--accent,#5459a3); text-decoration: none; }
+  a:hover { color: var(--accent-dark,#3c3f78); }
+  ::selection { background: var(--line,#e2e2f4); }
+
+  /* --- mobile responsiveness --- */
+  html, body { overflow-x: hidden; max-width: 100%; }
+  img { max-width: 100%; height: auto; }
+  @media (max-width: 760px) {
+    [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+    [style*="columns:3"] { columns: 1 !important; }
+    [style*="margin:0 auto"] { padding-left: 22px !important; padding-right: 22px !important; }
+    header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
+    h1 { font-size: clamp(34px, 9vw, 60px) !important; }
+    h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
+    .icon-nav { grid-template-columns: repeat(5, 1fr) !important; }
+  }
+</style>
+</helmet>
+<div style="background:var(--paper,#eeeefa); color:var(--ink,#1c1d2b); font-family:'Public Sans',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; {{ themeVars }}">
+
+  <header style="position:sticky; top:0; z-index:50; background:var(--header,rgba(238,238,250,0.88)); backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid var(--line,#dcdcef);">
+    <div style="max-width:1140px; margin:0 auto; padding:16px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
+      <a href="../index.html" style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:var(--ink,#1c1d2b); font-weight:700;">Francis&nbsp;Su</a>
+      <nav style="display:flex; align-items:center; gap:26px; font-size:14.5px; color:var(--sub,#55566f);">
+        <a href="#reviews" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">↓ Reviews</a>
+        <a href="#praise" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">↓ Praise</a>
+        
+        <a href="discuss.html" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">Discuss</a><a href="endnotes.html" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">Endnotes</a>
+        <a href="../books.html" style="color:var(--accent,#5459a3);" style-hover="color:var(--ink,#3c3f78);">↑ All books</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- hero -->
+    <section style="max-width:1140px; margin:0 auto; padding:calc(var(--pad,1)*80px) 40px calc(var(--pad,1)*72px); display:grid; grid-template-columns:0.85fr 1.15fr; gap:72px; align-items:center;">
+      <div style="position:relative;">
+        <div style="aspect-ratio:2/3; border-radius:3px; overflow:hidden; background:var(--band,#22233a); box-shadow:0 30px 70px -28px rgba(40,42,90,0.6);">
+          <img src="flourishing-cover.jpg" alt="Mathematics for Human Flourishing cover" style="width:100%; height:100%; object-fit:cover; display:block;">
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.24em; text-transform:uppercase; color:var(--accent,#5459a3); margin-bottom:22px;">WINNER, 2021 EULER PRIZE</div>
+        <h1 style="font-family:'Newsreader',serif; font-weight:400; font-size:calc(var(--hero,1)*54px); line-height:1.05; letter-spacing:var(--track,-0.01em); margin:0 0 22px;">Mathematics for Human Flourishing</h1>
+        <p style="font-size:20px; line-height:1.55; color:var(--body,#43455c); font-family:'Newsreader',serif; font-style:italic; margin:0 0 28px; max-width:26em;">An inclusive vision of what mathematics is, who it's for, and why anyone should learn it.</p>
+        <p style="font-size:15px; line-height:1.6; color:var(--sub,#63647d); margin:0 0 28px; max-width:34em;">Also in Spanish, Italian, Romanian, Turkish, Chinese (traditional &amp; simplified), Japanese, Korean, and Greek. <a href="https://docs.google.com/document/d/1LhDv9I-tlQ5ZMGsVMmSBkrIrsRGPsI6sEcj-1tH-8bo/edit?usp=sharing">Find translations here.</a></p>
+        <div style="display:flex; flex-wrap:wrap; gap:14px;">
+          <a href="https://amzn.to/379LLCm" style="display:inline-flex; align-items:center; padding:13px 26px; background:var(--accent,#5459a3); color:#fff; font-size:15px; font-weight:600; border-radius:2px;" style-hover="background:var(--accent-dark,#3c3f78);">Order on Amazon ↗</a>
+          <a href="https://www.powells.com/book/mathematics-for-human-flourishing-9780300258516" style="display:inline-flex; align-items:center; padding:13px 26px; border:1px solid var(--band-body,#c4c6e6); color:var(--ink,#1c1d2b); font-size:15px; font-weight:500; border-radius:2px;" style-hover="border-color:var(--accent,#5459a3);">Powell's ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- about -->
+    <section id="about" style="background:var(--paper2,#eaeaf8);">
+      <div style="max-width:900px; margin:0 auto; padding:calc(var(--pad,1)*80px) 40px;">
+        <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.22em; text-transform:uppercase; color:var(--muted,#6b70b0); margin-bottom:18px;">FROM YALE UNIVERSITY PRESS</div>
+        <div style="font-size:17px; line-height:1.7; color:var(--body,#2b2c40);">
+          <p style="margin: 0 0 22px; font-size: 18px">For mathematician Francis Su, a society without mathematical affection is like a city without concerts, parks, or museums. To miss out on mathematics is to live without experiencing some of humanity's most beautiful ideas.</p>
+          <p style="margin: 0 0 22px; font-size: 18px">In this profound book, written for a wide audience but especially for those disenchanted by their past experiences, an award-winning mathematician and educator weaves parables, puzzles, and personal reflections to show how mathematics meets basic human desires — such as for play, beauty, freedom, justice, and love — and cultivates virtues essential for human flourishing.</p>
+          <p style="margin: 0; font-size: 18px">These desires and virtues, and the stories told here, reveal how mathematics is intimately tied to being human. Some lessons emerge from those who have struggled, including philosopher Simone Weil, and Christopher Jackson, who discovered mathematics as an inmate in a federal prison. Christopher's letters to the author appear throughout the book and show how this intellectual pursuit can — and must — be open to all.</p>
+          
+        </div>
+      </div>
+    </section>
+
+    <!-- reviews -->
+    <section id="reviews" style="max-width:1140px; margin:0 auto; padding:calc(var(--pad,1)*80px) 40px;">
+      <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.22em; text-transform:uppercase; color:var(--muted,#6b70b0); margin-bottom:14px;">Reviews &amp; press</div>
+      <h2 style="font-family:'Newsreader',serif; font-weight:400; font-size:calc(var(--h2,1)*34px); margin:0 0 8px; max-width:18em;">"This is perhaps the most important mathematics book of our time."</h2>
+      <p style="font-size:15px; color:var(--sub,#63647d); margin:0 0 44px;">— James Tanton, Global Math Project</p>
+
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px;">
+        <a href="https://www.maa.org/press/maa-reviews/mathematics-for-human-flourishing" style="display:flex; flex-direction:column; background:var(--card,#fff); border:1px solid var(--line,#e4e4f6); border-radius:5px; padding:28px 26px; color:var(--ink,#1c1d2b);" style-hover="border-color:var(--accent,#5459a3);">
+          <p style="font-family:'Newsreader',serif; font-size:19px; line-height:1.5; margin:0 0 18px; flex:1;">"A great book holds up a mirror that allows us to more clearly see ourselves and the world we live in. [This] is both a good book and a great book."</p>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.08em; color:var(--accent,#5459a3);">MAA REVIEWS</div>
+        </a>
+        <a href="https://www.harvardmagazine.com/2020/01/francis-su-math" style="display:flex; flex-direction:column; background:var(--card,#fff); border:1px solid var(--line,#e4e4f6); border-radius:5px; padding:28px 26px; color:var(--ink,#1c1d2b);" style-hover="border-color:var(--accent,#5459a3);">
+          <p style="font-family:'Newsreader',serif; font-size:19px; line-height:1.5; margin:0 0 18px; flex:1;">"Deeply human-centered… Like mathematics itself, Su's book is for everyone."</p>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.08em; color:var(--accent,#5459a3);">HARVARD MAGAZINE</div>
+        </a>
+        
+        <a href="https://www.insidehighered.com/views/2020/01/03/review-francis-su-mathematics-human-flourishing" style="display:flex; flex-direction:column; background:var(--card,#fff); border:1px solid var(--line,#e4e4f6); border-radius:5px; padding:28px 26px; color:var(--ink,#1c1d2b);" style-hover="border-color:var(--accent,#5459a3);">
+          <p style="font-family:'Newsreader',serif; font-size:19px; line-height:1.5; margin:0 0 18px; flex:1;">"I don't much like the word 'inspiring,' but damned if I can think of a more suitable word for this book."</p>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.08em; color:var(--accent,#5459a3);">INSIDE HIGHER ED</div>
+        </a><a href="https://www.ams.org/publications/journals/notices/201705/rnoti-p448.pdf" style="display:flex; flex-direction:column; background:var(--card,#fff); border:1px solid var(--line,#e4e4f6); border-radius:5px; padding:28px 26px; color:var(--ink,#1c1d2b);" style-hover="border-color:var(--accent,#5459a3);">
+          <p style="font-family:'Newsreader',serif; font-size:19px; line-height:1.5; margin:0 0 18px; flex:1;">"Profound and wide-ranging… Mathematics can transform the human heart, turning it toward compassion."</p>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.08em; color:var(--accent,#5459a3);">AMS NOTICES</div>
+        </a><a href="https://www.wired.com/2017/02/live-best-life-mathematics/" style="display:flex; flex-direction:column; background:var(--card,#fff); border:1px solid var(--line,#e4e4f6); border-radius:5px; padding:28px 26px; color:var(--ink,#1c1d2b);" style-hover="border-color:var(--accent,#5459a3);">
+          <p style="font-family:'Newsreader',serif; font-size:19px; line-height:1.5; margin:0 0 18px; flex:1;">"The mathematician who will make you fall in love with numbers."</p>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.08em; color:var(--accent,#5459a3);">WIRED MAGAZINE</div>
+        </a><a href="https://blogs.scientificamerican.com/roots-of-unity/an-inclusive-vision-of-math/" style="display:flex; flex-direction:column; background:var(--card,#fff); border:1px solid var(--line,#e4e4f6); border-radius:5px; padding:28px 26px; color:var(--ink,#1c1d2b);" style-hover="border-color:var(--accent,#5459a3);">
+          <p style="font-family:'Newsreader',serif; font-size:19px; line-height:1.5; margin:0 0 18px; flex:1;">"Unconventional… an invitation and a manifesto."</p>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.08em; color:var(--accent,#5459a3);">SCIENTIFIC AMERICAN</div>
+        </a>
+        
+        
+      </div>
+    </section>
+
+    <!-- what people say -->
+    <section id="praise" style="background:var(--paper3,#eaeaf8);">
+      <div style="max-width:1140px; margin:0 auto; padding:calc(var(--pad,1)*80px) 40px;">
+        <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.22em; text-transform:uppercase; color:var(--muted,#6b70b0); margin-bottom:14px; text-align:center;">What people say</div>
+        <h2 style="font-family:'Newsreader',serif; font-weight:400; font-size:calc(var(--h2,1)*34px); margin:0 auto 8px; max-width:20em; text-align:center;">Praise from readers and writers.</h2>
+
+        <div style="max-width:660px; margin:0 auto;">
+          <div style="position:relative; min-height:160px;">
+            <div style="position: {{ c0.pos }}; top:0; left:0; width:100%; opacity: {{ c0.o }}; transform: {{ c0.t }}; pointer-events: {{ c0.pe }}; transition:opacity 0.5s ease, transform 0.5s ease;">
+              <div style="background:var(--card,#fff); border:1px solid var(--line,#dcdcef); border-radius:20px; padding:28px 34px 24px; box-shadow:0 22px 56px -34px rgba(40,42,90,0.4); min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <p style="font-family:'Newsreader',serif; font-size:22px; line-height:1.5; color:var(--body,#2b2c40); margin:0 0 26px; max-width:34em;">Francis Su has written a lyrical meditation on the beauty of mathematics and how it connects to our common humanity.</p>
+                <div style="font-size:16px; font-weight:600; color:var(--ink,#1c1d2b);">John Urschel</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:var(--muted,#6b70b0); margin-top:5px; text-transform:uppercase;">Mind and Matter: A Life in Math and Football</div>
+              </div>
+            </div>
+            <div style="position: {{ c1.pos }}; top:0; left:0; width:100%; opacity: {{ c1.o }}; transform: {{ c1.t }}; pointer-events: {{ c1.pe }}; transition:opacity 0.5s ease, transform 0.5s ease;">
+              <div style="background:var(--card,#fff); border:1px solid var(--line,#dcdcef); border-radius:20px; padding:28px 34px 24px; box-shadow:0 22px 56px -34px rgba(40,42,90,0.4); min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <p style="font-family:'Newsreader',serif; font-size:22px; line-height:1.5; color:var(--body,#2b2c40); margin:0 0 26px; max-width:34em;">Please read this beautiful, compelling, galvanizing book if you care about mathematics, social justice, or humanity — which I hope is everyone.</p>
+                <div style="font-size:16px; font-weight:600; color:var(--ink,#1c1d2b);">Eugenia Cheng</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:var(--muted,#6b70b0); margin-top:5px; text-transform:uppercase;">The Art of Logic in an Illogical World</div>
+              </div>
+            </div>
+            <div style="position: {{ c2.pos }}; top:0; left:0; width:100%; opacity: {{ c2.o }}; transform: {{ c2.t }}; pointer-events: {{ c2.pe }}; transition:opacity 0.5s ease, transform 0.5s ease;">
+              <div style="background:var(--card,#fff); border:1px solid var(--line,#dcdcef); border-radius:20px; padding:28px 34px 24px; box-shadow:0 22px 56px -34px rgba(40,42,90,0.4); min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <p style="font-family:'Newsreader',serif; font-size:22px; line-height:1.5; color:var(--body,#2b2c40); margin:0 0 26px; max-width:34em;">Francis Su believes that math can make us better humans — and he leads by example. Every page is a work of generosity and compassion.</p>
+                <div style="font-size:16px; font-weight:600; color:var(--ink,#1c1d2b);">Ben Orlin</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:var(--muted,#6b70b0); margin-top:5px; text-transform:uppercase;">Math with Bad Drawings</div>
+              </div>
+            </div>
+            <div style="position: {{ c3.pos }}; top:0; left:0; width:100%; opacity: {{ c3.o }}; transform: {{ c3.t }}; pointer-events: {{ c3.pe }}; transition:opacity 0.5s ease, transform 0.5s ease;">
+              <div style="background:var(--card,#fff); border:1px solid var(--line,#dcdcef); border-radius:20px; padding:28px 34px 24px; box-shadow:0 22px 56px -34px rgba(40,42,90,0.4); min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <p style="font-family:'Newsreader',serif; font-size:22px; line-height:1.5; color:var(--body,#2b2c40); margin:0 0 26px; max-width:34em;">A powerful narrative of mathematical beauty, this book is the antidote for a mathematically fixed mindset.</p>
+                <div style="font-size:16px; font-weight:600; color:var(--ink,#1c1d2b);">Talithia Williams</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:var(--muted,#6b70b0); margin-top:5px; text-transform:uppercase;">Power in Numbers: The Rebel Women of Mathematics</div>
+              </div>
+            </div>
+            <div style="position: {{ c4.pos }}; top:0; left:0; width:100%; opacity: {{ c4.o }}; transform: {{ c4.t }}; pointer-events: {{ c4.pe }}; transition:opacity 0.5s ease, transform 0.5s ease;">
+              <div style="background:var(--card,#fff); border:1px solid var(--line,#dcdcef); border-radius:20px; padding:28px 34px 24px; box-shadow:0 22px 56px -34px rgba(40,42,90,0.4); min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <p style="font-family:'Newsreader',serif; font-size:22px; line-height:1.5; color:var(--body,#2b2c40); margin:0 0 26px; max-width:34em;">The world desperately needs this all-embracing and deeply human perspective on what mathematics is and why it matters.</p>
+                <div style="font-size:16px; font-weight:600; color:var(--ink,#1c1d2b);">Eddie Woo</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:var(--muted,#6b70b0); margin-top:5px; text-transform:uppercase;">It's a Numberful World</div>
+              </div>
+            </div>
+            <div style="position: {{ c5.pos }}; top:0; left:0; width:100%; opacity: {{ c5.o }}; transform: {{ c5.t }}; pointer-events: {{ c5.pe }}; transition:opacity 0.5s ease, transform 0.5s ease;">
+              <div style="background:var(--card,#fff); border:1px solid var(--line,#dcdcef); border-radius:20px; padding:28px 34px 24px; box-shadow:0 22px 56px -34px rgba(40,42,90,0.4); min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <p style="font-family:'Newsreader',serif; font-size:22px; line-height:1.5; color:var(--body,#2b2c40); margin:0 0 26px; max-width:34em;">“Mom, this is really good.” S___ has not read anything that was not assigned to him since school went remote. So grateful.</p>
+                <div style="font-size:16px; font-weight:600; color:var(--ink,#1c1d2b);">Laura Palucki Blake</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:var(--muted,#6b70b0); margin-top:5px; text-transform:uppercase;">Mother of a teen</div>
+              </div>
+            </div>
+            <div style="position: {{ c6.pos }}; top:0; left:0; width:100%; opacity: {{ c6.o }}; transform: {{ c6.t }}; pointer-events: {{ c6.pe }}; transition:opacity 0.5s ease, transform 0.5s ease;">
+              <div style="background:var(--card,#fff); border:1px solid var(--line,#dcdcef); border-radius:20px; padding:28px 34px 24px; box-shadow:0 22px 56px -34px rgba(40,42,90,0.4); min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <p style="font-family:'Newsreader',serif; font-size:22px; line-height:1.5; color:var(--body,#2b2c40); margin:0 0 26px; max-width:34em;">A celebration of mathematics and the human spirit. Learning mathematics enriches our lives, and Su wants everyone to have a seat at the banquet.</p>
+                <div style="font-size:16px; font-weight:600; color:var(--ink,#1c1d2b);">Edward Scheinerman</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:var(--muted,#6b70b0); margin-top:5px; text-transform:uppercase;">The Mathematics Lover's Companion</div>
+              </div>
+            </div>
+            <div style="position: {{ c7.pos }}; top:0; left:0; width:100%; opacity: {{ c7.o }}; transform: {{ c7.t }}; pointer-events: {{ c7.pe }}; transition:opacity 0.5s ease, transform 0.5s ease;">
+              <div style="background:var(--card,#fff); border:1px solid var(--line,#dcdcef); border-radius:20px; padding:28px 34px 24px; box-shadow:0 22px 56px -34px rgba(40,42,90,0.4); min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <p style="font-family:'Newsreader',serif; font-size:22px; line-height:1.5; color:var(--body,#2b2c40); margin:0 0 26px; max-width:34em;">This is perhaps the most important mathematics book of our time. Francis Su shows mathematics is an experience of the mind and, most important, of the heart.</p>
+                <div style="font-size:16px; font-weight:600; color:var(--ink,#1c1d2b);">James Tanton</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:var(--muted,#6b70b0); margin-top:5px; text-transform:uppercase;">Global Math Project</div>
+              </div>
+            </div>
+            <div style="position: {{ c8.pos }}; top:0; left:0; width:100%; opacity: {{ c8.o }}; transform: {{ c8.t }}; pointer-events: {{ c8.pe }}; transition:opacity 0.5s ease, transform 0.5s ease;">
+              <div style="background:var(--card,#fff); border:1px solid var(--line,#dcdcef); border-radius:20px; padding:28px 34px 24px; box-shadow:0 22px 56px -34px rgba(40,42,90,0.4); min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <p style="font-family:'Newsreader',serif; font-size:22px; line-height:1.5; color:var(--body,#2b2c40); margin:0 0 26px; max-width:34em;">I was mesmerized by this unusual, sublime book.</p>
+                <div style="font-size:16px; font-weight:600; color:var(--ink,#1c1d2b);">Nalini Joshi</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:var(--muted,#6b70b0); margin-top:5px; text-transform:uppercase;">University of Sydney</div>
+              </div>
+            </div>
+            <div style="position: {{ c9.pos }}; top:0; left:0; width:100%; opacity: {{ c9.o }}; transform: {{ c9.t }}; pointer-events: {{ c9.pe }}; transition:opacity 0.5s ease, transform 0.5s ease;">
+              <div style="background:var(--card,#fff); border:1px solid var(--line,#dcdcef); border-radius:20px; padding:28px 34px 24px; box-shadow:0 22px 56px -34px rgba(40,42,90,0.4); min-height:170px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                <p style="font-family:'Newsreader',serif; font-size:22px; line-height:1.5; color:var(--body,#2b2c40); margin:0 0 26px; max-width:34em;">The ancient Greeks argued that the best life was filled with beauty, truth, justice, play and love. The mathematician Francis Su knows just where to find them.</p>
+                <div style="font-size:16px; font-weight:600; color:var(--ink,#1c1d2b);">Kevin Hartnett</div>
+                <div style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.06em; color:var(--muted,#6b70b0); margin-top:5px; text-transform:uppercase;">Quanta Magazine</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; justify-content:center; gap:22px; margin-top:22px;">
+            <button type="button" onClick="{{ prev }}" aria-label="Previous" style="width:42px; height:42px; border-radius:50%; border:1px solid var(--line,#cdcee8); background:var(--card,#fff); color:var(--accent,#5459a3); font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="border-color:var(--accent,#5459a3);">‹</button>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <sc-for list="{{ dots }}" as="dot" hint-placeholder-count="10">
+                <button type="button" onClick="{{ dot.go }}" aria-label="Go to quote" style="width:9px; height:9px; border-radius:50%; border:none; padding:0; cursor:pointer; background: {{ dot.color }};"></button>
+              </sc-for>
+            </div>
+            <button type="button" onClick="{{ next }}" aria-label="Next" style="width:42px; height:42px; border-radius:50%; border:1px solid var(--line,#cdcee8); background:var(--card,#fff); color:var(--accent,#5459a3); font-size:20px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center;" style-hover="border-color:var(--accent,#5459a3);">›</button>
+          </div>
+      </div>
+    </div></section>
+
+    <!-- reflection & action -->
+    <section style="background:var(--band,#22233a); color:var(--paper,#eeeefa);">
+      <div style="max-width:1140px; margin:0 auto; padding:calc(var(--pad,1)*80px) 40px;">
+        <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.22em; text-transform:uppercase; color:var(--band-muted,#adaedb); margin-bottom:14px;">Reflection &amp; action</div>
+        <h2 style="font-family:'Newsreader',serif; font-weight:400; font-size:calc(var(--h2,1)*34px); margin:0 0 44px;">Ways to go deeper.</h2>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
+          <a href="endnotes.html" style="display:block; background:var(--band-card,#33344f); border:1px solid var(--band-line,#42457a); border-radius:6px; overflow:hidden; color:var(--paper,#eeeefa);" style-hover="border-color:var(--band-muted,#adaedb);">
+            <div style="aspect-ratio:16/9; overflow:hidden; background:var(--band-deep,#1f2036);"><img src="feature-endnotes.jpg" alt="" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+            <div style="padding:24px 24px 26px;">
+              <h3 style="font-family:'Newsreader',serif; font-weight:500; font-size:22px; margin:0 0 8px;">Book Endnotes</h3>
+              <p style="font-size:15px; line-height:1.55; color:var(--band-body,#c4c6e6); margin:0 0 16px;">The book's endnotes, grouped by chapter, with live hyperlinks to every reference.</p>
+              <span style="font-size:14px; font-weight:600; color:var(--band-body,#bfc0ea);">Browse notes →</span>
+            </div>
+          </a>
+          <a href="discuss.html" style="display:block; background:var(--band-card,#33344f); border:1px solid var(--band-line,#42457a); border-radius:6px; overflow:hidden; color:var(--paper,#eeeefa);" style-hover="border-color:var(--band-muted,#adaedb);">
+            <div style="aspect-ratio:16/9; overflow:hidden; background:var(--band-deep,#1f2036);"><img src="feature-discuss.jpg" alt="" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+            <div style="padding:24px 24px 26px;">
+              <h3 style="font-family:'Newsreader',serif; font-weight:500; font-size:22px; margin:0 0 8px;">Discuss with Friends</h3>
+              <p style="font-size:15px; line-height:1.55; color:var(--band-body,#c4c6e6); margin:0 0 16px;">100 open-ended questions for reflection. Gather friends, read the book, discuss. #Math4HF</p>
+              <span style="font-size:14px; font-weight:600; color:var(--band-body,#bfc0ea);">Start a conversation →</span>
+            </div>
+          </a>
+          <a href="https://francissu.substack.com/p/mathematics-for-human-flourishing" style="display:block; background:var(--band-card,#33344f); border:1px solid var(--band-line,#42457a); border-radius:6px; overflow:hidden; color:var(--paper,#eeeefa);" style-hover="border-color:var(--band-muted,#adaedb);" target="_blank" rel="noopener noreferrer">
+            <div style="aspect-ratio:16/9; overflow:hidden; background:var(--band-deep,#1f2036);"><img src="feature-speech.jpg" alt="" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+            <div style="padding:24px 24px 26px;">
+              <h3 style="font-family:'Newsreader',serif; font-weight:500; font-size:22px; margin:0 0 8px;">The Original Speech</h3>
+              <p style="font-size:15px; line-height:1.55; color:var(--band-body,#c4c6e6); margin:0 0 16px;">The address to a conference of mathematicians that inspired the book.</p>
+              <span style="font-size:14px; font-weight:600; color:var(--band-body,#bfc0ea);">Read the speech ↗</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- author -->
+    <section style="max-width:900px; margin:0 auto; padding:calc(var(--pad,1)*76px) 40px;">
+      <div style="display:grid; grid-template-columns:130px 1fr; gap:32px; align-items:center;">
+        <div style="aspect-ratio:1/1; border-radius:50%; overflow:hidden; background:var(--line,#e2e2f4); border:1px solid var(--band-body,#d3d3ee);"><img src="author-photo.jpg" alt="Francis Su" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted,#6b70b0); margin-bottom:10px;">About the author</div>
+          <p style="font-size:16.5px; line-height:1.65; color:#3b3c54; margin:0 0 14px;">Francis Su is the Benediktsson-Karwa Professor of Mathematics at Harvey Mudd College and a former president of the Mathematical Association of America. In 2013, he received the Haimo Award, a nationwide teaching prize for college math faculty, and in 2018 he won the Halmos-Ford writing award for the highly-acclaimed speech that formed the basis for this book. His work has been profiled in <i>Quanta Magazine</i>, <i>Wired</i>, and <i>The&nbsp;New York Times</i>.</p>
+          <a href="../bio.html" style="font-size:14px; font-weight:600; color:var(--accent,#5459a3);">Read the full bio →</a>
+        </div>
+      </div>
+    </section>
+
+    <footer id="contact" style="background:var(--band-deep,#1f2036); color:var(--band-body,#d3d3ee);">
+      <div style="max-width:1140px; margin:0 auto; padding:calc(var(--pad,1)*76px) 40px calc(var(--pad,1)*40px);">
+        <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:48px; padding-bottom:56px; border-bottom:1px solid var(--band-line,#343552);">
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:14px; letter-spacing:0.22em; text-transform:uppercase; font-weight:700; color:var(--paper,#eeeefa); margin-bottom:18px;">Francis Su</div>
+            <p style="font-family:'Newsreader',serif; font-style:italic; font-size:20px; line-height:1.45; color:#b3b4e2; max-width:22em; margin:0 0 18px;">Author, teacher, and mathematical explorer.</p>
+            <div style="display:flex; gap:16px; align-items:flex-start; max-width:24em;">
+              <a href="index.html" style="flex-shrink:0; display:block;"><img src="flourishing-cover.jpg" alt="Mathematics for Human Flourishing cover" style="width:70px; height:auto; border-radius:2px; display:block; box-shadow:0 6px 16px -8px rgba(0,0,0,0.6);"></a>
+              <p style="font-family: 'Newsreader',serif; font-style: italic; font-size: 15px; line-height: 1.5; color: var(--band-body,#b3b4e2); margin: 0">I don't much like the word 'inspiring,' but damned if I can think of a more suitable word for this book. <span style="font-style:normal; color:var(--band-muted,#9092c4);">—Inside Higher Ed</span></p>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--band-muted,#9092c4); margin-bottom:18px;">Explore</div>
+            <div style="display:flex; flex-direction:column; gap:12px; font-size:15px;">
+              <a href="index.html" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">About the book</a>
+              <a href="endnotes.html" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">Endnotes</a>
+              <a href="discuss.html" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">Discuss with Friends</a>
+              <a href="../books.html" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">All books</a>
+              <a href="../index.html" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">Home</a>
+              <a href="https://francissu.substack.com/" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">Blog ↗</a>
+            </div>
+          </div>
+          <div>
+            <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:var(--band-muted,#9092c4); margin-bottom:18px;">Contact</div>
+            <div style="display:flex; flex-direction:column; gap:12px; font-size:15px; color:var(--band-body,#c4c6e6);">
+              <span>[mylastname] @ math.hmc.edu</span>
+              <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+                <a href="https://www.linkedin.com/in/francissu/" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">LinkedIn</a>
+                <a href="https://bsky.app/profile/mathyawp.bsky.social" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">Bluesky</a>
+                <a href="http://www.facebook.com/francis.su" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">Facebook</a>
+                <a href="https://www.instagram.com/mathyawp" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">Instagram</a>
+                <a href="https://x.com/mathyawp" style="color:var(--band-body,#c4c6e6);" style-hover="color:#fff;">X</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="padding-top:28px; display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; font-size:13px; color:var(--band-muted,#9092c4);">
+          <span>© 2026 Francis Edward Su</span>
+        </div>
+      </div>
+    </footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Periwinkle&quot;,&quot;Lavender&quot;,&quot;Eggplant&quot;,&quot;Magenta&quot;,&quot;Scholarly&quot;,&quot;Sepia&quot;,&quot;Teal&quot;],&quot;default&quot;:&quot;Periwinkle&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Cozy&quot;,&quot;Balanced&quot;,&quot;Airy&quot;],&quot;default&quot;:&quot;Cozy&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;headlines&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Refined&quot;,&quot;Grand&quot;],&quot;default&quot;:&quot;Refined&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;interval&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:5,&quot;min&quot;:3,&quot;max&quot;:14,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Carousel&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { i: 0 };
+    this.quotes = [
+      { quote: "This is perhaps the most important mathematics book of our time. Francis Su shows mathematics is an experience of the mind and, most important, of the heart.", name: "James Tanton", source: "Global Math Project" },
+      { quote: "Please read this beautiful, compelling, galvanizing book if you care about mathematics, social justice, or humanity \u2014 which I hope is everyone.", name: "Eugenia Cheng", source: "The Art of Logic in an Illogical World" },
+      { quote: "The ancient Greeks argued that the best life was filled with beauty, truth, justice, play and love. The mathematician Francis Su knows just where to find them.", name: "Kevin Hartnett", source: "Quanta Magazine" },
+      { quote: "Francis Su believes that math can make us better humans \u2014 and he leads by example. Every page is a work of generosity and compassion. Plus, the puzzles will haunt you for weeks.", name: "Ben Orlin", source: "Math with Bad Drawings" },
+      { quote: "The world desperately needs this all-embracing and deeply human perspective on what mathematics is and why it matters.", name: "Eddie Woo", source: "It's a Numberful World" },
+      { quote: "I was mesmerized by this unusual, sublime book. Original insights and engaging puzzles made me feel young again, discovering a way to Zen and the Art of Mathematics.", name: "Nalini Joshi", source: "University of Sydney" },
+      { quote: "A celebration of mathematics and the human spirit. Learning mathematics enriches our lives, and Su wants everyone to have a seat at the banquet.", name: "Edward Scheinerman", source: "The Mathematics Lover's Companion" },
+      { quote: "\u201CMom, this is really good.\u201D S has not read anything that was not assigned to him since school went remote. So grateful.", name: "Laura Palucki Blake", source: "Mother of a teen" },
+      { quote: "A powerful narrative of mathematical beauty, this book is the antidote for a mathematically fixed mindset.", name: "Talithia Williams", source: "Power in Numbers: The Rebel Women of Mathematics" },
+      { quote: "Francis Su has written a lyrical meditation on the beauty of mathematics and how it connects to our common humanity.", name: "John Urschel", source: "Mind and Matter: A Life in Math and Football" }
+    ];
+    // base-6 roles per palette, taken from the Palettes document
+    this.P = {
+      Periwinkle: { paper:'#eeeefa', accent:'#5459a3', ink:'#1a1a2a', body:'#383a4d', band:'#1f2036', line:'#dcdcef' },
+      Lavender:   { paper:'#f4f1f9', accent:'#5a4b86', ink:'#2e2545', body:'#453a5f', band:'#241c38', line:'#e2daf0' },
+      Eggplant:   { paper:'#f4efe0', accent:'#4d2e57', ink:'#241c28', body:'#413546', band:'#241a29', line:'#e3dbcb' },
+      Magenta:    { paper:'#f9ecf4', accent:'#9c1f63', ink:'#2a1420', body:'#4a2f3f', band:'#2c1622', line:'#ecd7e5' },
+      Scholarly:  { paper:'#f7f5f0', accent:'#2e4a6b', ink:'#1a1917', body:'#403c35', band:'#20303f', line:'#e6e0d5' },
+      Sepia:      { paper:'#f6efe3', accent:'#a15c30', ink:'#2a2016', body:'#4b3d2c', band:'#3a2a1d', line:'#e7dcc9' },
+      Teal:       { paper:'#eef1f0', accent:'#2f635d', ink:'#14201e', body:'#33403d', band:'#10201e', line:'#d7e0dd' }
+    };
+  }
+  _hx(h){ h=h.replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+  _mix(a,b,t){ const x=this._hx(a),y=this._hx(b); const c=k=>Math.round(x[k]+(y[k]-x[k])*t).toString(16).padStart(2,'0'); return '#'+c(0)+c(1)+c(2); }
+  _rgba(h,a){ const x=this._hx(h); return 'rgba('+x[0]+','+x[1]+','+x[2]+','+a+')'; }
+  componentDidMount(){ this._arm(); }
+  componentWillUnmount(){ clearInterval(this._t); }
+  _arm(){ clearInterval(this._t); const ms = (Number(this.props.interval) || 7) * 1000; this._t = setInterval(() => this.setState(s => ({ i: (s.i + 1) % this.quotes.length })), ms); }
+  componentDidUpdate(prev){ if (prev.interval !== this.props.interval) this._arm(); }
+  go(n){ const L = this.quotes.length; this.setState({ i: ((n % L) + L) % L }); this._arm(); }
+  _theme(){
+    const p = this.P[this.props.palette] || this.P.Periwinkle;
+    const m = (a,b,t) => this._mix(a,b,t);
+    const v = {
+      '--paper': p.paper,
+      '--paper2': m(p.paper, p.accent, 0.11),
+      '--paper3': m(p.paper, p.ink, 0.05),
+      '--card': m(p.paper, '#ffffff', 0.62),
+      '--ink': p.ink,
+      '--accent': p.accent,
+      '--accent-dark': m(p.accent, '#000000', 0.26),
+      '--body': p.body,
+      '--sub': m(p.body, p.paper, 0.30),
+      '--muted': m(p.accent, p.paper, 0.42),
+      '--line': p.line,
+      '--band': p.band,
+      '--band-deep': m(p.band, '#000000', 0.22),
+      '--band-card': m(p.band, p.accent, 0.26),
+      '--band-line': m(p.band, p.accent, 0.5),
+      '--band-body': m(p.paper, p.band, 0.28),
+      '--band-muted': m(m(p.accent, p.paper, 0.5), '#ffffff', 0.15),
+      '--qmark': m(p.accent, p.paper, 0.78),
+      '--header': this._rgba(p.paper, 0.88)
+    };
+    const pad = ({ Cozy: 0.72, Balanced: 1, Airy: 1.34 })[this.props.density] ?? 1;
+    const h = ({ Refined: { hero: 1, h2: 1, track: '-0.01em' }, Grand: { hero: 1.22, h2: 1.14, track: '-0.025em' } })[this.props.headlines] || { hero: 1, h2: 1, track: '-0.01em' };
+    v['--pad'] = pad;
+    v['--hero'] = h.hero;
+    v['--h2'] = h.h2;
+    v['--track'] = h.track;
+    return Object.keys(v).map(k => k + ':' + v[k]).join('; ') + ';';
+  }
+  renderVals(){
+    const i = this.state.i, q = this.quotes;
+    const out = {
+      themeVars: this._theme(),
+      prev: () => this.go(i - 1),
+      next: () => this.go(i + 1),
+      dots: q.map((_, k) => ({ color: k === i ? 'var(--accent,#5459a3)' : 'var(--qmark,#c2c3e4)', go: () => this.go(k) }))
+    };
+    for (let k = 0; k < q.length; k++) {
+      out['c' + k] = { pos: k === i ? 'relative' : 'absolute', o: k === i ? 1 : 0, t: k === i ? 'translateX(0)' : 'translateX(' + (k < i ? -28 : 28) + 'px)', pe: k === i ? 'auto' : 'none' };
+    }
+    return out;
+  }
+}
+</script>
+</body>
+</html>
