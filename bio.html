@@ -29,7 +29,9 @@
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
     h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
     .icon-nav { grid-template-columns: repeat(5, 1fr) !important; }
-    .bio-photo { position: static !important; top: auto !important; }
+    .bio-photo { position: static !important; top: auto !important; width: 250px !important; max-width: 250px !important; margin: 0 !important; }
+    .bio-img { width: 100% !important; height: auto !important; aspect-ratio: 1 / 1 !important; object-fit: cover !important; object-position: top !important; }
+    .bio-sec { padding-top: 28px !important; gap: 28px !important; }
   }
 </style>
 </helmet>
@@ -49,14 +51,10 @@
   </header>
 
   <main>
-    <section style="max-width:1140px; margin:0 auto; padding:58px 40px 52px; display:grid; grid-template-columns:1fr 1.3fr; gap:64px; align-items:start;">
+    <section class="bio-sec" style="max-width:1140px; margin:0 auto; padding:58px 40px 52px; display:grid; grid-template-columns:1fr 1.3fr; gap:64px; align-items:start;">
       <div class="bio-photo" style="position:sticky; top:110px;">
-        <div style="border-radius:3px; overflow:hidden; background:#ece7dd; border:1px solid #e2ddd3;">
-          <img src="bio-photo.png" alt="Francis Su" style="width:100%; height:auto; display:block;">
-        </div>
-        <div style="display:flex; flex-direction:column; gap:10px; margin-top:22px;">
-          <a href="cv.pdf" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border:1px solid #4d2e57; border-radius:2px; background:#4d2e57; color:#f4efe0; font-size:14.5px; font-weight:500;" style-hover="background:#38213f; border-color:#38213f;">Curriculum Vitae <span style="color:#c9bcd0;">↗</span></a>
-          <a href="http://math.hmc.edu/su/" style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; border:1px solid #e0d6bf; border-radius:2px; background:#ece5d6; color:#241c28; font-size:14.5px; font-weight:500;" style-hover="background:#e2d9c6; border-color:#d8cdb8;">College webpage <span style="color:#8f8172;">↗</span></a>
+        <div style="max-width:360px; margin:0; border-radius:3px; overflow:hidden; background:#ece7dd; border:1px solid #e2ddd3;">
+          <img class="bio-img" src="bio-photo.png" alt="Francis Su" style="width:100%; height:auto; display:block;">
         </div>
       </div>
       <div>
@@ -68,6 +66,10 @@
           <div style="margin:0 0 22px;"><div>From the Mathematical Association of America, he received the 2018 Halmos-Ford award for mathematical writing, and the 2013 Haimo Award for distinguished teaching of college-level mathematics. His book <i>Mathematics for Human Flourishing</i> (2020), published by Yale University Press, won the 2021 Euler Book Prize, and has been translated into 9 languages. It offers an inclusive vision of what math is, who it’s for, and why anyone should learn it.</div><div><br></div></div>
           
           <p style="margin:0;">This is Su's public-facing website. His scholarly work can be found at his Harvey Mudd College webpage.</p>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:32px;">
+          <a href="cv.pdf" style="display:flex; align-items:center; justify-content:space-between; width:100%; max-width:200px; padding:12px 16px; border:1px solid #4d2e57; border-radius:2px; background:#4d2e57; color:#f4efe0; font-size:14.5px; font-weight:500;" style-hover="background:#38213f; border-color:#38213f;">Curriculum Vitae <span style="color:#c9bcd0;">↗</span></a>
+          <a href="http://math.hmc.edu/su/" style="display:flex; align-items:center; justify-content:space-between; width:100%; max-width:200px; padding:12px 16px; border:1px solid #cbb9d0; border-radius:2px; background:#e6dced; color:#241c28; font-size:14.5px; font-weight:500;" style-hover="background:#dccee4; border-color:#bda6c4;">College webpage <span style="color:#7a5f83;">↗</span></a>
         </div>
 
         
