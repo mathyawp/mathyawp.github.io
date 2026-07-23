@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mathematics for Human Flourishing</title>
+<meta name="description" content="An inclusive vision of what mathematics is, who it's for, and why anyone should learn it — and its power to cultivate virtues that help us flourish.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mathematics for Human Flourishing">
+<meta property="og:description" content="An inclusive vision of what mathematics is, who it's for, and why anyone should learn it — and its power to cultivate virtues that help us flourish.">
+<meta property="og:image" content="https://francissu.com/flourishing-cover.jpg">
+<meta property="og:url" content="https://francissu.com/flourishing/">
+<meta name="twitter:card" content="summary_large_image">
 <script src="../support.js"></script>
 </head>
 <body>
@@ -14,6 +22,7 @@
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
+  body { scroll-behavior: smooth; }
   body { background: var(--paper,#eeeefa); }
   a { color: var(--accent,#5459a3); text-decoration: none; }
   a:hover { color: var(--accent-dark,#3c3f78); }
@@ -39,8 +48,8 @@
     <div style="max-width:1140px; margin:0 auto; padding:16px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
       <a href="../index.html" style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:var(--ink,#1c1d2b); font-weight:700;">Francis&nbsp;Su</a>
       <nav style="display:flex; align-items:center; gap:26px; font-size:14.5px; color:var(--sub,#55566f);">
-        <a href="#reviews" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">↓ Reviews</a>
-        <a href="#praise" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">↓ Praise</a>
+        <a href="#reviews" onClick="{{ scrollToReviews }}" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">↓ Reviews</a>
+        <a href="#praise" onClick="{{ scrollToPraise }}" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">↓ Praise</a>
         
         <a href="discuss.html" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">Discuss</a><a href="endnotes.html" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">Endnotes</a>
         <a href="../books.html" style="color:var(--accent,#5459a3);" style-hover="color:var(--ink,#3c3f78);">↑ All books</a>
@@ -333,6 +342,7 @@ class Component extends DCLogic {
   _arm(){ clearInterval(this._t); const ms = (Number(this.props.interval) || 7) * 1000; this._t = setInterval(() => this.setState(s => ({ i: (s.i + 1) % this.quotes.length })), ms); }
   componentDidUpdate(prev){ if (prev.interval !== this.props.interval) this._arm(); }
   go(n){ const L = this.quotes.length; this.setState({ i: ((n % L) + L) % L }); this._arm(); }
+  scrollToId(id){ return (e) => { if (e && e.preventDefault) e.preventDefault(); const el = document.getElementById(id); if (!el) return; let top = 0, n = el; while (n && n !== document.body) { top += n.offsetTop; n = n.offsetParent; } top -= 20; if (Math.abs(document.body.scrollTop - top) < 2) return; document.body.scrollTo({ top, behavior: 'smooth' }); }; }
   _theme(){
     const p = this.P[this.props.palette] || this.P.Periwinkle;
     const m = (a,b,t) => this._mix(a,b,t);
@@ -369,6 +379,8 @@ class Component extends DCLogic {
     const i = this.state.i, q = this.quotes;
     const out = {
       themeVars: this._theme(),
+      scrollToReviews: this.scrollToId('reviews'),
+      scrollToPraise: this.scrollToId('praise'),
       prev: () => this.go(i - 1),
       next: () => this.go(i + 1),
       dots: q.map((_, k) => ({ color: k === i ? 'var(--accent,#5459a3)' : 'var(--qmark,#c2c3e4)', go: () => this.go(k) }))

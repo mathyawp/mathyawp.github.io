@@ -3,6 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Endnotes for Math4HF</title>
+<meta name="description" content="Endnotes and references for Mathematics for Human Flourishing, grouped by chapter with links to related readings.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Endnotes for Math4HF">
+<meta property="og:description" content="Endnotes and references for Mathematics for Human Flourishing, grouped by chapter with links to related readings.">
+<meta property="og:image" content="https://francissu.com/flourishing-cover.jpg">
+<meta property="og:url" content="https://francissu.com/flourishing/endnotes.html">
+<meta name="twitter:card" content="summary_large_image">
 <script src="../support.js"></script>
 </head>
 <body>
@@ -33,6 +41,20 @@
     .icon-nav { grid-template-columns: repeat(5, 1fr) !important; }
   }
 </style>
+<script>
+document.addEventListener('click', function(e){
+  var a = e.target.closest && e.target.closest('.icon-nav a[href^="#"]');
+  if (!a) return;
+  var el = document.getElementById(a.getAttribute('href').slice(1));
+  if (!el) return;
+  e.preventDefault();
+  var top = 0, n = el;
+  while (n && n !== document.body) { top += n.offsetTop; n = n.offsetParent; }
+  top -= 20;
+  if (Math.abs(document.body.scrollTop - top) < 2) return;
+  document.body.scrollTo({ top: top, behavior: 'smooth' });
+});
+</script>
 </helmet>
 <div style="background:#eeeefa; color:#1c1d2b; font-family:'Public Sans',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh;">
 
@@ -40,8 +62,8 @@
     <div style="max-width:1140px; margin:0 auto; padding:16px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
       <a href="../index.html" style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:#1c1d2b; font-weight:700;">Francis&nbsp;Su</a>
       <nav style="display:flex; align-items:center; gap:26px; font-size:14.5px; color:#55566f;">
-        <a href="index.html" style="color:#5459a3;" style-hover="color:#3c3f78;">↑ The book</a>
         <a href="discuss.html" style="color:#55566f;" style-hover="color:#1c1d2b;">Discuss</a><a href="endnotes.html" style="color:#5459a3; font-weight:600;">Endnotes</a>
+        <a href="index.html" style="margin-left:auto; color:#5459a3;" style-hover="color:#3c3f78;">↑ The book</a>
       </nav>
     </div>
   </header>
@@ -69,13 +91,14 @@
           <a href="#n12" title="Ch 12 · Community" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="../icon-ch12.jpg" alt="Community" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">12 · Community</span></a>
           <a href="#n13" title="Ch 13 · Love" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#55566f;" style-hover="color:#1c1d2b;"><img src="../icon-ch13.jpg" alt="Love" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">13 · Love</span></a>
         </div>
+        <p style="font-size:13.5px; line-height:1.6; color:#8385ad; margin:16px 0 0; text-align:right;">Chapter icons designed by <a href="https://carlolsen.net/">Carl Olsen</a>.</p>
       </div>
     </section>
 
     <!-- 1 -->
-    <section id="n1" style="background:#f1eff9; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n1" style="background:#f1eff9; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch01.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 1</div>
@@ -104,9 +127,9 @@
     </section>
 
     <!-- 2 -->
-    <section id="n2" style="background:#e7e5f3; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n2" style="background:#e7e5f3; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch02.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 2</div>
@@ -133,9 +156,9 @@
     </section>
 
     <!-- 3 -->
-    <section id="n3" style="background:#ece5f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n3" style="background:#ece5f4; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch03.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 3</div>
@@ -156,9 +179,9 @@
     </section>
 
     <!-- 4 -->
-    <section id="n4" style="background:#e4e7f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n4" style="background:#e4e7f4; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch04.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 4</div>
@@ -185,9 +208,9 @@
     </section>
 
     <!-- 5 -->
-    <section id="n5" style="background:#f1eff9; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n5" style="background:#f1eff9; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch05.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 5</div>
@@ -214,9 +237,9 @@
     </section>
 
     <!-- 6 -->
-    <section id="n6" style="background:#e7e5f3; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n6" style="background:#e7e5f3; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch06.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 6</div>
@@ -236,9 +259,9 @@
     </section>
 
     <!-- 7 -->
-    <section id="n7" style="background:#ece5f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n7" style="background:#ece5f4; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch07.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 7</div>
@@ -259,9 +282,9 @@
     </section>
 
     <!-- 8 -->
-    <section id="n8" style="background:#e4e7f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n8" style="background:#e4e7f4; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch08.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 8</div>
@@ -283,9 +306,9 @@
     </section>
 
     <!-- 9 -->
-    <section id="n9" style="background:#f1eff9; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n9" style="background:#f1eff9; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch09.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 9</div>
@@ -307,9 +330,9 @@
     </section>
 
     <!-- 10 -->
-    <section id="n10" style="background:#e7e5f3; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n10" style="background:#e7e5f3; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch10.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 10</div>
@@ -334,9 +357,9 @@
     </section>
 
     <!-- 11 -->
-    <section id="n11" style="background:#ece5f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n11" style="background:#ece5f4; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch11.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 11</div>
@@ -358,9 +381,9 @@
     </section>
 
     <!-- 12 -->
-    <section id="n12" style="background:#e4e7f4; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n12" style="background:#e4e7f4; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch12.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 12</div>
@@ -388,9 +411,9 @@
     </section>
 
     <!-- 13 -->
-    <section id="n13" style="background:#f1eff9; padding:48px 0; border-top:1px solid #cfc9e4;">
+    <section id="n13" style="background:#f1eff9; padding:0 0 48px;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
         <img src="../icon-ch13.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#6b70b0; margin-bottom:2px;">Chapter 13</div>
