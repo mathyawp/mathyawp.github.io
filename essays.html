@@ -28,12 +28,13 @@
   ::selection { background: #e7dcec; }
 
   /* --- mobile responsiveness --- */
-  html { overflow-x: hidden; }
-  html, body { max-width: 100%; }
+  html, body { overflow-x: clip; max-width: 100%; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  [style*="grid-template-columns"] > * { min-width: 0; }
   img { max-width: 100%; height: auto; }
   @media (max-width: 760px) {
     [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
-    [style*="margin:0 auto"] { padding-left: 22px !important; padding-right: 22px !important; }
+    [style*="margin:0 auto"], [style*="margin: 0px auto"] { padding-left: 22px !important; padding-right: 22px !important; }
     header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
     h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }

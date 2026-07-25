@@ -19,12 +19,13 @@
   ::selection { background: #e7dcec; }
 
   /* --- mobile responsiveness --- */
-  html { overflow-x: hidden; }
-  html, body { max-width: 100%; }
+  html, body { overflow-x: clip; max-width: 100%; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  [style*="grid-template-columns"] > * { min-width: 0; }
   img { max-width: 100%; height: auto; }
   @media (max-width: 760px) {
     [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
-    [style*="margin:0 auto"] { padding-left: 22px !important; padding-right: 22px !important; }
+    [style*="margin:0 auto"], [style*="margin: 0px auto"] { padding-left: 22px !important; padding-right: 22px !important; }
     header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
     h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
@@ -72,7 +73,7 @@
       <div style="grid-area: body;">
         <p style="font-size: 19px; line-height: 1.65; color: var(--body,#413546); max-width: 33em; margin: 0px 0px 36px;">I teach, explore, and write about the beauty and joy of mathematics and the dignity of human beings. My work explores what math is, who it is for, and how good teaching can help people find more belonging in it.<br><br>I'm the Benediktsson-Karwa Professor of Mathematics at Harvey Mudd College, a former president of the Mathematical Association of America, and the author of <a href="#book" style="border-bottom: 1px solid rgb(185, 196, 210);"><i>Mathematics for Human Flourishing</i></a>.</p>
         <div style="display: flex; flex-wrap: wrap; gap: 14px;">
-          <a href="bio.html" class="scp1" style="display: inline-flex; align-items: center; padding: 13px 24px; background: var(--ink,#241c28); color: var(--paper,#f4efe0); font-size: 15px; font-weight: 500; border-radius: 2px;">See my bio</a>
+          <a href="bio.html" class="scp1" style="display: inline-flex; align-items: center; padding: 13px 24px; background: var(--ink,#241c28); color: var(--paper,#f4efe0); font-size: 15px; font-weight: 500; border-radius: 2px;">my bio</a>
           <a href="cv.pdf" target="_blank" class="scp2" style="display: inline-flex; align-items: center; padding: 13px 24px; background: var(--accent,#4d2e57); color: var(--paper,#f4efe0); font-size: 15px; font-weight: 500; border-radius: 2px;">my CV ↗</a>
           <a href="https://math.hmc.edu/su/" class="scp3" style="display: inline-flex; align-items: center; padding: 13px 24px; background: var(--line,#e3dccb); border: 1px solid var(--line,#d8cdb8); color: rgb(36, 28, 40); font-size: 15px; font-weight: 500; border-radius: 2px;">my College site ↗</a>
         </div>
@@ -208,7 +209,7 @@
         <div>
           <div style="font-family: &quot;Space Mono&quot;, monospace; font-size: 13px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted,#8f8172); margin-bottom: 16px;">AN ENCOURAGEMENT</div>
           <h2 style="font-family: Newsreader, serif; font-weight: 400; font-size: calc(var(--h2,1)*34px); line-height: 1.18; margin: 0px 0px 22px;">Yes, you are a math person.</h2>
-          <p style="font-size: 17px; line-height: 1.68; color: var(--body,#413546); max-width: 34em; margin: 0px 0px 16px;">I hope the work gathered here helps you see aspects of yourself in mathematics, not because math is impressive of useful, but because math is bound up with deeply human desires—for play, beauty, truth, justice, freedom, and community. Those desires are already part of you, and they can awaken the mathematical nature within.<br><br>Believe that you and everyone in your life can flourish in mathematics.</p>
+          <p style="font-size: 17px; line-height: 1.68; color: var(--body,#413546); max-width: 34em; margin: 0px 0px 16px;">I hope the work gathered here helps you see aspects of yourself in mathematics, not because math is impressive or useful, but because math is bound up with deeply human desires—for play, beauty, truth, justice, freedom, and community. Those desires are already part of you, and they can awaken the mathematical nature within.<br><br>Believe that you and everyone in your life can flourish in mathematics.</p>
         </div>
       </div>
     </section>
