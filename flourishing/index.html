@@ -34,6 +34,8 @@
   @media (max-width: 760px) {
     [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
     [style*="columns:3"] { columns: 1 !important; }
+    [style*="aspect-ratio: 2 / 3"] { max-width: 300px !important; margin-left: auto !important; margin-right: auto !important; }
+    header nav a[href="#reviews"], header nav a[href="#praise"] { display: none !important; }
     [style*="margin:0 auto"] { padding-left: 22px !important; padding-right: 22px !important; }
     header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
@@ -44,15 +46,15 @@
 </helmet>
 <div style="background:var(--paper,#eeeefa); color:var(--ink,#1c1d2b); font-family:'Public Sans',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; {{ themeVars }}">
 
-  <header style="position:sticky; top:0; z-index:50; background:var(--header,rgba(238,238,250,0.88)); backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid var(--line,#dcdcef);">
+  <header style="position:sticky; top:0; z-index:50; background:var(--accent,#5a4b86); backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid var(--accent-dark,#433863);">
     <div style="max-width:1140px; margin:0 auto; padding:16px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
-      <a href="../index.html" style="font-family:'Space Mono',monospace; font-size:15px; letter-spacing:0.2em; text-transform:uppercase; color:var(--ink,#1c1d2b); font-weight:700;">Francis&nbsp;Su</a>
-      <nav style="display:flex; align-items:center; gap:26px; font-size:14.5px; color:var(--sub,#55566f);">
-        <a href="#reviews" onClick="{{ scrollToReviews }}" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">↓ Reviews</a>
-        <a href="#praise" onClick="{{ scrollToPraise }}" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">↓ Praise</a>
+      <a href="../index.html" style="font-family:'Space Mono',monospace; font-size:15px; letter-spacing:0.2em; text-transform:uppercase; color:#f4f1f9; font-weight:700;">Francis&nbsp;Su</a>
+      <nav style="display:flex; align-items:center; gap:26px; font-size:14.5px; color:rgba(244,241,249,0.82);">
+        <a href="#reviews" onClick="{{ scrollToReviews }}" style="color:rgba(244,241,249,0.82);" style-hover="color:#ffffff;">↓ Reviews</a>
+        <a href="#praise" onClick="{{ scrollToPraise }}" style="color:rgba(244,241,249,0.82);" style-hover="color:#ffffff;">↓ Praise</a>
         
-        <a href="discuss.html" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">Discuss</a><a href="endnotes.html" style="color:var(--sub,#55566f);" style-hover="color:var(--ink,#1c1d2b);">Endnotes</a>
-        <a href="../books.html" style="margin-left:auto; color:var(--accent,#5459a3);" style-hover="color:var(--ink,#3c3f78);">↑ All books</a>
+        <a href="discuss.html" style="color:rgba(244,241,249,0.82);" style-hover="color:#ffffff;">Discuss</a><a href="endnotes.html" style="color:rgba(244,241,249,0.82);" style-hover="color:#ffffff;">Endnotes</a>
+        <a href="../books.html" style="margin-left:auto; color:#ffffff; font-weight:600;" style-hover="color:rgba(244,241,249,0.82);">↑ All books</a>
       </nav>
     </div>
   </header>
@@ -223,7 +225,7 @@
         <h2 style="font-family:'Newsreader',serif; font-weight:400; font-size:calc(var(--h2,1)*34px); margin:0 0 44px;">Ways to go deeper.</h2>
         <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px;">
           <a href="endnotes.html" style="display:block; background:var(--band-card,#33344f); border:1px solid var(--band-line,#42457a); border-radius:6px; overflow:hidden; color:var(--paper,#eeeefa);" style-hover="border-color:var(--band-muted,#adaedb);">
-            <div style="aspect-ratio:16/9; overflow:hidden; background:var(--band-deep,#1f2036);"><img src="../feature-endnotes.jpg" alt="" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+            <div style="width:150px; height:150px; overflow:hidden; border-radius:6px; background:var(--band-deep,#1f2036); margin:24px auto 0;"><img src="../feature-endnotes.jpg" alt="" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
             <div style="padding:24px 24px 26px;">
               <h3 style="font-family:'Newsreader',serif; font-weight:500; font-size:22px; margin:0 0 8px;">Book Endnotes</h3>
               <p style="font-size:15px; line-height:1.55; color:var(--band-body,#c4c6e6); margin:0 0 16px;">The book's endnotes, grouped by chapter, with live hyperlinks to every reference.</p>
@@ -231,7 +233,7 @@
             </div>
           </a>
           <a href="discuss.html" style="display:block; background:var(--band-card,#33344f); border:1px solid var(--band-line,#42457a); border-radius:6px; overflow:hidden; color:var(--paper,#eeeefa);" style-hover="border-color:var(--band-muted,#adaedb);">
-            <div style="aspect-ratio:16/9; overflow:hidden; background:var(--band-deep,#1f2036);"><img src="../feature-discuss.jpg" alt="" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+            <div style="width:150px; height:150px; overflow:hidden; border-radius:6px; background:var(--band-deep,#1f2036); margin:24px auto 0;"><img src="../feature-discuss.jpg" alt="" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
             <div style="padding:24px 24px 26px;">
               <h3 style="font-family:'Newsreader',serif; font-weight:500; font-size:22px; margin:0 0 8px;">Discuss with Friends</h3>
               <p style="font-size:15px; line-height:1.55; color:var(--band-body,#c4c6e6); margin:0 0 16px;">100 open-ended questions for reflection. Gather friends, read the book, discuss. #Math4HF</p>
@@ -239,7 +241,7 @@
             </div>
           </a>
           <a href="https://francissu.substack.com/p/mathematics-for-human-flourishing" style="display:block; background:var(--band-card,#33344f); border:1px solid var(--band-line,#42457a); border-radius:6px; overflow:hidden; color:var(--paper,#eeeefa);" style-hover="border-color:var(--band-muted,#adaedb);" target="_blank" rel="noopener noreferrer">
-            <div style="aspect-ratio:16/9; overflow:hidden; background:var(--band-deep,#1f2036);"><img src="../feature-speech.jpg" alt="" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
+            <div style="width:150px; height:150px; overflow:hidden; border-radius:6px; background:var(--band-deep,#1f2036); margin:24px auto 0;"><img src="../feature-speech.jpg" alt="" style="width:100%; height:100%; object-fit:cover; display:block;"></div>
             <div style="padding:24px 24px 26px;">
               <h3 style="font-family:'Newsreader',serif; font-weight:500; font-size:22px; margin:0 0 8px;">The Original Speech</h3>
               <p style="font-size:15px; line-height:1.55; color:var(--band-body,#c4c6e6); margin:0 0 16px;">The address to a conference of mathematicians that inspired the book.</p>
@@ -306,7 +308,7 @@
   </main>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Periwinkle&quot;,&quot;Lavender&quot;,&quot;Eggplant&quot;,&quot;Magenta&quot;,&quot;Scholarly&quot;,&quot;Sepia&quot;,&quot;Teal&quot;],&quot;default&quot;:&quot;Periwinkle&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Cozy&quot;,&quot;Balanced&quot;,&quot;Airy&quot;],&quot;default&quot;:&quot;Cozy&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;headlines&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Refined&quot;,&quot;Grand&quot;],&quot;default&quot;:&quot;Refined&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;interval&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:5,&quot;min&quot;:3,&quot;max&quot;:14,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Carousel&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Periwinkle&quot;,&quot;Lavender&quot;,&quot;Eggplant&quot;,&quot;Magenta&quot;,&quot;Scholarly&quot;,&quot;Sepia&quot;,&quot;Teal&quot;],&quot;default&quot;:&quot;Lavender&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Cozy&quot;,&quot;Balanced&quot;,&quot;Airy&quot;],&quot;default&quot;:&quot;Cozy&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;headlines&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Refined&quot;,&quot;Grand&quot;],&quot;default&quot;:&quot;Refined&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Feel&quot;},&quot;interval&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:5,&quot;min&quot;:3,&quot;max&quot;:14,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Carousel&quot;}}">
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -342,7 +344,7 @@ class Component extends DCLogic {
   _arm(){ clearInterval(this._t); const ms = (Number(this.props.interval) || 7) * 1000; this._t = setInterval(() => this.setState(s => ({ i: (s.i + 1) % this.quotes.length })), ms); }
   componentDidUpdate(prev){ if (prev.interval !== this.props.interval) this._arm(); }
   go(n){ const L = this.quotes.length; this.setState({ i: ((n % L) + L) % L }); this._arm(); }
-  scrollToId(id){ return (e) => { if (e && e.preventDefault) e.preventDefault(); const el = document.getElementById(id); if (!el) return; let top = 0, n = el; while (n && n !== document.body) { top += n.offsetTop; n = n.offsetParent; } top -= 20; if (Math.abs(document.body.scrollTop - top) < 2) return; document.body.scrollTo({ top, behavior: 'smooth' }); }; }
+  scrollToId(id){ return (e) => { if (e && e.preventDefault) e.preventDefault(); const el = document.getElementById(id); if (!el) return; let top = 0, n = el; while (n && n !== document.body) { top += n.offsetTop; n = n.offsetParent; } const hdr = document.querySelector('header'); top -= (hdr ? hdr.offsetHeight : 0); if (Math.abs(document.body.scrollTop - top) < 2) return; document.body.scrollTo({ top, behavior: 'smooth' }); }; }
   _theme(){
     const p = this.P[this.props.palette] || this.P.Periwinkle;
     const m = (a,b,t) => this._mix(a,b,t);
