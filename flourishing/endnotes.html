@@ -27,7 +27,13 @@
   a:hover { color: #433863; }
   ::selection { background: #e8e2f4; }
   ol.n > li { margin-bottom: 12px; padding-left: 6px; }
-  @media (max-width: 640px) { .icon-nav span { display: none; } }
+
+  details.acc > summary { list-style: none; cursor: pointer; }
+  details.acc > summary::-webkit-details-marker { display: none; }
+  details.acc > summary:hover h2 { color: #5a4b86; }
+  details.acc > summary .acc-mark::after { content: "+"; }
+  details.acc[open] > summary .acc-mark::after { content: "\2212"; }
+  @media (max-width: 640px) { .acc-count { display: none; } }
 
   /* --- mobile responsiveness --- */
   html, body { overflow-x: hidden; max-width: 100%; }
@@ -38,29 +44,35 @@
     header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
     h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
-    .icon-nav { grid-template-columns: repeat(5, 1fr) !important; }
   }
 </style>
 <script>
-document.addEventListener('click', function(e){
-  var a = e.target.closest && e.target.closest('.icon-nav a[href^="#"]');
-  if (!a) return;
-  var el = document.getElementById(a.getAttribute('href').slice(1));
-  if (!el) return;
-  e.preventDefault();
-  var top = 0, n = el;
-  while (n && n !== document.body) { top += n.offsetTop; n = n.offsetParent; }
-  top -= 20;
-  if (Math.abs(document.body.scrollTop - top) < 2) return;
-  document.body.scrollTo({ top: top, behavior: 'smooth' });
-});
+(function(){
+  function openTarget(el){ var d = el && el.querySelector ? el.querySelector('details.acc') : null; if (d) d.open = true; }
+  function headerH(){ var h = document.querySelector('header'); return h ? h.offsetHeight : 0; }
+  document.addEventListener('click', function(e){
+    var t = e.target.closest && e.target.closest('[data-acc-all]');
+    if (t) {
+      var want = t.getAttribute('data-acc-all') === 'open';
+      Array.prototype.forEach.call(document.querySelectorAll('details.acc'), function(d){ d.open = want; });
+      return;
+    }
+  });
+  function openFromHash(){
+    if (!location.hash) return;
+    openTarget(document.getElementById(decodeURIComponent(location.hash.slice(1))));
+  }
+  window.addEventListener('load', openFromHash);
+  setTimeout(openFromHash, 600);
+  setTimeout(openFromHash, 1600);
+})();
 </script>
 </helmet>
 <div style="background:#f4f1f9; color:#2e2545; font-family:'Public Sans',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh;">
 
   <header style="position:sticky; top:0; z-index:50; background:#5a4b86; backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid #433863;">
     <div style="max-width:1140px; margin:0 auto; padding:16px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
-      <a href="../index.html" style="font-family:'Space Mono',monospace; font-size:15px; letter-spacing:0.2em; text-transform:uppercase; color:#f4f1f9; font-weight:700;">Francis&nbsp;Su</a>
+      <a href="/" style="font-family:'Space Mono',monospace; font-size:15px; letter-spacing:0.2em; text-transform:uppercase; color:#f4f1f9; font-weight:700;">Francis&nbsp;Su</a>
       <nav style="display:flex; align-items:center; gap:26px; font-size:14.5px; color:rgba(244,241,249,0.82);">
         <a href="discuss.html" style="color:rgba(244,241,249,0.82);" style-hover="color:#ffffff;">Discuss</a><a href="endnotes.html" style="color:#ffffff; font-weight:600;">Endnotes</a>
         <a href="index.html" style="margin-left:auto; color:#ffffff;" style-hover="color:rgba(244,241,249,0.82);">↑ The book</a>
@@ -69,46 +81,38 @@ document.addEventListener('click', function(e){
   </header>
 
   <main>
-    <section style="max-width:800px; margin:0 auto; padding:52px 40px 26px;">
+    <section style="max-width:800px; margin:0 auto; padding:52px 40px 12px;">
       <a href="index.html" style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#7a6ba0;">Mathematics for Human Flourishing</a>
       <h1 style="font-family:'Newsreader',serif; font-weight:400; font-size:52px; line-height:1.05; letter-spacing:-0.01em; margin:16px 0 22px;">Endnotes</h1>
       <p style="font-size:19px; line-height:1.65; color:#43385c; max-width:34em; margin:0;">The book's endnotes, grouped by chapter, with hyperlinks to references. Page numbers and full citations follow the printed edition.</p>
 
-      <div style="margin-top:34px; padding-top:30px; border-top:1px solid #e2daf0;">
-        <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:16px;">Click icons to navigate quickly to chapter headings</div>
-        <div class="icon-nav" style="display:grid; grid-template-columns:repeat(7,1fr); gap:14px;">
-          <a href="#n1" title="Ch 1 · Flourishing" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch01.jpg" alt="Flourishing" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">1 · Flourishing</span></a>
-          <a href="#n2" title="Ch 2 · Exploration" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch02.jpg" alt="Exploration" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">2 · Exploration</span></a>
-          <a href="#n3" title="Ch 3 · Meaning" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch03.jpg" alt="Meaning" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">3 · Meaning</span></a>
-          <a href="#n4" title="Ch 4 · Play" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch04.jpg" alt="Play" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">4 · Play</span></a>
-          <a href="#n5" title="Ch 5 · Beauty" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch05.jpg" alt="Beauty" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">5 · Beauty</span></a>
-          <a href="#n6" title="Ch 6 · Permanence" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch06.jpg" alt="Permanence" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">6 · Permanence</span></a>
-          <a href="#n7" title="Ch 7 · Truth" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch07.jpg" alt="Truth" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">7 · Truth</span></a>
-          <a href="#n8" title="Ch 8 · Struggle" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch08.jpg" alt="Struggle" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">8 · Struggle</span></a>
-          <a href="#n9" title="Ch 9 · Power" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch09.jpg" alt="Power" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">9 · Power</span></a>
-          <a href="#n10" title="Ch 10 · Justice" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch10.jpg" alt="Justice" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">10 · Justice</span></a>
-          <a href="#n11" title="Ch 11 · Freedom" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch11.jpg" alt="Freedom" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">11 · Freedom</span></a>
-          <a href="#n12" title="Ch 12 · Community" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch12.jpg" alt="Community" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">12 · Community</span></a>
-          <a href="#n13" title="Ch 13 · Love" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch13.jpg" alt="Love" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">13 · Love</span></a>
+      <p style="font-size:13.5px; line-height:1.6; color:#8b7ea8; margin:14px 0 0;">Chapter icons designed by <a href="https://carlolsen.net/">Carl Olsen</a>.</p>
+
+      <div style="margin-top:26px; background:#b9b1d8; padding:10px 14px; margin-left:-14px; margin-right:-14px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+          <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#3b3158;">Click icons to open</div>
+          <div style="display:flex; align-items:center; gap:14px;">
+            <button type="button" data-acc-all="open" style="appearance:none; -webkit-appearance:none; background:none; border:0; padding:0; cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#3b3158;" style-hover="color:#241c38;">Expand all</button><span style="color:#8d80ab;">·</span><button type="button" data-acc-all="close" style="appearance:none; -webkit-appearance:none; background:none; border:0; padding:0; cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#3b3158;" style-hover="color:#241c38;">Collapse all</button>
+          </div>
         </div>
-        <p style="font-size:13.5px; line-height:1.6; color:#8b7ea8; margin:16px 0 0; text-align:right;">Chapter icons designed by <a href="https://carlolsen.net/">Carl Olsen</a>.</p>
       </div>
     </section>
 
     <!-- 1 -->
-    <section id="n1" style="background:#f6f3fb; padding:0 0 48px;">
+    <section id="n1" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch01.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 1</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Flourishing</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch01.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 1</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Flourishing</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">15 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraph. Simone Weil, <a href="https://amzn.to/2V0YK2W">Gravity and Grace</a> (Putnam's Sons, 1952), 188.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>Simone Weil, <a href="https://amzn.to/2Ygz3h0">Waiting for God</a> (Routledge &amp; K. Paul, 1951), 64.</li>
-        <li>Scott Taylor, "Mathematics and the Love of God: An Introduction to the Thought of Simone Weil," <a href="http://colby.edu/~sataylor/SimoneWeil.pdf">colby.edu</a>.</li>
+        <li>Scott Taylor, "Mathematics and the Love of God: An Introduction to the Thought of Simone Weil," <a href="https://colby.edu/~sataylor/SimoneWeil.pdf">colby.edu</a>.</li>
         <li>Maurice Mashaal, <a href="https://amzn.to/37MKCiZ">Bourbaki: A Secret Society of Mathematicians</a> (AMS, 2006), 109–13.</li>
         <li>Sylvie Weil, <a href="https://amzn.to/2YMiIzq">At Home with André and Simone Weil</a> (Northwestern University Press, 2010).</li>
         <li>Throughout 2018 the top four public companies by market cap were technology companies — Apple, Alphabet, Microsoft, Amazon; the top ten included Tencent, Alibaba, and Facebook.</li>
@@ -123,48 +127,54 @@ document.addEventListener('click', function(e){
         <li>See Ubiratan D'Ambrosio on ethno-mathematics; Reuben Hersh, <a href="https://amzn.to/3140fkK">What Is Mathematics, Really?</a> (Oxford, 1997); Rochelle Gutiérrez, "The Need to Rehumanize Mathematics," in <a href="https://www.nctm.org/Store/Products/Annual-Perspectives-in-Math-Ed-2018-(Download)/">Rehumanizing Mathematics</a> (NCTM, 2018), 1–10.</li>
         <li>Joshua Wilkerson, <a href="https://digital.library.txstate.edu/handle/10877/6611">"Cultivating Mathematical Affections"</a> (PhD thesis, Texas State University, 2017), 1.</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 2 -->
-    <section id="n2" style="background:#ede8f4; padding:0 0 48px;">
+    <section id="n2" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch02.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 2</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Exploration</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch02.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 2</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Exploration</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">13 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. Maryam Mirzakhani, quoted in Bjorn Carey, <a href="https://news.stanford.edu/news/2014/august/fields-medal-mirzakhani-081214.html">"Stanford's Maryam Mirzakhani Wins Fields Medal"</a> (2014); Eugenia Cheng, <a href="https://amzn.to/2Yj5hbx">How to Bake Pi</a> (Basic Books, 2015), 2.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>John Joseph Fahie, Galileo: His Life and Work (James Pott, 1903), 114.</li>
-        <li>Blaine Friedlander, <a href="http://news.cornell.edu/stories/2017/10/keep-saturns-ring-contained-its-moons-stand-united">"To Keep Saturn's A Ring Contained…"</a> Cornell Chronicle (2017).</li>
+        <li>Blaine Friedlander, <a href="https://news.cornell.edu/stories/2017/10/keep-saturns-ring-contained-its-moons-stand-united">"To Keep Saturn's A Ring Contained…"</a> Cornell Chronicle (2017).</li>
         <li>Paul Lockhart, "A Mathematician's Lament" (2002), in Keith Devlin, <a href="https://www.maa.org/external_archive/devlin/devlin_03_08.html">"Lockhart's Lament"</a> (2008).</li>
         <li>Achi and other games appear in the MIND Research Institute's <a href="https://www.mindresearch.org/mathminds-games">South of the Sahara game box</a>.</li>
         <li>I have not seen any definitive source that resolves these ambiguities.</li>
         <li>Claudia Zaslavsky, <a href="https://amzn.to/31dqe9J">Math Games &amp; Activities from Around the World</a> (Chicago Review Press, 1998).</li>
-        <li>Fawn Nguyen, <a href="http://fawnnguyen.com/these-twenty-things/">"These Twenty Things,"</a> Finding Ways (2016).</li>
+        <li>Fawn Nguyen, <a href="https://fawnnguyen.com/these-twenty-things/">"These Twenty Things,"</a> Finding Ways (2016).</li>
         <li>Kevin Hartnett, <a href="https://www.quantamagazine.org/mathematicians-seal-back-door-to-breaking-rsa-encryption-20181217/">"Mathematicians Seal Back Door to Breaking RSA Encryption,"</a> Quanta (2018); Mishra &amp; Bhushan, <a href="https://link.springer.com/article/10.1007/s00285-011-0488-3">"Knot Theory in Understanding Proteins"</a> (2012); Budd &amp; Mitchell, <a href="https://plus.maths.org/content/saving-lives-mathematics-tomography">"Saving Lives: The Mathematics of Tomography"</a> (2008).</li>
         <li>The <a href="https://artofproblemsolving.com/">Art of Problem Solving</a> website.</li>
         <li>Ben Orlin, <a href="https://amzn.to/3dhp1k0">Math with Bad Drawings</a> (Black Dog &amp; Leventhal, 2018), 10–12.</li>
         <li>Wayfinding was featured in Disney's <a href="https://amzn.to/2Ni0qRk">Moana</a> (2016). "Star of gladness" refers to Arcturus.</li>
         <li>Richard Schiffman, <a href="https://www.scientificamerican.com/article/fantastic-voyage-polynesian-seafaring-canoe-completes-its-globe-circling-journey/">"Fantastic Voyage…"</a> Scientific American (2017).</li>
-        <li>Cheryl Ernst, <a href="http://www.hawaii.edu/malamalama/2010/07/ethnomathematics/">"Ethnomathematics Makes Difficult Subject Relevant,"</a> Mālamalama (2010).</li>
+        <li>Cheryl Ernst, <a href="https://www.hawaii.edu/malamalama/2010/07/ethnomathematics/">"Ethnomathematics Makes Difficult Subject Relevant,"</a> Mālamalama (2010).</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 3 -->
-    <section id="n3" style="background:#efe8f6; padding:0 0 48px;">
+    <section id="n3" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch03.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 3</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Meaning</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch03.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 3</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Meaning</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">7 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. Sónya Kovalévsky, Recollections of Childhood (Century, 1895), 316; Jorge Luis Borges, <a href="https://amzn.to/2NlC9K5">This Craft of Verse</a> (Harvard, 2002), 22.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>For an amusing parallel, search news coverage of President Obama's <a href="https://www.youtube.com/watch?v=ep9bomhKXt8">car getting stuck</a> at the US Embassy in Dublin (2011).</li>
@@ -175,19 +185,22 @@ document.addEventListener('click', function(e){
         <li>William Byers, <a href="https://amzn.to/3hLH8lt">How Mathematicians Think</a> (Princeton, 2007).</li>
         <li>Keith Devlin, <a href="https://amzn.to/2Ygc8Cq">Mathematics: The Science of Patterns</a> (1997); Lynn Steen, <a href="https://science.sciencemag.org/content/240/4852/611">"The Science of Patterns,"</a> Science 240 (1988): 611–16.</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 4 -->
-    <section id="n4" style="background:#eae5f4; padding:0 0 48px;">
+    <section id="n4" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch04.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 4</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Play</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch04.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 4</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Play</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">13 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. Martin Buber, <a href="https://amzn.to/3hPvmX9">Pointing the Way</a> (Harper &amp; Row, 1963), 21; Sophie Germain, in Ioan James, <a href="https://amzn.to/3eltaET">Remarkable Mathematicians</a> (Cambridge, 2002), 58.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>Johan Huizinga, <a href="https://amzn.to/2Bu0yKM">Homo Ludens: A Study in the Play-Element of Culture</a> (Routledge &amp; Kegan Paul, 1949).</li>
@@ -204,19 +217,22 @@ document.addEventListener('click', function(e){
         <li>See PM Lee Hsien Loong's remarks in <a href="https://www.washingtonpost.com/news/reliable-source/wp/2016/08/02/full-transcript-prime-minister-lee-hsien-loongs-toast-at-the-singapore-state-dinner/">"Full Transcript… Singapore State Dinner"</a> (2016).</li>
         <li>"Republic," trans. Shorey, in <a href="https://amzn.to/3elgGgu">The Collected Dialogues of Plato</a> (Princeton, 1961), 768 (7.536e).</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 5 -->
-    <section id="n5" style="background:#f6f3fb; padding:0 0 48px;">
+    <section id="n5" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch05.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 5</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Beauty</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch05.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 5</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Beauty</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">13 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. "Autobiography of Olga Taussky-Todd" (Caltech Archives, 1980), 6; David Blackwell, in <a href="https://amzn.to/2zSYc86">Mathematical People</a> (A. K. Peters, 2008), 21.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li><a href="https://www.claymath.org/library/annual_report/ar2008/08Interview.pdf">"Interview with Research Fellow Maryam Mirzakhani,"</a> Clay Mathematics Institute (2008), 13.</li>
@@ -233,20 +249,23 @@ document.addEventListener('click', function(e){
         <li>C. S. Lewis, <a href="https://amzn.to/3dkeeW3">The Weight of Glory</a> (Macmillan, 1949), 7.</li>
         <li>Barbara Oakley, <a href="https://www.nytimes.com/2018/08/07/opinion/stem-girls-math-practice.html">"Make Your Daughter Practice Math…"</a> NYT (2018).</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 6 -->
-    <section id="n6" style="background:#ede8f4; padding:0 0 48px;">
+    <section id="n6" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch06.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 6</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Permanence</h2>
-        </div>
-      </div>
-      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. Bernhard Riemann, <a href="https://doi.org/10.5840/monist19001029">"On the Psychology of Metaphysics"</a> (1900), 198; Tai-Danae Bradley, <a href="http://mathematicallygiftedandblack.com/rising-stars/tai-danae-bradley/">Mathematically Gifted and Black</a>.</p>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch06.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 6</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Permanence</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">6 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
+      <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. Bernhard Riemann, <a href="https://doi.org/10.5840/monist19001029">"On the Psychology of Metaphysics"</a> (1900), 198; Tai-Danae Bradley, <a href="https://mathematicallygiftedandblack.com/rising-stars/tai-danae-bradley/">Mathematically Gifted and Black</a>.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>The word "law" is sometimes used for empirically observed patterns validated by a theorem (e.g., the law of large numbers) or for axioms (e.g., the commutative law).</li>
         <li>David Eugene Smith, <a href="https://www.jstor.org/stable/2972153">"Religio Mathematici,"</a> American Mathematical Monthly 28, no. 10 (1921): 341.</li>
@@ -255,19 +274,22 @@ document.addEventListener('click', function(e){
         <li>An 81-step solution appears in Martin Gardner, "The Hypnotic Fascination of Sliding Block Puzzles," Scientific American 210 (1964): 122–30.</li>
         <li>George Orwell, <a href="https://amzn.to/2V2XeO1">1984</a> (Houghton Mifflin Harcourt, 1949), 76.</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 7 -->
-    <section id="n7" style="background:#efe8f6; padding:0 0 48px;">
+    <section id="n7" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch07.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 7</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Truth</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch07.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 7</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Truth</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">7 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. John 18:38 (Good News Translation); Blaise Pascal, <a href="https://www.gutenberg.org/ebooks/18269">Pensées</a> (1958), 259, no. 864.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>Hannah Arendt, "Truth and Politics," New Yorker (1967), reprinted in <a href="https://amzn.to/2V3SDuH">Between Past and Future</a> (Penguin, 1968), 257.</li>
@@ -278,19 +300,22 @@ document.addEventListener('click', function(e){
         <li>Kenneth Burke, "Literature as Equipment for Living," in <a href="https://amzn.to/2YgfJQW">The Philosophy of Literary Form</a> (LSU Press, 1941), 293–304.</li>
         <li>Quoted in David Brewster, The Life of Sir Isaac Newton (J. &amp; J. Harper, 1832), 300–301.</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 8 -->
-    <section id="n8" style="background:#eae5f4; padding:0 0 48px;">
+    <section id="n8" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch08.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 8</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Struggle</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch08.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 8</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Struggle</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">8 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. Simone Weil, <a href="https://amzn.to/2V2GAhb">Waiting for God</a> (1951), 107; Martha Graham, "An Athlete of God," in This I Believe (Holt, 2006), 84.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>Alasdair MacIntyre, <a href="https://amzn.to/37Msx4u">After Virtue</a>, 3rd ed. (Notre Dame, 2007), 188.</li>
@@ -302,19 +327,22 @@ document.addEventListener('click', function(e){
         <li>David Richeson, <a href="https://doi.org/10.4169/mathhorizons.23.1.10">"A Conversation with Timothy Gowers,"</a> Math Horizons 23, no. 1 (2015): 10–11.</li>
         <li>Laurent Schwartz, <a href="https://amzn.to/2DVJTBx">A Mathematician Grappling with His Century</a> (Birkhäuser, 2001), 30.</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 9 -->
-    <section id="n9" style="background:#f6f3fb; padding:0 0 48px;">
+    <section id="n9" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch09.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 9</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Power</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch09.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 9</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Power</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">8 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. Quoted in Stephen Winsten, Days with Bernard Shaw (Vanguard, 1949), 291; Augustus de Morgan, in Graves, The Life of Sir William Rowan Hamilton (1889), 219.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>Isidor Wallimann et al., <a href="https://doi.org/10.1177/003803858001400204">"Misreading Weber: The Concept of 'Macht,'"</a> Sociology 14, no. 2 (1980): 261–75.</li>
@@ -326,19 +354,22 @@ document.addEventListener('click', function(e){
         <li>Cathy O'Neil, <a href="https://amzn.to/2NeEiHB">Weapons of Math Destruction</a> (Crown, 2016).</li>
         <li>Parker J. Palmer, <a href="https://amzn.to/3fKaU8s">The Courage to Teach</a>, 10th anniv. ed. (Jossey-Bass, 2007), 7.</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 10 -->
-    <section id="n10" style="background:#ede8f4; padding:0 0 48px;">
+    <section id="n10" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch10.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 10</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Justice</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch10.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 10</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Justice</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">11 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraph. Simone Weil, <a href="https://amzn.to/2V0YK2W">Gravity and Grace</a> (1952), 188.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>Timothy Keller, <a href="https://amzn.to/2YR836R">Generous Justice</a> (Penguin, 2012).</li>
@@ -348,24 +379,27 @@ document.addEventListener('click', function(e){
         <li>Kevin Eagan et al., <a href="https://sites.nationalacademies.org/cs/groups/dbassesite/documents/webpage/dbasse_088834.pdf">"Examining STEM Pathways…"</a> (National Academies Press, 2014).</li>
         <li>Jennifer Engle and Vincent Tinto, <a href="https://files.eric.ed.gov/fulltext/ED504448.pdf">Moving Beyond Access</a> (Pell Institute, 2008).</li>
         <li>William Yslas Vélez et al., <a href="https://www.ams.org/publications/journals/notices/201607/rnoti-p754.pdf">"Report on the 2014–2015 New Doctoral Recipients,"</a> Notices of the AMS 63, no. 7 (2016): 754–65.</li>
-        <li><a href="http://blog.angryasianman.com/2016/01/finally-asian-guy-whos-good-at-math.html">"Finally, an Asian Guy Who's Good at Math (Part Two),"</a> Angry Asian Man (2016).</li>
+        <li><a href="https://blog.angryasianman.com/2016/01/finally-asian-guy-whos-good-at-math.html">"Finally, an Asian Guy Who's Good at Math (Part Two),"</a> Angry Asian Man (2016).</li>
         <li>Rochelle Gutiérrez, <a href="https://doi.org/10.1207/S15327833MTL04023_4">"Enabling the Practice of Mathematics Teachers in Context,"</a> Mathematical Thinking and Learning 4 (2002): 147.</li>
         <li>NCTM, <a href="https://amzn.to/2BrStq0">Catalyzing Change in High School Mathematics</a> (2018); Jo Boaler, "Changing Students' Lives through the De-tracking of Urban Mathematics Classrooms," JUME 4, no. 1 (2011): 7–14.</li>
         <li>William F. Tate, <a href="https://www.jstor.org/stable/20405144">"Race, Retrenchment, and the Reform of School Mathematics,"</a> Phi Delta Kappan 75, no. 6 (1994): 477–84.</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 11 -->
-    <section id="n11" style="background:#efe8f6; padding:0 0 48px;">
+    <section id="n11" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch11.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 11</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Freedom</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch11.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 11</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Freedom</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">8 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. Helen Keller, The Story of My Life (Grosset &amp; Dunlap, 1905), 39; Eleanor Roosevelt, You Learn by Living (Harper &amp; Row, 1960), 152.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>Arthur Benjamin and Michael Shermer, <a href="https://amzn.to/3ejMOBd">Secrets of Mental Math</a> (Three Rivers, 2006).</li>
@@ -377,19 +411,22 @@ document.addEventListener('click', function(e){
         <li>bell hooks, <a href="https://amzn.to/3hK4tE5">Teaching to Transgress</a> (Routledge, 1994), 3.</li>
         <li>Ibid.</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 12 -->
-    <section id="n12" style="background:#eae5f4; padding:0 0 48px;">
+    <section id="n12" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch12.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 12</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Community</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch12.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 12</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Community</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">14 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. Bill Thurston, <a href="https://mathoverflow.net/questions/43690/whats-a-mathematician-to-do">Math Overflow</a> (2010); Deanna Haunsperger, <a href="https://www.youtube.com/watch?v=jwAE3iHi4vM">"The Inclusion Principle"</a> (JMM, 2019).</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>Parker Palmer, <a href="https://amzn.to/3hQs4TQ">To Know as We Are Known</a> (Harper Collins, 1993), 9.</li>
@@ -397,7 +434,7 @@ document.addEventListener('click', function(e){
         <li>Dennis Overbye, <a href="https://www.nytimes.com/2006/08/15/science/15math.html">"Elusive Proof, Elusive Prover,"</a> NYT (2006).</li>
         <li>Thomas Lin, <a href="https://www.quantamagazine.org/yitang-zhang-and-the-mystery-of-numbers-20150402/">"After Prime Proof, an Unlikely Star Rises,"</a> Quanta (2015).</li>
         <li>Jerrold W. Grossman, <a href="https://archive.siam.org/pdf/news/485.pdf">"Patterns of Collaboration in Mathematical Research,"</a> SIAM News 35, no. 9 (2002): 8–9.</li>
-        <li>Programs that may appeal widely: <a href="http://www.mathcircles.org/">math circles</a>, <a href="https://www.beammath.org/">BEAM</a>, <a href="http://www.mathpath.org/">MathPath</a>, and the <a href="https://www.ias.edu/pcmi">Park City Mathematics Institute</a>.</li>
+        <li>Programs that may appeal widely: <a href="https://www.mathcircles.org/">math circles</a>, <a href="https://www.beammath.org/">BEAM</a>, <a href="https://www.mathpath.org/">MathPath</a>, and the <a href="https://www.ias.edu/pcmi">Park City Mathematics Institute</a>.</li>
         <li>Talithia Williams, <a href="https://amzn.to/37KowO2">Power in Numbers</a> (Race Point, 2018); <a href="https://amzn.to/2YhK1CH">101 Careers in Mathematics</a>, 3rd ed. (MAA, 2014).</li>
         <li>Simone Weil, letter to Father Perrin, in <a href="https://amzn.to/2V2GAhb">Waiting for God</a> (1951), 64.</li>
         <li>The <a href="https://www.maa.org/programs-and-communities/curriculum%20resources/instructional-practices-guide">MAA Instructional Practices Guide</a> (2017).</li>
@@ -407,19 +444,22 @@ document.addEventListener('click', function(e){
         <li>AWIS–MAA Joint Task Force, <a href="https://www.maa.org/sites/default/files/pdf/ABOUTMAA/AvoidingImplicitBias_revisionMarch2018.pdf">"Avoiding Implicit Bias"</a> (2012).</li>
         <li>Karen Uhlenbeck, <a href="https://www.jstor.org/stable/25678066">"Coming to Grips with Success,"</a> Math Horizons 3, no. 4 (1996): 17.</li>
       </ol>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 13 -->
-    <section id="n13" style="background:#f6f3fb; padding:0 0 48px;">
+    <section id="n13" style="background:#f6f3fb;">
       <div style="max-width:800px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px; border-top:1px solid #b9b1d8; padding-top:48px;">
-        <img src="../icon-ch13.jpg" alt="" style="width:60px; height:52px; border-radius:8px; display:block; flex-shrink:0;">
-        <div>
-          <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 13</div>
-          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Love</h2>
-        </div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:16px; padding:12px 0;">
+        <img src="../icon-ch13.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:2px;">Chapter 13</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:0;">Love</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">4 notes</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 48px;">
       <p style="font-family:'Newsreader',serif; font-style:italic; font-size:16px; line-height:1.5; color:#574b6b; margin:0 0 20px;">Epigraphs. 1 Corinthians 13:1 (Good News Translation); <a href="https://amzn.to/311mAzB">The Papers of Martin Luther King, Jr.</a>, vol. 1 (California, 1992), 124.</p>
       <ol class="n" style="font-size:16px; line-height:1.55; color:#3a2f52; padding-left:24px; margin:0;">
         <li>Hannah Fry, <a href="https://amzn.to/2YgiMIS">The Mathematics of Love</a> (Simon &amp; Schuster, 2015).</li>
@@ -428,6 +468,10 @@ document.addEventListener('click', function(e){
         <li>Simone Weil, "Reflections on the Right Use of School Studies…," in <a href="https://amzn.to/2V2GAhb">Waiting for God</a> (1951), 115.</li>
       </ol>
       <p style="font-size:15px; line-height:1.55; color:#574b6b; margin:22px 0 0;"><strong style="font-weight:600;">Acknowledgments.</strong> Simone Weil's original quote is "L'attention est la forme la plus rare et la plus pure de la générosité." See Weil and Jo. Bousquet, Correspondance (Editions l'Age d'Homme, 1982), 18.</p>
+      </div>
+      </details>
+      <div style="border-top:1px solid #b9b1d8;"></div>
+      <div style="height:8px;"></div>
     </div>
     </section>
 
@@ -453,7 +497,7 @@ document.addEventListener('click', function(e){
               <a href="endnotes.html" style="color:#cabfe0;" style-hover="color:#fff;">Endnotes</a>
               <a href="discuss.html" style="color:#cabfe0;" style-hover="color:#fff;">Discuss with Friends</a>
               <a href="../books.html" style="color:#cabfe0;" style-hover="color:#fff;">All books</a>
-              <a href="../index.html" style="color:#cabfe0;" style-hover="color:#fff;">Home</a>
+              <a href="/" style="color:#cabfe0;" style-hover="color:#fff;">Home</a>
               <a href="https://francissu.substack.com/" style="color:#cabfe0;" style-hover="color:#fff;">Blog ↗</a>
             </div>
           </div>
@@ -464,7 +508,7 @@ document.addEventListener('click', function(e){
               <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
                 <a href="https://www.linkedin.com/in/francissu/" style="color:#cabfe0;" style-hover="color:#fff;">LinkedIn</a>
                 <a href="https://bsky.app/profile/mathyawp.bsky.social" style="color:#cabfe0;" style-hover="color:#fff;">Bluesky</a>
-                <a href="http://www.facebook.com/francis.su" style="color:#cabfe0;" style-hover="color:#fff;">Facebook</a>
+                <a href="https://www.facebook.com/francis.su" style="color:#cabfe0;" style-hover="color:#fff;">Facebook</a>
                 <a href="https://www.instagram.com/mathyawp" style="color:#cabfe0;" style-hover="color:#fff;">Instagram</a>
                 <a href="https://x.com/mathyawp" style="color:#cabfe0;" style-hover="color:#fff;">X</a>
               </div>

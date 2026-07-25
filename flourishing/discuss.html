@@ -28,7 +28,13 @@
   ::selection { background: #e8e2f4; }
   ol.q > li { margin-bottom: 13px; padding-left: 6px; }
   ul.r > li { margin-bottom: 11px; }
-  @media (max-width: 640px) { .icon-nav span { display: none; } }
+
+  details.acc > summary { list-style: none; cursor: pointer; }
+  details.acc > summary::-webkit-details-marker { display: none; }
+  details.acc > summary:hover h2 { color: #5a4b86; }
+  details.acc > summary .acc-mark::after { content: "+"; }
+  details.acc[open] > summary .acc-mark::after { content: "\2212"; }
+  @media (max-width: 640px) { .acc-count { display: none; } }
 
   /* --- mobile responsiveness --- */
   html, body { overflow-x: hidden; max-width: 100%; }
@@ -39,29 +45,35 @@
     header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
     h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
-    .icon-nav { grid-template-columns: repeat(5, 1fr) !important; }
   }
 </style>
 <script>
-document.addEventListener('click', function(e){
-  var a = e.target.closest && e.target.closest('.icon-nav a[href^="#"]');
-  if (!a) return;
-  var el = document.getElementById(a.getAttribute('href').slice(1));
-  if (!el) return;
-  e.preventDefault();
-  var top = 0, n = el;
-  while (n && n !== document.body) { top += n.offsetTop; n = n.offsetParent; }
-  top -= 20;
-  if (Math.abs(document.body.scrollTop - top) < 2) return;
-  document.body.scrollTo({ top: top, behavior: 'smooth' });
-});
+(function(){
+  function openTarget(el){ var d = el && el.querySelector ? el.querySelector('details.acc') : null; if (d) d.open = true; }
+  function headerH(){ var h = document.querySelector('header'); return h ? h.offsetHeight : 0; }
+  document.addEventListener('click', function(e){
+    var t = e.target.closest && e.target.closest('[data-acc-all]');
+    if (t) {
+      var want = t.getAttribute('data-acc-all') === 'open';
+      Array.prototype.forEach.call(document.querySelectorAll('details.acc'), function(d){ d.open = want; });
+      return;
+    }
+  });
+  function openFromHash(){
+    if (!location.hash) return;
+    openTarget(document.getElementById(decodeURIComponent(location.hash.slice(1))));
+  }
+  window.addEventListener('load', openFromHash);
+  setTimeout(openFromHash, 600);
+  setTimeout(openFromHash, 1600);
+})();
 </script>
 </helmet>
 <div style="background:#f4f1f9; color:#2e2545; font-family:'Public Sans',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh;">
 
   <header style="position:sticky; top:0; z-index:50; background:#5a4b86; backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid #433863;">
     <div style="max-width:1140px; margin:0 auto; padding:16px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
-      <a href="../index.html" style="font-family:'Space Mono',monospace; font-size:15px; letter-spacing:0.2em; text-transform:uppercase; color:#f4f1f9; font-weight:700;">Francis&nbsp;Su</a>
+      <a href="/" style="font-family:'Space Mono',monospace; font-size:15px; letter-spacing:0.2em; text-transform:uppercase; color:#f4f1f9; font-weight:700;">Francis&nbsp;Su</a>
       <nav style="display:flex; align-items:center; gap:26px; font-size:14.5px; color:rgba(244,241,249,0.82);">
         <a href="discuss.html" style="color:#ffffff; font-weight:600;">Discuss</a><a href="endnotes.html" style="color:rgba(244,241,249,0.82);" style-hover="color:#ffffff;">Endnotes</a>
         <a href="index.html" style="margin-left:auto; color:#ffffff;" style-hover="color:rgba(244,241,249,0.82);">↑ The book</a>
@@ -71,40 +83,34 @@ document.addEventListener('click', function(e){
   </header>
 
   <main>
-    <section style="max-width:820px; margin:0 auto; padding:52px 40px 29px;">
+    <section style="max-width:820px; margin:0 auto; padding:52px 40px 12px;">
       <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:#7a6ba0;">Discuss with friends</div>
       <h1 style="font-family:'Newsreader',serif; font-weight:400; font-size:52px; line-height:1.05; letter-spacing:-0.01em; margin:16px 0 22px;">100 Questions about Mathematics</h1>
       <p style="font-size:19px; line-height:1.65; color:#43385c; max-width:34em; margin:0 0 10px;">For use with the book <a href="index.html">Mathematics for Human Flourishing</a> — enlarging the set in the book's appendix — plus additional resources for each chapter. Gather friends, read the book, and talk.</p>
 
-      <div style="margin-top:34px; padding-top:30px; border-top:1px solid #e2daf0;">
-        <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0; margin-bottom:16px;">Click icons to navigate quickly to chapter headings</div>
-        <div class="icon-nav" style="display:grid; grid-template-columns:repeat(7,1fr); gap:14px;">
-          <a href="#c1" title="Ch 1 · Flourishing" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch01.jpg" alt="Flourishing" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">1 · Flourishing</span></a>
-          <a href="#c2" title="Ch 2 · Exploration" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch02.jpg" alt="Exploration" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">2 · Exploration</span></a>
-          <a href="#c3" title="Ch 3 · Meaning" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch03.jpg" alt="Meaning" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">3 · Meaning</span></a>
-          <a href="#c4" title="Ch 4 · Play" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch04.jpg" alt="Play" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">4 · Play</span></a>
-          <a href="#c5" title="Ch 5 · Beauty" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch05.jpg" alt="Beauty" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">5 · Beauty</span></a>
-          <a href="#c6" title="Ch 6 · Permanence" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch06.jpg" alt="Permanence" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">6 · Permanence</span></a>
-          <a href="#c7" title="Ch 7 · Truth" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch07.jpg" alt="Truth" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">7 · Truth</span></a>
-          <a href="#c8" title="Ch 8 · Struggle" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch08.jpg" alt="Struggle" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">8 · Struggle</span></a>
-          <a href="#c9" title="Ch 9 · Power" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch09.jpg" alt="Power" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">9 · Power</span></a>
-          <a href="#c10" title="Ch 10 · Justice" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch10.jpg" alt="Justice" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">10 · Justice</span></a>
-          <a href="#c11" title="Ch 11 · Freedom" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch11.jpg" alt="Freedom" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">11 · Freedom</span></a>
-          <a href="#c12" title="Ch 12 · Community" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch12.jpg" alt="Community" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">12 · Community</span></a>
-          <a href="#c13" title="Ch 13 · Love" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-ch13.jpg" alt="Love" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">13 · Love</span></a>
-          <a href="#epilogue" title="Epilogue" style="display:flex; flex-direction:column; align-items:center; gap:6px; color:#574b6b;" style-hover="color:#2e2545;"><img src="../icon-speech.jpg" alt="Epilogue" style="width:100%; aspect-ratio:1/1; border-radius:10px; display:block;"><span style="font-size:11px; text-align:center; line-height:1.2;">Epilogue</span></a>
+      <p style="font-size:13.5px; line-height:1.6; color:#8b7ea8; margin:14px 0 0;">Chapter icons designed by <a href="https://carlolsen.net/">Carl Olsen</a>.</p>
+
+      <div style="margin-top:26px; background:#b9b1d8; padding:10px 14px; margin-left:-14px; margin-right:-14px;">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+          <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#3b3158;">Click icons to open</div>
+          <div style="display:flex; align-items:center; gap:14px;">
+            <button type="button" data-acc-all="open" style="appearance:none; -webkit-appearance:none; background:none; border:0; padding:0; cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#3b3158;" style-hover="color:#241c38;">Expand all</button><span style="color:#8d80ab;">·</span><button type="button" data-acc-all="close" style="appearance:none; -webkit-appearance:none; background:none; border:0; padding:0; cursor:pointer; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#3b3158;" style-hover="color:#241c38;">Collapse all</button>
+          </div>
         </div>
-        <p style="font-size:13.5px; line-height:1.6; color:#8b7ea8; margin:16px 0 0; text-align:right;">Chapter icons designed by <a href="https://carlolsen.net/">Carl Olsen</a>.</p>
       </div>
     </section>
 
     <!-- 1 -->
-    <section id="c1" style="background:#f6f3fb; padding:0 0 52px;">
+    <section id="c1" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch01.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 1</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Flourishing</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch01.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 1</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Flourishing</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">1–12</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <p style="font-size:15px; line-height:1.6; color:#7a6ba0; max-width:34em; margin:0 0 22px;">The first three questions in Chapter 1 are worth pondering before you read the book — then returning to afterward, to see how your answers have changed.</p>
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="1" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
@@ -128,16 +134,22 @@ document.addEventListener('click', function(e){
         <li>Ben Braun's compiled <a href="https://www.francissu.com/_files/ugd/60bcaa_351c401d64f143639618f1d26de030e5.pdf">list of readings that make the ideas in this book actionable</a>.</li>
         <li>The book's <a href="endnotes.html">endnotes</a> also contain many related readings.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 2 -->
-    <section id="c2" style="background:#ede8f4; padding:0 0 52px;">
+    <section id="c2" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch02.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 2</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Exploration</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch02.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 2</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Exploration</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">13–19</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="13" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>Think of a time when you were captivated by exploring something (a location, an idea, a game). What analogies can you draw between doing math and this exploration?</li>
@@ -156,16 +168,22 @@ document.addEventListener('click', function(e){
         <li>Games from Africa in the MIND Research Institute's <a href="https://www.mindresearch.org/mathminds-games">South of the Sahara game box</a>; Claudia Zaslavsky, <a href="https://amzn.to/31dqe9J">Math Games &amp; Activities from Around the World</a>.</li>
         <li>The <a href="https://artofproblemsolving.com/">Art of Problem Solving</a> website.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 3 -->
-    <section id="c3" style="background:#efe8f6; padding:0 0 52px;">
+    <section id="c3" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch03.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 3</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Meaning</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch03.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 3</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Meaning</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">20–26</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="20" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>"Mathematical ideas are metaphors." Reflect on one mathematical idea you've seen in multiple situations, and how its meaning was enhanced each time.</li>
@@ -178,20 +196,26 @@ document.addEventListener('click', function(e){
       </ol>
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#8b7ea8; margin-bottom:8px;">Resources</div>
       <ul class="r" style="font-size:15.5px; line-height:1.55; color:#4c3f66; padding-left:20px; margin:8px 0 0;">
-        <li>See how ideas relate in this <a href="https://achievethecore.org/coherence-map/">coherence map</a> of the Common Core standards, and the University of Arizona <a href="http://ime.math.arizona.edu/progressions/">progressions documents</a>.</li>
+        <li>See how ideas relate in this <a href="https://achievethecore.org/coherence-map/">coherence map</a> of the Common Core standards, and the University of Arizona <a href="https://ime.math.arizona.edu/progressions/">progressions documents</a>.</li>
         <li>Bob Moses, <a href="https://amzn.to/312QL9s">Radical Equations: Civil Rights from Mississippi to the Algebra Project</a>.</li>
         <li>William Byers, <a href="https://amzn.to/3hLH8lt">How Mathematicians Think</a>.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 4 -->
-    <section id="c4" style="background:#eae5f4; padding:0 0 52px;">
+    <section id="c4" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch04.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 4</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Play</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch04.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 4</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Play</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">27–33</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="27" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>Think of an activity you associate with play (try to think of something that isn't a game). List the characteristics that make it feel playful. Are there mathematical activities that share those characteristics?</li>
@@ -206,16 +230,22 @@ document.addEventListener('click', function(e){
       <ul class="r" style="font-size:15.5px; line-height:1.55; color:#4c3f66; padding-left:20px; margin:8px 0 0;">
         <li>Sunil Singh and Chris Brownell, <em style="font-style:italic;">Math Recess: Playful Learning in an Age of Disruption</em>.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 5 -->
-    <section id="c5" style="background:#f6f3fb; padding:0 0 52px;">
+    <section id="c5" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch05.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 5</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Beauty</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch05.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 5</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Beauty</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">34–40</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="34" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>Think of non-mathematical examples of (a) something whose beauty took a while to appreciate, and (b) something beautiful at first glance. In each, what preparation made the experience of beauty possible?</li>
@@ -229,20 +259,26 @@ document.addEventListener('click', function(e){
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#8b7ea8; margin-bottom:8px;">Resources</div>
       <ul class="r" style="font-size:15.5px; line-height:1.55; color:#4c3f66; padding-left:20px; margin:8px 0 0;">
         <li>Roger Nelsen's series <a href="https://amzn.to/35K5Z3K">Proofs Without Words I, II, III</a>.</li>
-        <li>The <a href="http://gallery.bridgesmathart.org/">Mathematical Art Galleries</a> from the Bridges Organization.</li>
+        <li>The <a href="https://gallery.bridgesmathart.org/">Mathematical Art Galleries</a> from the Bridges Organization.</li>
         <li>Kelsey Houston-Edwards and Tai-Danae Bradley's <a href="https://www.youtube.com/channel/UCs4aHmggTfFrpkPcWSaBN9g">PBS Infinite Series</a>.</li>
         <li>Aigner and Ziegler, <a href="https://amzn.to/2AXEQ1U">Proofs from THE BOOK</a>.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 6 -->
-    <section id="c6" style="background:#ede8f4; padding:0 0 52px;">
+    <section id="c6" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch06.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 6</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Permanence</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch06.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 6</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Permanence</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">41–47</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="41" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>What mathematical laws, truths, or ideas do you rely on in your daily life?</li>
@@ -257,16 +293,22 @@ document.addEventListener('click', function(e){
       <ul class="r" style="font-size:15.5px; line-height:1.55; color:#4c3f66; padding-left:20px; margin:8px 0 0;">
         <li>Learn about the art collection that included the Matsumoto puzzle in <a href="https://www.npr.org/templates/story/story.php?storyId=126557553">"The Creative Art of Coping in Japanese Internment"</a> (NPR).</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 7 -->
-    <section id="c7" style="background:#efe8f6; padding:0 0 52px;">
+    <section id="c7" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch07.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 7</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Truth</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch07.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 7</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Truth</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">48–54</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="48" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>Reflect on a time when shallow knowledge led you astray. How did that feel? How is deep knowledge an antidote?</li>
@@ -282,16 +324,22 @@ document.addEventListener('click', function(e){
         <li>Gian-Carlo Rota, <a href="https://www.jstor.org/stable/20129055">"The Concept of Mathematical Truth."</a></li>
         <li>Eugene Wigner, <a href="https://www.dartmouth.edu/~matc/MathDrama/reading/Wigner.html">"The Unreasonable Effectiveness of Mathematics in the Natural Sciences."</a></li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 8 -->
-    <section id="c8" style="background:#eae5f4; padding:0 0 52px;">
+    <section id="c8" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch08.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 8</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Struggle</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch08.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 8</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Struggle</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">55–61</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="55" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>Describe an activity you enjoy and list the internal and external goods associated with it. Do the same for an activity you don't enjoy. What do you notice about the lists?</li>
@@ -308,16 +356,22 @@ document.addEventListener('click', function(e){
         <li>Carol Dweck, <a href="https://www.scientificamerican.com/article/the-secret-to-raising-smart-kids1/">"The Secret to Raising Smart Kids."</a></li>
         <li>Alasdair MacIntyre, <a href="https://amzn.to/37Msx4u">After Virtue: A Study in Moral Theory</a>.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 9 -->
-    <section id="c9" style="background:#f6f3fb; padding:0 0 52px;">
+    <section id="c9" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch09.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 9</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Power</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch09.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 9</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Power</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">62–68</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="62" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>Think of a recent challenging problem you explored. Which powers of mathematics did you develop or use (interpretation, definition, quantification, abstraction, visualization, imagination, creation, strategization, modeling, multiple representations, generalization, structure identification)?</li>
@@ -333,16 +387,22 @@ document.addEventListener('click', function(e){
         <li>Persi Diaconis and Ron Graham, <a href="https://amzn.to/34v5kEe">Magical Mathematics</a> — creative power used to inspire and entertain.</li>
         <li>Cathy O'Neil, <a href="https://amzn.to/2NeEiHB">Weapons of Math Destruction</a> — a sobering look at coercive power.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 10 -->
-    <section id="c10" style="background:#ede8f4; padding:0 0 52px;">
+    <section id="c10" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch10.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 10</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Justice</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch10.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 10</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Justice</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">69–75</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="69" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>If people have realized the way we teach math needs to change, why hasn't it changed yet? Who benefits from keeping it the same?</li>
@@ -359,16 +419,22 @@ document.addEventListener('click', function(e){
         <li><a href="https://www.nctm.org/Store/Products/Annual-Perspectives-in-Math-Ed-2018-(Download)/">Rehumanizing Mathematics for Black, Indigenous, and Latinx Students</a>, ed. Imani Goffney and Rochelle Gutiérrez.</li>
         <li><a href="https://amzn.to/3dXrBxB">Mathematics for Social Justice</a> (Karaali &amp; Khadjavi) and <a href="https://amzn.to/3ktOew3">High School Mathematics Lessons to Explore, Understand, and Respond to Social Injustice</a>.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 11 -->
-    <section id="c11" style="background:#efe8f6; padding:0 0 52px;">
+    <section id="c11" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch11.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 11</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Freedom</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch11.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 11</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Freedom</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">76–82</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="76" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>Describe settings in which you've experienced any of these freedoms: of knowledge, to explore, of understanding, or to imagine.</li>
@@ -383,16 +449,22 @@ document.addEventListener('click', function(e){
       <ul class="r" style="font-size:15.5px; line-height:1.55; color:#4c3f66; padding-left:20px; margin:8px 0 0;">
         <li>bell hooks, <a href="https://amzn.to/3hK4tE5">Teaching to Transgress: Education as the Practice of Freedom</a>.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 12 -->
-    <section id="c12" style="background:#eae5f4; padding:0 0 52px;">
+    <section id="c12" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch12.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 12</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Community</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch12.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 12</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Community</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">83–89</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="83" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>Why should hospitality, or excellence in teaching and mentoring, be central to doing mathematics well?</li>
@@ -405,23 +477,29 @@ document.addEventListener('click', function(e){
       </ol>
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#8b7ea8; margin-bottom:8px;">Resources</div>
       <ul class="r" style="font-size:15.5px; line-height:1.55; color:#4c3f66; padding-left:20px; margin:8px 0 0;">
-        <li><a href="http://www.mathcircles.org/">National Association of Math Circles</a> — gatherings for discovery around low-threshold, high-ceiling problems.</li>
+        <li><a href="https://www.mathcircles.org/">National Association of Math Circles</a> — gatherings for discovery around low-threshold, high-ceiling problems.</li>
         <li><a href="https://www.beammath.org/">BEAM (Bridge to Enter Advanced Mathematics)</a> — programs to help underserved students enter the sciences.</li>
-        <li><a href="http://www.mathpath.org/">MathPath</a> — a summer math camp for middle-schoolers.</li>
+        <li><a href="https://www.mathpath.org/">MathPath</a> — a summer math camp for middle-schoolers.</li>
         <li>The <a href="https://www.ias.edu/pcmi">Park City Mathematics Institute</a> summer program for math teachers.</li>
         <li>Darryl Yong, <a href="https://profteacher.com/2017/08/30/active-learning-2-0-making-it-inclusive/">"Active Learning 2.0: Making It Inclusive."</a></li>
         <li>Ilana Seidel Horn, <a href="https://amzn.to/3oHOl9v">Motivated: Designing Math Classrooms Where Students Want to Join In</a>.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- 13 -->
-    <section id="c13" style="background:#f6f3fb; padding:0 0 52px;">
+    <section id="c13" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-ch13.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 13</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Love</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-ch13.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Chapter 13</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Love</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">90–96</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="90" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 28px;">
         <li>In what harmful ways do we use mathematics as "a showcase for flaunting talent rather than a playground for building virtue"?</li>
@@ -437,16 +515,22 @@ document.addEventListener('click', function(e){
         <li>Parker Palmer, <a href="https://amzn.to/3hQs4TQ">To Know as We Are Known</a> — a wonderful book about teaching, and about love.</li>
         <li>My essay <a href="https://francissu.substack.com/p/the-lesson-of-grace-in-teaching">The Lesson of Grace in Teaching</a>, which calls us away from an achievement-oriented mindset.</li>
       </ul>
+      </div>
+      </details>
     </div>
     </section>
 
     <!-- epilogue -->
-    <section id="epilogue" style="background:#ede8f4; padding:0 0 52px;">
+    <section id="epilogue" style="background:#f6f3fb;">
       <div style="max-width:820px; margin:0 auto; padding:0 40px;">
-      <div style="display:flex; align-items:center; gap:18px; margin-bottom:26px; border-top:1px solid #b9b1d8; padding-top:52px;">
-        <img src="../icon-speech.jpg" alt="" style="width:60px; height:60px; border-radius:8px; display:block;">
-        <div><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Epilogue</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Epilogue</h2></div>
-      </div>
+      <details class="acc" style="border-top:1px solid #b9b1d8;">
+      <summary style="display:flex; align-items:center; gap:18px; padding:12px 0;">
+        <img src="../icon-speech.jpg" alt="" style="width:68px; height:68px; border-radius:8px; display:block; flex-shrink:0;">
+        <div style="flex:1; min-width:0;"><div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#7a6ba0;">Epilogue</div><h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:30px; margin:2px 0 0;">Epilogue</h2></div>
+        <span class="acc-count" style="font-family:'Space Mono',monospace; font-size:11.5px; letter-spacing:0.1em; color:#8b7ea8; flex-shrink:0;">97–100</span>
+        <span class="acc-mark" style="font-family:'Space Mono',monospace; font-size:19px; line-height:1; color:#7a6ba0; width:20px; text-align:center; flex-shrink:0;"></span>
+      </summary>
+      <div style="padding:4px 0 52px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:#5a4b86; margin-bottom:8px;">For reflection &amp; discussion</div>
       <ol start="97" class="q" style="font-size:17px; line-height:1.58; color:#302647; padding-left:22px; margin:8px 0 0;">
         <li>Describe the ways you see Christopher Jackson flourishing even in challenging circumstances.</li>
@@ -454,7 +538,15 @@ document.addEventListener('click', function(e){
         <li>Write an essay describing how this book has changed your understanding of what math is, who it's for, and why anyone should learn it.</li>
         <li>Consider the mathematical virtues in this book and explain how they can help us (you, epidemiologists, and others) solve problems arising from a pandemic.</li>
       </ol>
+      </div>
+      </details>
+      <div style="border-top:1px solid #b9b1d8;"></div>
+      <div style="height:8px;"></div>
     </div>
+    </section>
+
+    <section style="max-width:820px; margin:0 auto; padding:26px 40px 14px;">
+      <p style="font-size:15px; line-height:1.6; color:#574b6b; margin:0;">Learn more about <a href="index.html">Mathematics for Human Flourishing</a>, or explore the <a href="endnotes.html">endnotes</a>.</p>
     </section>
 
     <footer id="contact" style="background:#241c38; color:#dad2ee;">
@@ -475,7 +567,7 @@ document.addEventListener('click', function(e){
               <a href="endnotes.html" style="color:#cabfe0;" style-hover="color:#fff;">Endnotes</a>
               <a href="discuss.html" style="color:#cabfe0;" style-hover="color:#fff;">Discuss with Friends</a>
               <a href="../books.html" style="color:#cabfe0;" style-hover="color:#fff;">All books</a>
-              <a href="../index.html" style="color:#cabfe0;" style-hover="color:#fff;">Home</a>
+              <a href="/" style="color:#cabfe0;" style-hover="color:#fff;">Home</a>
               <a href="https://francissu.substack.com/" style="color:#cabfe0;" style-hover="color:#fff;">Blog ↗</a>
             </div>
           </div>
@@ -486,7 +578,7 @@ document.addEventListener('click', function(e){
               <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
                 <a href="https://www.linkedin.com/in/francissu/" style="color:#cabfe0;" style-hover="color:#fff;">LinkedIn</a>
                 <a href="https://bsky.app/profile/mathyawp.bsky.social" style="color:#cabfe0;" style-hover="color:#fff;">Bluesky</a>
-                <a href="http://www.facebook.com/francis.su" style="color:#cabfe0;" style-hover="color:#fff;">Facebook</a>
+                <a href="https://www.facebook.com/francis.su" style="color:#cabfe0;" style-hover="color:#fff;">Facebook</a>
                 <a href="https://www.instagram.com/mathyawp" style="color:#cabfe0;" style-hover="color:#fff;">Instagram</a>
                 <a href="https://x.com/mathyawp" style="color:#cabfe0;" style-hover="color:#fff;">X</a>
               </div>
