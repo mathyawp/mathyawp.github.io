@@ -28,7 +28,7 @@
     [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
     [style*="columns:3"] { columns: 1 !important; }
     [style*="aspect-ratio: 2 / 3"] { max-width: 300px !important; margin-left: auto !important; margin-right: auto !important; }
-    header nav a[href="#reviews"], header nav a[href="#praise"] { display: none !important; }
+    header nav a[href="#reviews"] { display: none !important; }
     [style*="margin:0 auto"]:not([style*="aspect-ratio"]), [style*="margin: 0px auto"]:not([style*="aspect-ratio"]) { padding-left: 22px !important; padding-right: 22px !important; }
     header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
@@ -48,10 +48,10 @@
     <div style="max-width: 1140px; margin: 0px auto; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
       <a href="/" style="font-family: &quot;Space Mono&quot;, monospace; font-size: 15px; letter-spacing: 0.2em; text-transform: uppercase; color: rgb(244, 241, 249); font-weight: 700;">Francis&nbsp;Su</a>
       <nav style="display: flex; align-items: center; gap: 26px; font-size: 14.5px; color: rgba(244, 241, 249, 0.82);">
+        <a href="index.html" style="color: rgb(255, 255, 255); font-weight: 600;">Book</a>
         <a href="#reviews" class="scp0" style="color: rgba(244, 241, 249, 0.82);">↓ Reviews</a>
-        <a href="#praise" class="scp0" style="color: rgba(244, 241, 249, 0.82);">↓ Praise</a>
         <a href="discuss.html" class="scp0" style="color: rgba(244, 241, 249, 0.82);">Discuss</a><a href="endnotes.html" class="scp0" style="color: rgba(244, 241, 249, 0.82);">Endnotes</a>
-        <a href="../books.html" class="scp1" style="margin-left: auto; color: rgb(255, 255, 255); font-weight: 600;">↑ All books</a>
+        <a href="../books.html" class="scp1" style="margin-left: auto; color: rgb(255, 255, 255);">↑ All books</a>
       </nav>
     </div>
   </header>
@@ -292,6 +292,26 @@
       </div>
     </footer>
   </main></div></div></div>
+<script>
+/* header-offset anchor scroll */
+(function(){
+  document.querySelectorAll('header nav a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var el = document.getElementById(a.getAttribute('href').slice(1));
+      if(!el) return;
+      e.preventDefault();
+      var hdr = document.querySelector('header');
+      var off = hdr ? hdr.offsetHeight : 0;
+      var cands = [document.scrollingElement, document.documentElement, document.body].filter(Boolean);
+      var sc = null;
+      for (var i=0;i<cands.length;i++){ if (cands[i].scrollHeight - cands[i].clientHeight > 4){ sc = cands[i]; break; } }
+      var top = el.getBoundingClientRect().top;
+      if (sc) sc.scrollTo({ top: sc.scrollTop + top - off, behavior: 'smooth' });
+      else window.scrollBy({ top: top - off, behavior: 'smooth' });
+    });
+  });
+})();
+</script>
 <script>
 /* restores the praise carousel in the static (baked) page */
 (function(){
