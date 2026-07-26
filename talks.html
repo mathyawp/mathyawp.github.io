@@ -36,7 +36,7 @@
     [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
     .talk-grid > div { border-top: 1px solid #d2c6ab !important; padding-top: 30px !important; }
     .talk-grid > div:first-child { border-top: 0 !important; padding-top: 0 !important; }
-    [style*="margin:0 auto"], [style*="margin: 0px auto"] { padding-left: 22px !important; padding-right: 22px !important; }
+    [style*="margin:0 auto"]:not([style*="aspect-ratio"]), [style*="margin: 0px auto"]:not([style*="aspect-ratio"]) { padding-left: 22px !important; padding-right: 22px !important; }
     header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
     h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
@@ -74,7 +74,7 @@
       <div class="talk-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(333px,1fr)); gap:32px;">
 
         <div style="display:flex; flex-direction:column;">
-          <a href="https://www.youtube.com/watch?v=xigc7UFgMmk&amp;t=1s" style="display:block; aspect-ratio:16/9; max-height:250px; border-radius:4px; overflow:hidden; background:#241a29 url('quanta-interview.webp') center 22% / cover no-repeat; border:1px solid #ddd6c9; position:relative;" style-hover="opacity:0.94;">
+          <a href="https://www.youtube.com/watch?v=xigc7UFgMmk&amp;t=1s" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('quanta-interview.webp') center 22% / cover no-repeat; border:1px solid #ddd6c9; position:relative;" style-hover="opacity:0.94;">
             <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="width:64px; height:64px; border-radius:50%; background:rgba(36,28,40,0.82); color:#f4efe0; display:flex; align-items:center; justify-content:center; font-size:22px; padding-left:4px;">▶</span></span>
             <span style="position:absolute; left:14px; bottom:12px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.05em; color:#7a7364; background:rgba(244,239,224,0.85); padding:5px 9px; border-radius:2px;">video ↗</span>
           </a>
@@ -86,7 +86,7 @@
         </div>
 
         <div style="display:flex; flex-direction:column;">
-          <a href="https://www.youtube.com/watch?v=UitkuhpDUpc" style="display:block; aspect-ratio:16/9; max-height:250px; border-radius:4px; overflow:hidden; background:#241a29 url('enlightning-talks.webp') center center / cover no-repeat; border:1px solid #ddd6c9; position:relative;" style-hover="opacity:0.94;">
+          <a href="https://www.youtube.com/watch?v=UitkuhpDUpc" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('enlightning-talks.webp') center center / cover no-repeat; border:1px solid #ddd6c9; position:relative;" style-hover="opacity:0.94;">
             <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="width:64px; height:64px; border-radius:50%; background:rgba(36,28,40,0.82); color:#f4efe0; display:flex; align-items:center; justify-content:center; font-size:22px; padding-left:4px;">▶</span></span>
             <span style="position:absolute; left:14px; bottom:12px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.05em; color:#7a7364; background:rgba(244,239,224,0.85); padding:5px 9px; border-radius:2px;">video ↗</span>
           </a>
@@ -98,7 +98,7 @@
         </div>
 
         <div style="display:flex; flex-direction:column;">
-          <a href="https://podcasts.apple.com/us/podcast/how-to-discover-your-humanity-through-math-with-francis-su/id1544098624?i=1000571070588" style="display:block; aspect-ratio:16/9; max-height:250px; border-radius:4px; overflow:hidden; background:#241a29 url('better-human-podcast.webp') center top / cover no-repeat; border:1px solid #201526; position:relative;" style-hover="opacity:0.94;">
+          <a href="https://podcasts.apple.com/us/podcast/how-to-discover-your-humanity-through-math-with-francis-su/id1544098624?i=1000571070588" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('better-human-podcast.webp') center top / cover no-repeat; border:1px solid #201526; position:relative;" style-hover="opacity:0.94;">
             <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="width:64px; height:64px; border-radius:50%; background:rgba(244,239,224,0.92); color:#241a29; display:flex; align-items:center; justify-content:center; font-size:22px; padding-left:4px;">▶</span></span>
             <span style="position:absolute; left:14px; bottom:12px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.05em; color:#241c28; background:rgba(244,239,224,0.9); padding:5px 9px; border-radius:2px;">audio ↗</span>
           </a>
@@ -110,7 +110,7 @@
         </div>
 
         <div style="display:flex; flex-direction:column;">
-          <a href="https://www.youtube.com/watch?v=K5P7S0z4os4" style="display:block; aspect-ratio:16/9; max-height:250px; border-radius:4px; overflow:hidden; background:#241a29 url('australian-academy.webp') center center / cover no-repeat; border:1px solid #ddd6c9; position:relative;" style-hover="opacity:0.94;">
+          <a href="https://www.youtube.com/watch?v=K5P7S0z4os4" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('australian-academy.webp') center center / cover no-repeat; border:1px solid #ddd6c9; position:relative;" style-hover="opacity:0.94;">
             <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="width:64px; height:64px; border-radius:50%; background:rgba(36,28,40,0.82); color:#f4efe0; display:flex; align-items:center; justify-content:center; font-size:22px; padding-left:4px;">▶</span></span>
             <span style="position:absolute; left:14px; bottom:12px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.05em; color:#7a7364; background:rgba(244,239,224,0.85); padding:5px 9px; border-radius:2px;">video ↗</span>
           </a>
@@ -127,7 +127,7 @@
         <div>
           <div style="font-family:'Space Mono',monospace; font-size:12px; letter-spacing:0.2em; text-transform:uppercase; color:#ac97b6; margin-bottom:12px;">AVAILABILITY</div>
           <h3 style="font-family:'Newsreader',serif; font-weight:400; font-size:26px; margin:0 0 8px; max-width:20em;">Speaking</h3>
-          <p style="font-size:16px; color:#c9bcd0; margin:0; max-width:38em;">I take on a limited number of engagements are year so I can protect time for family and teaching. Inquires 6-8 months in advance are especially helpful. Please tell me about your audience, the occasion, and your hoped-for timing.</p>
+          <p style="font-size:16px; color:#c9bcd0; margin:0; max-width:38em;">I take on a limited number of engagements a year so that I can protect time for family and teaching. Inquiries 6-8 months in advance are especially helpful. Please tell me about your audience, the occasion, and your hoped-for timing.</p>
         </div>
         <a href="#contact" style="display:inline-flex; align-items:center; padding:13px 26px; background:#f4efe0; color:#241a29; font-size:15px; font-weight:600; border-radius:2px; white-space:nowrap;" style-hover="background:#fff;">Email below↓</a>
       </div>
