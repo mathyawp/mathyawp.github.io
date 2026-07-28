@@ -41,21 +41,20 @@
   html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   [style*="grid-template-columns"] > * { min-width: 0; }
   img { max-width: 100%; height: auto; }
+  header > div > *:first-child { position: relative; top: 2px; }
   @media (max-width: 760px) {
     [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
     [style*="margin:0 auto"]:not([style*="aspect-ratio"]), [style*="margin: 0px auto"]:not([style*="aspect-ratio"]) { padding-left: 22px !important; padding-right: 22px !important; }
     header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
+    header nav a[data-hide-compact] { margin-left: auto !important; }
     header > div { transition: padding 0.22s ease; }
     header nav, header nav a, header > div > a:first-child { transition: font-size 0.22s ease, letter-spacing 0.22s ease; }
     header.hdr-compact > div { padding: 7px 10px !important; gap: 8px !important; }
     header.hdr-compact nav { flex-wrap: nowrap !important; white-space: nowrap !important; font-size: clamp(12px, 4.2vw, 14px) !important; gap: clamp(7px, 2.6vw, 16px) !important; }
     header.hdr-compact nav a { font-size: clamp(12px, 4.2vw, 14px) !important; }
     header.hdr-compact nav a[href*="substack"] { display: none !important; }
+    header.hdr-compact nav a[data-hide-compact] { display: none !important; }
     header.hdr-compact > div > a:first-child { font-size: 13px !important; }
-    header > div > div > a { transition: font-size 0.22s ease, letter-spacing 0.22s ease; }
-    header.hdr-compact > div > div { gap: 10px !important; }
-    header.hdr-compact > div > div > a:first-child { font-size: 13px !important; }
-    header.hdr-compact > div > div > a + a { font-size: clamp(12px, 4.2vw, 14px) !important; }
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
     h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
   }
@@ -110,15 +109,13 @@
 <div style="background:#f4f1f9; color:#2e2545; font-family:'Public Sans',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh;">
 
   <header style="position:sticky; top:0; z-index:50; background:#5a4b86; backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid #433863;">
-    <div style="max-width:1140px; margin:0 auto; padding:16px 40px; display:flex; align-items:baseline; justify-content:space-between; gap:24px;">
-      <div style="display:flex; align-items:baseline; gap:22px;">
-        <a href="/" style="font-family:'Newsreader',Georgia,serif; font-size:16px; letter-spacing:0.16em; text-transform:uppercase; color:#f4f1f9; font-weight:600;">Francis&nbsp;Su</a>
-        <a href="../books.html" style="font-size:14.5px; color:rgba(244,241,249,0.82); white-space:nowrap;" style-hover="color:#ffffff;">↑ All books</a>
-      </div>
+    <div style="max-width:1140px; margin:0 auto; padding:16px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
+      <a href="/" style="font-family:'Newsreader',Georgia,serif; font-size:16px; letter-spacing:0.16em; text-transform:uppercase; color:#f4f1f9; font-weight:600;">Francis&nbsp;Su</a>
       <nav style="display:flex; align-items:center; gap:26px; font-size:14.5px; color:rgba(244,241,249,0.82);">
         <a href="index.html" style="color:rgba(244,241,249,0.82);" style-hover="color:#ffffff;">Book</a>
         <a href="discuss.html" style="color:#ffffff; font-weight:600;">Discuss</a><a href="endnotes.html" style="color:rgba(244,241,249,0.82);" style-hover="color:#ffffff;">Endnotes</a>
         
+        <a href="../books.html" data-hide-compact="" style="color:rgba(244,241,249,0.82); white-space:nowrap;" style-hover="color:#ffffff;">All books ↑</a>
       </nav>
     </div>
   </header>
