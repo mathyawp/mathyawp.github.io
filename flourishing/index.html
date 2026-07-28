@@ -31,6 +31,17 @@
     header nav a[href="#reviews"] { display: none !important; }
     [style*="margin:0 auto"]:not([style*="aspect-ratio"]), [style*="margin: 0px auto"]:not([style*="aspect-ratio"]) { padding-left: 22px !important; padding-right: 22px !important; }
     header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
+    header > div { transition: padding 0.22s ease; }
+    header nav, header nav a, header > div > a:first-child { transition: font-size 0.22s ease, letter-spacing 0.22s ease; }
+    header.hdr-compact > div { padding: 7px 10px !important; gap: 8px !important; }
+    header.hdr-compact nav { flex-wrap: nowrap !important; white-space: nowrap !important; font-size: clamp(12px, 4.2vw, 14px) !important; gap: clamp(7px, 2.6vw, 16px) !important; }
+    header.hdr-compact nav a { font-size: clamp(12px, 4.2vw, 14px) !important; }
+    header.hdr-compact nav a[href*="substack"] { display: none !important; }
+    header.hdr-compact > div > a:first-child { font-size: 13px !important; }
+    header > div > div > a { transition: font-size 0.22s ease, letter-spacing 0.22s ease; }
+    header.hdr-compact > div > div { gap: 10px !important; }
+    header.hdr-compact > div > div > a:first-child { font-size: 13px !important; }
+    header.hdr-compact > div > div > a + a { font-size: clamp(12px, 4.2vw, 14px) !important; }
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
     h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
     .icon-nav { grid-template-columns: repeat(5, 1fr) !important; }
@@ -45,9 +56,9 @@
 <div id="dc-root"><div class="sc-host"><div style="background: var(--paper,#eeeefa); color: var(--ink,#1c1d2b); font-family: &quot;Public Sans&quot;, system-ui, sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; --paper: #f4f1f9; --paper2: #e3dfec; --paper3: #eae7f0; --card: #fbfafd; --ink: #2e2545; --accent: #5a4b86; --accent-dark: #433863; --body: #453a5f; --sub: #7a718d; --muted: #9b91b6; --line: #e2daf0; --band: #241c38; --band-deep: #1c162c; --band-card: #32284c; --band-line: #3f345f; --band-body: #bab5c3; --band-muted: #b4adc9; --qmark: #d2cce0; --header: rgba(244,241,249,0.88); --pad: 0.72; --hero: 1; --h2: 1; --track: -0.01em;">
 
   <header style="position: sticky; top: 0px; z-index: 50; background: var(--accent,#5a4b86); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--accent-dark,#433863);">
-    <div style="max-width: 1140px; margin: 0px auto; padding: 16px 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+    <div style="max-width: 1140px; margin: 0px auto; padding: 16px 40px; display: flex; align-items: baseline; justify-content: space-between; gap: 24px;">
       <div style="display: flex; align-items: baseline; gap: 22px;">
-        <a href="/" style="font-family: &quot;Space Mono&quot;, monospace; font-size: 15px; letter-spacing: 0.2em; text-transform: uppercase; color: rgb(244, 241, 249); font-weight: 700;">Francis&nbsp;Su</a>
+        <a href="/" style="font-family: Newsreader, Georgia, serif; font-size: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: rgb(244, 241, 249); font-weight: 600;">Francis&nbsp;Su</a>
         <a href="../books.html" class="scp0" style="font-size: 14.5px; color: rgba(244, 241, 249, 0.82); white-space: nowrap;">↑ All books</a>
       </div>
       <nav style="display: flex; align-items: center; gap: 26px; font-size: 14.5px; color: rgba(244, 241, 249, 0.82);">
@@ -141,7 +152,7 @@
             </div>
             <div style="position: absolute; top: 0px; left: 0px; width: 100%; opacity: 0; transform: translateX(28px); pointer-events: none; transition: opacity 0.5s, transform 0.5s;">
               <div style="background: var(--card,#fff); border: 1px solid var(--line,#dcdcef); border-radius: 20px; padding: 28px 34px 24px; box-shadow: rgba(40, 42, 90, 0.4) 0px 22px 56px -34px; min-height: 170px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-                <p style="font-family: Newsreader, serif; font-size: 22px; line-height: 1.5; color: var(--body,#2b2c40); margin: 0px 0px 26px; max-width: 34em;">Francis Su believes that math can make us better humans — and he leads by example. Every page is a work of generosity and compassion. Plus, the puzzles will haunt you for weeks.</p>
+                <p style="font-family: Newsreader, serif; font-size: 22px; line-height: 1.5; color: var(--body,#2b2c40); margin: 0px 0px 26px; max-width: 34em;">Francis Su believes that math can make us better humans — and he leads by example. Every page is a work of generosity and compassion.</p>
                 <div style="font-size: 16px; font-weight: 600; color: var(--ink,#1c1d2b);">Ben Orlin</div>
                 <div style="font-family: &quot;Space Mono&quot;, monospace; font-size: 11.5px; letter-spacing: 0.06em; color: var(--muted,#6b70b0); margin-top: 5px; text-transform: uppercase;">Math with Bad Drawings</div>
               </div>
@@ -169,7 +180,7 @@
             </div>
             <div style="position: absolute; top: 0px; left: 0px; width: 100%; opacity: 0; transform: translateX(28px); pointer-events: none; transition: opacity 0.5s, transform 0.5s;">
               <div style="background: var(--card,#fff); border: 1px solid var(--line,#dcdcef); border-radius: 20px; padding: 28px 34px 24px; box-shadow: rgba(40, 42, 90, 0.4) 0px 22px 56px -34px; min-height: 170px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-                <p style="font-family: Newsreader, serif; font-size: 22px; line-height: 1.5; color: var(--body,#2b2c40); margin: 0px 0px 26px; max-width: 34em;">“Mom, this is really good.” S has not read anything that was not assigned to him since school went remote. So grateful.</p>
+                <p style="font-family: Newsreader, serif; font-size: 22px; line-height: 1.5; color: var(--body,#2b2c40); margin: 0px 0px 26px; max-width: 34em;">“Mom, this is really good.” S___ has not read anything that was not assigned to him since school went remote. So grateful.</p>
                 <div style="font-size: 16px; font-weight: 600; color: var(--ink,#1c1d2b);">Laura Palucki Blake</div>
                 <div style="font-family: &quot;Space Mono&quot;, monospace; font-size: 11.5px; letter-spacing: 0.06em; color: var(--muted,#6b70b0); margin-top: 5px; text-transform: uppercase;">Mother of a teen</div>
               </div>
@@ -343,6 +354,31 @@
   if(next) next.addEventListener('click', function(){ show(cur+1); });
   dots.forEach(function(d,k){ d.addEventListener('click', function(){ show(k); }); });
   show(cur);
+})();
+</script>
+<script>
+(function () {
+  if (window.__hdrCompactInit) return;
+  window.__hdrCompactInit = true;
+  var last = window.scrollY, acc = 0, dir = 0, compact = false, ticking = false;
+  var THRESHOLD = 60; // px of sustained travel in one direction before toggling
+  function apply() {
+    ticking = false;
+    var h = document.querySelector('header');
+    if (!h) return;
+    var y = Math.max(0, window.scrollY), d = y - last;
+    last = y;
+    if (y < 60) { acc = 0; dir = 0; compact = false; }
+    else if (d !== 0) {
+      var s = d > 0 ? 1 : -1;
+      if (s !== dir) { dir = s; acc = 0; }
+      acc += d;
+      if (acc > THRESHOLD) { compact = true; acc = 0; }
+      else if (acc < -THRESHOLD) { compact = false; acc = 0; }
+    }
+    h.classList.toggle('hdr-compact', compact);
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(apply); } }, { passive: true });
 })();
 </script>
 </body></html>

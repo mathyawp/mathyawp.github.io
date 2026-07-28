@@ -27,6 +27,13 @@
     [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
     [style*="margin:0 auto"]:not([style*="aspect-ratio"]), [style*="margin: 0px auto"]:not([style*="aspect-ratio"]) { padding-left: 22px !important; padding-right: 22px !important; }
     header nav { flex-wrap: wrap !important; gap: 12px 16px !important; justify-content: flex-start !important; }
+    header > div { transition: padding 0.22s ease; }
+    header nav, header nav a, header > div > a:first-child { transition: font-size 0.22s ease, letter-spacing 0.22s ease; }
+    header.hdr-compact > div { padding: 7px 10px !important; gap: 8px !important; }
+    header.hdr-compact nav { flex-wrap: nowrap !important; white-space: nowrap !important; font-size: clamp(12px, 4.2vw, 14px) !important; gap: clamp(7px, 2.6vw, 16px) !important; }
+    header.hdr-compact nav a { font-size: clamp(12px, 4.2vw, 14px) !important; }
+    header.hdr-compact nav a[href*="substack"] { display: none !important; }
+    header.hdr-compact > div > a:first-child { font-size: 13px !important; }
     h1 { font-size: clamp(34px, 9vw, 60px) !important; }
     h2 { font-size: clamp(26px, 6.5vw, 40px) !important; }
     .icon-nav { grid-template-columns: repeat(5, 1fr) !important; }
@@ -48,8 +55,8 @@
 <div id="dc-root"><div class="sc-host"><div style="background: var(--paper,#f4efe0); color: var(--ink,#241c28); font-family: &quot;Public Sans&quot;, system-ui, sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; --paper: #f4efe0; --ink: #241c28; --accent: #4d2e57; --band: #241a29; --card: #fdfbf5; --line: #e3dbcb; --muted: #8f8172; --body: #413546; --sub: #5f5749; --bio: #ece5d6; --band-ink: #efe9f2; --band-body: #c9bcd0; --band-muted: #ac97b6; --header: rgba(244,239,224,0.86); --pad: 0.72; --hero: 1; --h2: 1; --track: -0.01em;">
 
   <header style="position: sticky; top: 0px; z-index: 50; background: var(--header,rgba(244,239,224,0.86)); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--line,#e3dbcb);">
-    <div style="max-width: 1140px; margin: 0px auto; padding: 18px 40px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
-      <a href="#top" style="font-family: &quot;Space Mono&quot;, monospace; font-size: 15px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink,#241c28); font-weight: 700;">Francis&nbsp;Su</a>
+    <div style="max-width: 1140px; margin: 0px auto; padding: 18px 40px; display: flex; align-items: baseline; justify-content: space-between; gap: 24px;">
+      <a href="#top" style="font-family: Newsreader, Georgia, serif; font-size: 16px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink,#241c28); font-weight: 600;">Francis&nbsp;Su</a>
       <nav style="display: flex; align-items: center; gap: 30px; font-size: 15px; color: var(--sub,#5f5749);">
         <a href="bio.html" class="scp0" style="color: var(--sub,#5f5749);">Bio</a>
         <a href="books.html" class="scp0" style="color: var(--sub,#5f5749);">Books</a>
@@ -259,4 +266,29 @@
     </footer>
 
   </main></div></div></div>
+<script>
+(function () {
+  if (window.__hdrCompactInit) return;
+  window.__hdrCompactInit = true;
+  var last = window.scrollY, acc = 0, dir = 0, compact = false, ticking = false;
+  var THRESHOLD = 60; // px of sustained travel in one direction before toggling
+  function apply() {
+    ticking = false;
+    var h = document.querySelector('header');
+    if (!h) return;
+    var y = Math.max(0, window.scrollY), d = y - last;
+    last = y;
+    if (y < 60) { acc = 0; dir = 0; compact = false; }
+    else if (d !== 0) {
+      var s = d > 0 ? 1 : -1;
+      if (s !== dir) { dir = s; acc = 0; }
+      acc += d;
+      if (acc > THRESHOLD) { compact = true; acc = 0; }
+      else if (acc < -THRESHOLD) { compact = false; acc = 0; }
+    }
+    h.classList.toggle('hdr-compact', compact);
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(apply); } }, { passive: true });
+})();
+</script>
 </body></html>
