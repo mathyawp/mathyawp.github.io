@@ -41,7 +41,10 @@
     .hero { grid-template-columns: 1fr !important; grid-template-areas: "title" "photo" "body" !important; row-gap: 30px !important; }
     .hero h1 { margin-bottom: 0 !important; }
     .hero { padding-top: calc(var(--pad,1)*64px) !important; }
-    .hero-photo { max-width: 360px; margin: 0 auto; width: 100%; }
+    /* one column: hero photo spans the page margins and crops horizontally;
+       fixed height means it squares up on the narrowest screens */
+    .hero-photo { width: 100%; margin: 0; }
+    .hero-photo > div { aspect-ratio: auto !important; height: 300px !important; }
   }
   /* --- stacked header (wordmark line 1, nav line 2) below 670px; collapses to the
          one-line compact bar on scroll --- */
@@ -85,9 +88,9 @@
         <div style="font-family: &quot;Space Mono&quot;, monospace; font-size: 13px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent,#4d2e57); margin-bottom: 26px;">Author&nbsp;· teacher&nbsp;<span style="letter-spacing: 3.64px;">· </span>Mathematical&nbsp;Explorer</div>
         <h1 style="font-family: Newsreader, serif; font-weight: 400; font-size: calc(var(--hero,1)*64px); line-height: 1.04; letter-spacing: var(--track,-0.01em); margin: 0px 0px 26px; text-wrap: balance;">Francis Su</h1>
       </div>
-      <div class="hero-photo" style="grid-area: photo; position: relative;">
-        <div style="aspect-ratio: 1 / 1; border-radius: 3px; overflow: hidden; background: rgb(236, 231, 221); border: 1px solid rgb(226, 221, 211); width: 100%;">
-        <img src="su-portrait-2015.webp" alt="Francis Su" style="object-fit: cover; object-position: center 15%; display: block; width: 100%; height: 100%;" fetchpriority="high" decoding="async"></div>
+      <div class="hero-photo" style="grid-area: photo; position: relative; align-self: stretch;">
+        <div style="height: 100%; position: relative; border-radius: 3px; overflow: hidden; background: rgb(236, 231, 221); border: 1px solid rgb(226, 221, 211); width: 100%;">
+        <img src="su-office-2017.webp" alt="Francis Su" style="object-fit: cover; object-position: 70% 35%; display: block; width: 100%; height: 100%;" fetchpriority="high" decoding="async"><div style="position: absolute; left: 14px; bottom: 14px; max-width: calc(100% - 28px); font-family: 'Space Mono', monospace; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.9); background: rgba(20,14,30,0.28); padding: 5px 10px; border-radius: 2px;">Photo by Mark Skovorodko for <i>Quanta Magazine</i></div></div>
       </div>
       <div style="grid-area: body;">
         <p style="font-size: 19px; line-height: 1.65; color: var(--body,#413546); max-width: 33em; margin: 0px 0px 36px;">I teach, explore, and write about the beauty and joy of mathematics and the dignity of human beings. My work explores what math is, who it is for, and how good teaching can help people find more belonging in it.<br><br>I'm the Benediktsson-Karwa Professor of Mathematics at Harvey Mudd College, a former president of the Mathematical Association of America, and the author of <a href="#book" style="border-bottom: 1px solid rgb(185, 196, 210);"><i>Mathematics for Human Flourishing</i></a>.</p>
