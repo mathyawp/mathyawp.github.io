@@ -65,7 +65,7 @@
     header.hdr-compact nav { width: auto; justify-content: flex-start !important; }
   }
   /* --- header tone options (all drawn from the Eggplant palette) --- */
-  [data-hdrtone="warm"] header { background: rgba(235,227,207,0.9) !important; border-bottom-color: #cbbd9c !important; }
+  [data-hdrtone="warm"] header { background: color-mix(in srgb, color-mix(in srgb, var(--paper,#f4efe0) 76%, #cbbd9c 24%) 90%, transparent) !important; border-bottom-color: #cbbd9c !important; }
   [data-hdrtone="light"] header { background: rgba(251,248,239,0.92) !important; border-bottom-color: #ded4bd !important; }
   [data-hdrtone="eggplant"] header { background: #4d2e57 !important; border-bottom-color: #3a2242 !important; }
   [data-hdrtone="ink"] header { background: #241a29 !important; border-bottom-color: #120d15 !important; }
@@ -102,7 +102,7 @@
 </helmet>
 <div data-hdrtone="{{ headerTone }}" style="background:#f4efe0; color:#241c28; font-family:'Public Sans',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh;">
 
-  <header style="position:sticky; top:0; z-index:50; background:rgba(235, 227, 207, 0.9); backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid #cbbd9c;">
+  <header style="position:sticky; top:0; z-index:50; background:color-mix(in srgb, color-mix(in srgb, var(--paper,#f4efe0) 76%, #cbbd9c 24%) 90%, transparent); backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid #cbbd9c;">
     <div style="max-width:1140px; margin:0 auto; padding:18px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
       <a href="/" data-wordmark="true" style="font-family:'Newsreader',Georgia,serif; font-size:16px; letter-spacing:0.16em; text-transform:uppercase; color:#241c28; font-weight:600;">Francis&nbsp;Su</a>
       <nav style="display:flex; align-items:center; gap:30px; font-size:15px; color:#5f5749;">
