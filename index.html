@@ -471,6 +471,7 @@
       next.style.transition = 'none';
       next.style.opacity = '0';
       next.style.transform = 'translateX(' + enterX + 'px)';
+      next.style.gridColumn = '4';
       grid.replaceChild(next, grid.children[3]);
       currentArchiveRaw = rawPick;
       requestAnimationFrame(function () {
@@ -495,7 +496,12 @@
     } else {
       cards = items.slice(0, 3).map(function (it) { return toCard(it, false); });
     }
+    var dots = grid.querySelector('[data-blog-dots]');
     grid.textContent = '';
+    if (dots) grid.appendChild(dots);
+    if (cards[0]) cards[0].style.gridColumn = '1';
+    if (cards[1]) cards[1].style.gridColumn = '2';
+    if (cards[2]) cards[2].style.gridColumn = '4';
     cards.forEach(function (c) { grid.appendChild(c); });
     if (pool.length > 1) {
       cycleTimer = setInterval(cycleArchive, 15000);
