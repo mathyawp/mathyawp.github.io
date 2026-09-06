@@ -71,8 +71,8 @@
     .math-card > div:first-child { width: 100% !important; max-width: 200px !important; height: 150px !important; }
   }
   @media (min-width: 761px) and (max-width: 980px) {
-    .math-grid > .math-card { grid-template-columns: 1fr !important; gap: 18px !important; }
-    .math-grid > .math-card > div:first-child { width: 100% !important; max-width: 200px !important; height: 150px !important; }
+    .math-card { grid-template-columns: 1fr !important; gap: 18px !important; }
+    .math-card > div:first-child { width: 100% !important; max-width: 200px !important; height: 150px !important; }
   }
 </style>
 <script>
@@ -205,6 +205,7 @@
     </div>
     <div style="max-width:1140px; margin:0 auto; padding:14px 40px 20px;">
 
+      <div class="math-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:28px;">
       <a href="https://www.nytimes.com/2014/04/29/science/to-divide-the-rent-start-with-a-triangle.html" class="math-card" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; padding:20px; border-radius:6px; background:color-mix(in srgb, color-mix(in srgb, var(--paper,#f4efe0) 90%, var(--accent,#4d2e57) 10%) 95%, var(--ink,#241c28) 5%); color:#241c28;" style-hover="opacity:0.92;">
         <div style="border-radius:3px; border:1px solid var(--line-2,#d2c6ab); overflow:hidden; width:150px; height:150px;"><img src="divide-the-rent.webp" alt="Sperner's Lemma rental-harmony triangle" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" decoding="async"></div>
         <div>
@@ -214,6 +215,17 @@
           <span style="font-size:14px; font-weight:600; color:#4d2e57;">Read the article ↗</span>
         </div>
       </a>
+
+      <a href="https://www.youtube.com/watch?v=dPXZZJyWw2I" class="math-card" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; padding:20px; border-radius:6px; background:color-mix(in srgb, color-mix(in srgb, var(--paper,#f4efe0) 90%, var(--accent,#4d2e57) 10%) 95%, var(--ink,#241c28) 5%); color:#241c28;" style-hover="opacity:0.92;">
+        <div style="position:relative; border-radius:3px; border:1px solid var(--line-2,#d2c6ab); overflow:hidden; width:150px; height:150px; background:#241a29;"><img src="frame-lecture-jmm-2026.webp" alt="Francis Su giving the PME J. Sutherland Frame Lecture at JMM 2026" style="width:100%; height:100%; object-fit:cover; object-position:center; display:block;" loading="lazy" decoding="async"><span style="position:absolute; left:10px; bottom:9px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.05em; color:#7a7364; background:rgba(244,239,224,0.85); padding:5px 9px; border-radius:2px;">video ↗</span></div>
+        <div>
+          <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:12px;">FRAME LECTURE · JOINT MATH MEETINGS</div>
+          <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:24px; line-height:1.18; margin:0 0 10px;">100 Years of Sperner's Lemma</h2>
+          <p style="font-size:16px; line-height:1.62; color:#5f5749; margin:0 0 12px; max-width:44em;">I gave the 2026 Frame Lecture on an amazing combinatorial lemma and its many proofs, generalizations, applications.</p>
+          <span style="font-size:14px; font-weight:600; color:#4d2e57;">Watch the lecture ↗</span>
+        </div>
+      </a>
+      </div>
 
       <p style="font-size:15.5px; line-height:1.6; color:#5f5749; margin:28px 0 0; max-width:42em;">At my academic page you can find the <a href="https://math.hmc.edu/su/research/" style="border-bottom:1px solid #d3c4de;"><b>research papers</b></a> I've written.&nbsp;<a href="https://math.hmc.edu/su/research/" style="border-bottom:1px solid #d3c4de;"><b>↗</b></a></p>
 
