@@ -30,13 +30,24 @@
   [style*="grid-template-columns"] > * { min-width: 0; }
   img { max-width: 100%; height: auto; }
   header > div > *:first-child { position: relative; top: 2px; }
-  #blog-cards > div:nth-child(2) { grid-column: 1; }
-  #blog-cards > div:nth-child(3) { grid-column: 2; }
-  #blog-cards > div:nth-child(4) { grid-column: 4; }
+  #blog-cards > div:not([data-blog-dots]):nth-child(2) { grid-column: 1; }
+  #blog-cards > div:not([data-blog-dots]):nth-child(3) { grid-column: 2; }
+  #blog-cards > div:not([data-blog-dots]):nth-child(4) { grid-column: 4; }
   @media (max-width: 760px) {
     [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+    .work-grid > * { grid-template-columns: 150px 1fr !important; gap: 22px !important; align-items: start !important; }
+    .work-grid > * > *:first-child { width: 150px !important; height: 150px !important; max-width: none !important; }
     [data-blog-dots] { display: none !important; }
-    #blog-cards > div:nth-child(2), #blog-cards > div:nth-child(3), #blog-cards > div:nth-child(4) { grid-column: auto !important; }
+    #blog-cards > div { grid-column: auto !important; }
+    /* One column: card 3 narrows and keeps an ellipsis on each side. The dots are
+       placed as real grid items in card 3's row (not children of the animated card
+       wrapper), so they stay put while card 3 crossfades. */
+    #blog-cards { grid-template-columns: 0px minmax(0, 1fr) 0px !important; }
+    #blog-cards > div:not([data-blog-dots]) { grid-column: 1 / -1 !important; }
+    #blog-cards > div:not([data-blog-dots]):nth-child(4) { grid-column: 2 !important; grid-row: 3 !important; margin: 0 28px !important; }
+    #blog-cards > div[data-blog-dots] { display: flex !important; position: static !important; grid-row: 3 !important; align-self: center !important; justify-self: center !important; width: max-content !important; }
+    #blog-cards > div[data-blog-dots]:first-child { grid-column: 1 !important; transform: translateX(28px) !important; }
+    #blog-cards > div[data-blog-dots]:last-child { grid-column: 3 !important; transform: translateX(-28px) !important; }
     [style*="aspect-ratio:240/150"], [style*="aspect-ratio: 240 / 150"] { margin: 0 0 18px !important; }
     [style*="height:340px"], [style*="height: 340px"] { height: auto !important; }
     [style*="margin:0 auto"]:not([style*="aspect-ratio"]), [style*="margin: 0px auto"]:not([style*="aspect-ratio"]) { padding-left: 22px !important; padding-right: 22px !important; }
@@ -71,6 +82,15 @@
     header nav { width: 100%; justify-content: flex-end !important; }
     header.hdr-compact > div { flex-direction: row !important; align-items: center !important; justify-content: space-between !important; gap: 8px !important; padding: 7px 10px !important; }
     header.hdr-compact nav { width: auto; justify-content: flex-start !important; }
+  }
+  /* --- Selected Work cards: stack image-over-text below 520px and at narrow 2-col tracks --- */
+  @media (max-width: 520px) {
+    .work-grid > * { grid-template-columns: 1fr !important; gap: 18px !important; }
+    .work-grid > * > *:first-child { width: 100% !important; max-width: 200px !important; height: 150px !important; }
+  }
+  @media (min-width: 761px) and (max-width: 980px) {
+    .work-grid > * { grid-template-columns: 1fr !important; gap: 18px !important; }
+    .work-grid > * > *:first-child { width: 100% !important; max-width: 200px !important; height: 150px !important; }
   }
 </style>
 <script>
@@ -113,7 +133,7 @@
 <div id="dc-root"><div class="sc-host">
 <div style="background:var(--paper,#f4efe0); color:var(--ink,#241c28); font-family:'Public Sans',system-ui,sans-serif; -webkit-font-smoothing:antialiased; min-height:100vh; --paper:#f4efe0; --ink:#241c28; --accent:#4d2e57; --band:#241a29; --band-soft:#2e2545; --card:#fdfbf5; --line:#e3dbcb; --muted:#8f8172; --body:#413546; --sub:#5f5749; --bio:#ece5d6; --band-ink:#efe9f2; --band-body:#c9bcd0; --band-muted:#ac97b6; --header:rgba(244,239,224,0.86); --pad:0.72; --hero:1; --h2:1; --track:-0.01em;">
 
-  <header style="position:sticky; top:0; z-index:50; background:color-mix(in srgb, color-mix(in srgb, var(--paper,#f4efe0) 76%, #cbbd9c 24%) 90%, transparent); backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid #cbbd9c;">
+  <header style="position:sticky; top:0; z-index:50; background:color-mix(in srgb, color-mix(in srgb, var(--paper,#f4efe0) 76%, var(--line-3,#cbbd9c) 24%) 90%, transparent); backdrop-filter:saturate(180%) blur(12px); border-bottom:1px solid var(--line-3,#cbbd9c);">
     <div style="max-width:1140px; margin:0 auto; padding:18px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px;">
       <a href="#top" style="font-family:'Newsreader',Georgia,serif; font-size:16px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink,#241c28); font-weight:600;">Francis&nbsp;Su</a>
       <nav style="display:flex; align-items:center; gap:30px; font-size:15px; color:var(--sub,#5f5749);">
@@ -151,7 +171,7 @@
 
     <div style="max-width:1140px; margin:0 auto; padding:0 40px;"><div style="height:1px; background:var(--line,#e3dbcb);"></div></div>
 
-    <section id="work" style="background:color-mix(in srgb, var(--paper,#f4efe0) 90%, #cbbd9c 10%); color:var(--ink,#241c28);">
+    <section id="work" style="background:color-mix(in srgb, var(--paper,#f4efe0) 90%, var(--line-3,#cbbd9c) 10%); color:var(--ink,#241c28);">
       <div style="max-width:1140px; margin:0 auto; padding:calc(var(--pad,1)*84px) 40px;">
       <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.24em; text-transform:uppercase; color:var(--accent,#4d2e57); margin-bottom:14px;">Ways in</div>
       <h2 style="font-family:'Newsreader',serif; font-weight:400; font-size:calc(var(--h2,1)*36px); line-height:1.15; margin:0 0 48px; max-width:20em;">An invitation into mathematics.</h2>
@@ -215,9 +235,9 @@
           <h2 style="font-family:'Newsreader',serif; font-weight:400; font-size:calc(var(--h2,1)*36px); line-height:1.15; margin:0;">A few highlights.</h2>
         </div>
       </div>
-      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:28px;">
+      <div class="work-grid" style="display:grid; grid-template-columns:repeat(2,1fr); gap:28px;">
 
-        <a href="https://francissu.substack.com/p/science-in-service-of-love" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, #241c28 5%); border-radius:6px; padding:20px;" class="scp6">
+        <a href="https://francissu.substack.com/p/science-in-service-of-love" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;" class="scp6">
           <div style="border-radius:3px; border:1px solid #e2ddd3; width:150px; height:150px; overflow:hidden;"><img src="science-in-service-of-love.webp" alt="Science, in Service of Love" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" decoding="async"></div>
           <div>
             <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--muted,#8f8172); margin-bottom:8px;">SPEECH · CONVOCATION</div>
@@ -226,16 +246,16 @@
           </div>
         </a>
 
-        <div style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, #241c28 5%); border-radius:6px; padding:20px;">
+        <div style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;">
           <a href="https://www.youtube.com/watch?v=xigc7UFgMmk&amp;t=1s" style="display:block; border-radius:3px; border:1px solid #e2ddd3; width:150px; height:150px; overflow:hidden;" class="scp6"><img src="quanta-interview.webp" alt="Francis Su interviewed by Quanta Magazine" style="width:100%; height:100%; object-fit:cover; object-position:center 25%; display:block;" loading="lazy" decoding="async"></a>
           <div>
             <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--muted,#8f8172); margin-bottom:8px;">VIDEO · QUANTA MAGAZINE</div>
             <h3 style="font-family:'Newsreader',serif; font-weight:500; font-size:21px; line-height:1.2; margin:0 0 8px;"><a href="https://www.youtube.com/watch?v=xigc7UFgMmk&amp;t=1s" style="color:var(--ink,#241c28);" class="scp6">Why mathematics can feel exclusive</a></h3>
-            <p style="font-size:14.5px; line-height:1.55; color:var(--sub,#5f5749); margin:0;">Why the math community can feel exclusive — even when we don't want it to be. Part of a <a href="https://www.quantamagazine.org/math-and-the-best-life-an-interview-with-francis-su-20170202/" style="color:#4d2e57; text-decoration:none; border-bottom:1px solid #cbbd9c;">profile in <i>Quanta Magazine</i></a>.</p>
+            <p style="font-size:14.5px; line-height:1.55; color:var(--sub,#5f5749); margin:0;">Why the math community can feel exclusive — even when we don't want it to be. Part of a <a href="https://www.quantamagazine.org/math-and-the-best-life-an-interview-with-francis-su-20170202/" style="color:#4d2e57; text-decoration:none; border-bottom:1px solid var(--line-3,#cbbd9c);">profile in <i>Quanta Magazine</i></a>.</p>
           </div>
         </div>
 
-        <a href="https://www.latimes.com/opinion/op-ed/la-oe-su-women-in-mathematics-20140826-story.html" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, #241c28 5%); border-radius:6px; padding:20px;" class="scp6">
+        <a href="https://www.latimes.com/opinion/op-ed/la-oe-su-women-in-mathematics-20140826-story.html" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;" class="scp6">
           <div style="border-radius:3px; border:1px solid #e2ddd3; width:150px; height:150px; overflow:hidden;"><img src="gender-gap.webp" alt="Maryam Mirzakhani, Fields Medalist" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" decoding="async"></div>
           <div>
             <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--muted,#8f8172); margin-bottom:8px;">OP-ED · LA TIMES</div>
@@ -244,7 +264,7 @@
           </div>
         </a>
 
-        <a href="https://www.nytimes.com/2014/04/29/science/to-divide-the-rent-start-with-a-triangle.html" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, #241c28 5%); border-radius:6px; padding:20px;" class="scp6">
+        <a href="https://www.nytimes.com/2014/04/29/science/to-divide-the-rent-start-with-a-triangle.html" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;" class="scp6">
           <div style="border-radius:3px; border:1px solid #e2ddd3; width:150px; height:150px; overflow:hidden;"><img src="divide-the-rent.webp" alt="Sperner's Lemma rental-harmony triangle" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" decoding="async"></div>
           <div>
             <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--muted,#8f8172); margin-bottom:8px;">RESEARCH · NEW YORK TIMES</div>
@@ -253,16 +273,16 @@
           </div>
         </a>
 
-        <a href="https://math.hmc.edu/funfacts" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, #241c28 5%); border-radius:6px; padding:20px;" class="scp6">
+        <a href="https://math.hmc.edu/funfacts" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;" class="scp6">
           <div style="border-radius:3px; border:1px solid #e2ddd3; width:150px; height:150px; overflow:hidden;"><img src="math-fun-facts.png" alt="Math Fun Facts" style="width:100%; height:100%; object-fit:cover; display:block; image-rendering:pixelated;" loading="lazy" decoding="async"></div>
           <div>
             <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--muted,#8f8172); margin-bottom:8px;">MATH · WEB ARCHIVE</div>
             <h3 style="font-family:'Newsreader',serif; font-weight:500; font-size:21px; line-height:1.2; margin:0 0 8px;">Math Fun Facts</h3>
-            <p style="font-size:14.5px; line-height:1.55; color:var(--sub,#5f5749); margin:0;">My web archive of cool math ideas to whet students' appetite — including a Random Fun Fact.</p>
+            <p style="font-size:14.5px; line-height:1.55; color:var(--sub,#5f5749); margin:0;">200+ cool ideas to whet students' appetites for math. Browse or get a Random Fun Fact.</p>
           </div>
         </a>
 
-        <a href="https://francissu.substack.com/p/the-lesson-of-grace-in-teaching" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, #241c28 5%); border-radius:6px; padding:20px;" class="scp6">
+        <a href="https://francissu.substack.com/p/the-lesson-of-grace-in-teaching" style="display:grid; grid-template-columns:150px 1fr; gap:22px; align-items:start; color:var(--ink,#241c28); background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;" class="scp6">
           <div style="border-radius:3px; border:1px solid #e2ddd3; width:150px; height:150px; overflow:hidden;"><img src="grace-in-teaching.webp" alt="The Lesson of Grace in Teaching" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy" decoding="async"></div>
           <div>
             <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.12em; color:var(--muted,#8f8172); margin-bottom:8px;">ESSAY · FROM MY BLOG</div>
@@ -282,13 +302,14 @@
         <div style="font-family:'Space Mono',monospace; font-size:13px; letter-spacing:0.24em; text-transform:uppercase; color:#fbf8f1; margin-bottom:14px;">From My Blog</div>
         <h2 style="font-family:'Newsreader',serif; font-weight:400; font-size:calc(var(--h2,1)*36px); line-height:1.15; margin:0;">A Math Yawp.</h2>
       </div>
-      <div id="blog-cards" style="display:grid; grid-template-columns:1fr 1fr 0px 1fr; gap:28px; position:relative;">
+      <div id="blog-cards" style="display:grid; grid-template-columns:1fr 1fr 0px 1fr 0px 0px; gap:28px; position:relative;">
 
-        <div data-blog-dots style="position:absolute; top:50%; left:66.667%; transform:translate(-50%,-50%); display:flex; gap:5px; z-index:1;">
+        <div data-blog-dots style="position:absolute; top:50%; left:calc(66.667% - 37.33px); transform:translate(-50%,-50%); display:flex; gap:5px; z-index:1;">
           <span style="width:5px; height:5px; border-radius:50%; background:#fbf8f1;"></span>
           <span style="width:5px; height:5px; border-radius:50%; background:#fbf8f1;"></span>
           <span style="width:5px; height:5px; border-radius:50%; background:#fbf8f1;"></span>
         </div>
+
 
         <div style="opacity:1; transform:translateX(0px); transition:opacity 800ms ease, transform 800ms ease;">
         <a href="https://francissu.substack.com/p/science-in-service-of-love" target="_blank" rel="noopener" style="display:block; box-sizing:border-box; height:340px; overflow:hidden; color:#fbf8f1; background:color-mix(in srgb, var(--accent,#4d2e57) 75%, #fff 25%); border-radius:3px; padding:22px;" class="scp6">
@@ -316,6 +337,13 @@
           <p style="font-size:14.5px; line-height:1.55; color:#fbf8f1; margin:0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">What would a child's book about joy look like? Math might be on every page.</p>
         </a>
         </div>
+
+        <div data-blog-dots style="position:absolute; top:50%; right:28px; transform:translate(50%,-50%); display:flex; gap:5px; z-index:1;">
+          <span style="width:5px; height:5px; border-radius:50%; background:#fbf8f1;"></span>
+          <span style="width:5px; height:5px; border-radius:50%; background:#fbf8f1;"></span>
+          <span style="width:5px; height:5px; border-radius:50%; background:#fbf8f1;"></span>
+        </div>
+
       </div>
 
       <div id="subscribe" style="margin-top:44px; background:var(--card,#fdfbf5); border:1px solid #ddd4c0; border-radius:6px; padding:24px 30px; display:flex; align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap;">
@@ -496,13 +524,14 @@
     } else {
       cards = items.slice(0, 3).map(function (it) { return toCard(it, false); });
     }
-    var dots = grid.querySelector('[data-blog-dots]');
+    var dots = grid.querySelectorAll('[data-blog-dots]');
     grid.textContent = '';
-    if (dots) grid.appendChild(dots);
+    if (dots[0]) grid.appendChild(dots[0]);
     if (cards[0]) cards[0].style.gridColumn = '1';
     if (cards[1]) cards[1].style.gridColumn = '2';
     if (cards[2]) cards[2].style.gridColumn = '4';
     cards.forEach(function (c) { grid.appendChild(c); });
+    if (dots[1]) grid.appendChild(dots[1]);
     if (pool.length > 1) {
       cycleTimer = setInterval(cycleArchive, 15000);
     }
