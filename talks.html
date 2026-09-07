@@ -26,6 +26,8 @@
   body { background: #f4efe0; }
   a { color: #4d2e57; text-decoration: none; }
   a:hover { color: #38213f; }
+  p a, li a { color: #73507c; }
+  p a:hover, li a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.15em; }
   ::selection { background: #e7dcec; }
 
   /* --- mobile responsiveness --- */
@@ -130,50 +132,50 @@
       
       <div class="talk-grid" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(333px,1fr)); gap:32px;">
 
-        <div style="display:flex; flex-direction:column; background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;">
-          <a href="https://www.youtube.com/watch?v=xigc7UFgMmk&amp;t=1s" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('quanta-interview.webp') center 22% / cover no-repeat; border:1px solid #ddd6c9; position:relative;" style-hover="opacity:0.94;">
+        <div style="display:flex; flex-direction:column; background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;" style-hover="background:color-mix(in srgb, var(--paper,#f4efe0) 90%, var(--ink,#241c28) 10%);">
+          <a href="https://www.youtube.com/watch?v=xigc7UFgMmk&amp;t=1s" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('quanta-interview.webp') center 22% / cover no-repeat; border:1px solid #ddd6c9; position:relative;">
             <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="width:64px; height:64px; border-radius:50%; background:rgba(36,28,40,0.82); color:#f4efe0; display:flex; align-items:center; justify-content:center; font-size:22px; padding-left:4px;">▶</span></span>
             <span style="position:absolute; left:14px; bottom:12px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.05em; color:#7a7364; background:rgba(244,239,224,0.85); padding:5px 9px; border-radius:2px;">video ↗</span>
           </a>
           <div style="padding-top:20px;">
             <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:8px;">INTERVIEW · QUANTA MAGAZINE</div>
-            <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:24px; line-height:1.2; margin:0 0 8px;">Why mathematics can feel exclusive</h2>
-            <p style="font-size:15.5px; line-height:1.6; color:#5f5749; margin:0;">A clip on how the community of mathematicians can be exclusive, even when we don't want it to be. Part of a <a href="https://www.quantamagazine.org/math-and-the-best-life-an-interview-with-francis-su-20170202/" style="color:#4d2e57; text-decoration:none; border-bottom:1px solid var(--line-3,#cbbd9c);">profile in <i>Quanta Magazine</i></a>.</p>
+            <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:24px; line-height:1.2; margin:0 0 8px;"><a href="https://www.youtube.com/watch?v=xigc7UFgMmk&amp;t=1s" style="color:#241c28;">Why mathematics can feel exclusive</a></h2>
+            <p style="font-size:15.5px; line-height:1.6; color:#5f5749; margin:0;">A clip on how the community of mathematicians can be exclusive, even when we don't want it to be. Part of a <a href="https://www.quantamagazine.org/math-and-the-best-life-an-interview-with-francis-su-20170202/" style="color:#73507c;">profile in <i>Quanta Magazine</i></a>.</p>
           </div>
         </div>
 
-        <div style="display:flex; flex-direction:column; background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;">
-          <a href="https://www.youtube.com/watch?v=UitkuhpDUpc" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('enlightning-talks.webp') center center / cover no-repeat; border:1px solid #ddd6c9; position:relative;" style-hover="opacity:0.94;">
+        <div style="display:flex; flex-direction:column; background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;" style-hover="background:color-mix(in srgb, var(--paper,#f4efe0) 90%, var(--ink,#241c28) 10%);">
+          <a href="https://www.youtube.com/watch?v=UitkuhpDUpc" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('enlightning-talks.webp') center center / cover no-repeat; border:1px solid #ddd6c9; position:relative;">
             <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="width:64px; height:64px; border-radius:50%; background:rgba(36,28,40,0.82); color:#f4efe0; display:flex; align-items:center; justify-content:center; font-size:22px; padding-left:4px;">▶</span></span>
             <span style="position:absolute; left:14px; bottom:12px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.05em; color:#7a7364; background:rgba(244,239,224,0.85); padding:5px 9px; border-radius:2px;">video ↗</span>
           </a>
           <div style="padding-top:20px;">
             <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:8px;">PUBLIC TALK · PHI BETA KAPPA</div>
-            <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:24px; line-height:1.2; margin:0 0 8px;">Five minutes on math for everyone</h2>
+            <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:24px; line-height:1.2; margin:0 0 8px;"><a href="https://www.youtube.com/watch?v=UitkuhpDUpc" style="color:#241c28;">Five minutes on math for everyone</a></h2>
             <p style="font-size:15.5px; line-height:1.6; color:#5f5749; margin:0;">The challenge: a five-minute talk about math for a general audience. I chose themes from my book. At PBK's EnLighting Talks, Los Angeles.</p>
           </div>
         </div>
 
-        <div style="display:flex; flex-direction:column; background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;">
-          <a href="https://podcasts.apple.com/us/podcast/how-to-discover-your-humanity-through-math-with-francis-su/id1544098624?i=1000571070588" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('better-human-podcast.webp') center top / cover no-repeat; border:1px solid #201526; position:relative;" style-hover="opacity:0.94;">
+        <div style="display:flex; flex-direction:column; background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;" style-hover="background:color-mix(in srgb, var(--paper,#f4efe0) 90%, var(--ink,#241c28) 10%);">
+          <a href="https://podcasts.apple.com/us/podcast/how-to-discover-your-humanity-through-math-with-francis-su/id1544098624?i=1000571070588" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('better-human-podcast.webp') center top / cover no-repeat; border:1px solid #201526; position:relative;">
             <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="width:64px; height:64px; border-radius:50%; background:rgba(244,239,224,0.92); color:#241a29; display:flex; align-items:center; justify-content:center; font-size:22px; padding-left:4px;">▶</span></span>
             <span style="position:absolute; left:14px; bottom:12px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.05em; color:#241c28; background:rgba(244,239,224,0.9); padding:5px 9px; border-radius:2px;">audio ↗</span>
           </a>
           <div style="padding-top:20px;">
             <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:8px;">PODCAST · TED "HOW TO BE A BETTER HUMAN"</div>
-            <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:24px; line-height:1.2; margin:0 0 8px;">Discover your humanity through math</h2>
+            <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:24px; line-height:1.2; margin:0 0 8px;"><a href="https://podcasts.apple.com/us/podcast/how-to-discover-your-humanity-through-math-with-francis-su/id1544098624?i=1000571070588" style="color:#241c28;">Discover your humanity through math</a></h2>
             <p style="font-size:15.5px; line-height:1.6; color:#5f5749; margin:0;">A conversation on TED's <em style="font-style: italic;">How to Be a Better Human</em> about finding beauty, meaning, and joy in math.</p>
           </div>
         </div>
 
-        <div style="display:flex; flex-direction:column; background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;">
-          <a href="https://www.youtube.com/watch?v=K5P7S0z4os4" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('australian-academy.webp') center center / cover no-repeat; border:1px solid #ddd6c9; position:relative;" style-hover="opacity:0.94;">
+        <div style="display:flex; flex-direction:column; background:color-mix(in srgb, var(--paper,#f4efe0) 95%, var(--ink,#241c28) 5%); border-radius:6px; padding:20px;" style-hover="background:color-mix(in srgb, var(--paper,#f4efe0) 90%, var(--ink,#241c28) 10%);">
+          <a href="https://www.youtube.com/watch?v=K5P7S0z4os4" style="display:block; aspect-ratio:16/9; border-radius:4px; overflow:hidden; background:#241a29 url('australian-academy.webp') center center / cover no-repeat; border:1px solid #ddd6c9; position:relative;">
             <span style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><span style="width:64px; height:64px; border-radius:50%; background:rgba(36,28,40,0.82); color:#f4efe0; display:flex; align-items:center; justify-content:center; font-size:22px; padding-left:4px;">▶</span></span>
             <span style="position:absolute; left:14px; bottom:12px; font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.05em; color:#7a7364; background:rgba(244,239,224,0.85); padding:5px 9px; border-radius:2px;">video ↗</span>
           </a>
           <div style="padding-top:20px;">
             <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:0.14em; color:#8f8172; margin-bottom:8px;">INTERVIEW · AUSTRALIAN ACADEMY</div>
-            <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:24px; line-height:1.2; margin:0 0 8px;">Why should we do mathematics?</h2>
+            <h2 style="font-family:'Newsreader',serif; font-weight:500; font-size:24px; line-height:1.2; margin:0 0 8px;"><a href="https://www.youtube.com/watch?v=K5P7S0z4os4" style="color:#241c28;">Why should we do mathematics?</a></h2>
             <p style="font-size:15.5px; line-height:1.6; color:#5f5749; margin:0;">Recorded for the Australian Academy of Science during my 2024 sabbatical in Sydney. Sorry my hair was a mess, it was windy that day!</p>
           </div>
         </div>
