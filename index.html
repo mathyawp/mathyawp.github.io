@@ -41,15 +41,16 @@
     .work-grid > * > *:first-child { width: 150px !important; height: 150px !important; max-width: none !important; }
     [data-blog-dots] { display: none !important; }
     #blog-cards > div { grid-column: auto !important; }
-    /* One column: card 3 narrows and keeps an ellipsis on each side. The dots are
-       placed as real grid items in card 3's row (not children of the animated card
-       wrapper), so they stay put while card 3 crossfades. */
-    #blog-cards { grid-template-columns: 0px minmax(0, 1fr) 0px !important; }
+    /* One column: card 3 narrows and keeps an ellipsis on each side. The dots sit in
+       their own max-content side columns, so the outer edge of each ellipsis lines up
+       with the edge of the full-width cards above. They are real grid items in card 3's
+       row (not children of the animated card wrapper), so they stay put while it fades. */
+    #blog-cards { grid-template-columns: max-content minmax(0, 1fr) max-content !important; }
     #blog-cards > div:not([data-blog-dots]) { grid-column: 1 / -1 !important; }
-    #blog-cards > div:not([data-blog-dots]):nth-child(4) { grid-column: 2 !important; grid-row: 3 !important; margin: 0 28px !important; }
+    #blog-cards > div:not([data-blog-dots]):nth-child(4) { grid-column: 2 !important; grid-row: 3 !important; margin: 0 -16px !important; }
     #blog-cards > div[data-blog-dots] { display: flex !important; position: static !important; grid-row: 3 !important; align-self: center !important; justify-self: center !important; width: max-content !important; }
-    #blog-cards > div[data-blog-dots]:first-child { grid-column: 1 !important; transform: translateX(28px) !important; }
-    #blog-cards > div[data-blog-dots]:last-child { grid-column: 3 !important; transform: translateX(-28px) !important; }
+    #blog-cards > div[data-blog-dots]:first-child { grid-column: 1 !important; transform: none !important; }
+    #blog-cards > div[data-blog-dots]:last-child { grid-column: 3 !important; transform: none !important; }
     [style*="aspect-ratio:240/150"], [style*="aspect-ratio: 240 / 150"] { margin: 0 0 18px !important; }
     [style*="height:340px"], [style*="height: 340px"] { height: auto !important; }
     [style*="margin:0 auto"]:not([style*="aspect-ratio"]), [style*="margin: 0px auto"]:not([style*="aspect-ratio"]) { padding-left: 22px !important; padding-right: 22px !important; }
