@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Making the Gap Small</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,222 +14,171 @@
      in analysis-style.css so every visualization inherits it. -->
 <style>
   *{box-sizing:border-box}
-  html,body{height:100%}
-  body{overflow:hidden}
+  body{min-height:100dvh}
+  .page{padding-block:44px 64px}
 
-  /* app shell */
-  .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
-  header.top{
-    display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-    padding:14px 22px;border-bottom:1px solid var(--line);
-    background:linear-gradient(180deg,rgba(19,40,58,0.55),rgba(19,40,58,0));
+  .head{max-width:66ch; margin-bottom:30px}
+  .eyebrow{
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--muted); font-weight:600; margin:0 0 10px;
   }
-  .brand{display:flex;flex-direction:column;gap:2px;min-width:max-content}
-  .brand .eyebrow{
-    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.32em;
-    text-transform:uppercase;color:var(--teal);
+  h1{
+    font-size:clamp(30px,4.6vw,42px); font-weight:600; line-height:1.1;
+    letter-spacing:-.015em; margin:0 0 14px; text-wrap:balance;
   }
-  .brand h1{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .lede{margin:0 0 18px; font-size:17px; line-height:1.6; color:var(--muted)}
+  .lede b{color:var(--text); font-weight:600}
   .formula{
-    font-family:var(--font-mono);font-size:15px;color:var(--text);
-    background:var(--inset);border:1px solid var(--line);border-radius:8px;
-    padding:8px 14px;display:flex;align-items:center;gap:6px;white-space:nowrap;
+    margin:0; font-size:clamp(17px,2.4vw,21px); color:var(--text);
+    padding:12px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    display:inline-block; min-width:min(100%,34ch);
   }
-  .formula .sig{font-size:24px;line-height:1;position:relative;top:1px;color:var(--trace)}
-  .formula sub{font-size:9px;font-family:var(--font-mono)}
-  .formula .var{color:var(--teal)}
-  .badge{margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+  .formula .var{color:var(--trace); font-style:italic}
+  .formula .wt{color:var(--teal); font-style:italic}
 
-  main{display:flex;flex:1;min-height:0}
-
-  aside{
-    width:330px;flex:none;border-right:1px solid var(--line);
-    background:linear-gradient(180deg,var(--panel),#0b1a27);
-    overflow-y:auto;padding:18px 18px 40px;
-    scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent;
+  figure{margin:0}
+  canvas{display:block; width:100%; height:min(52vh,440px); min-height:300px}
+  figcaption{
+    display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+    margin-top:10px; padding-top:9px; border-top:1px solid var(--line);
+    font-size:14px; color:var(--muted);
   }
-  aside::-webkit-scrollbar{width:8px}
-  aside::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:8px}
-  .group{margin-bottom:22px}
-  .btn-row{display:flex;gap:8px;flex-wrap:wrap}
-
-  /* preset pickers (two-up cards built from .btn) */
-  .presets{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px}
-  .presets button{
-    flex-direction:column;align-items:flex-start;gap:2px;
-    text-align:left;padding:9px 10px;line-height:1.25;
+  .fignum{font-weight:600; color:var(--text); font-size:13px; letter-spacing:.04em}
+  figcaption .nums{
+    margin-left:auto; font-variant-numeric:tabular-nums lining-nums; color:var(--text);
   }
-  .presets button b{font-size:12.5px;font-weight:600}
-  .presets button i{font-style:normal;font-size:10.5px;color:var(--muted)}
-  .presets button.on{border-color:var(--teal);background:rgba(70,214,196,.10)}
-  .presets button.on b{color:var(--teal)}
+  figcaption .nums b{color:var(--trace); font-weight:600}
+  figcaption .nums i{color:var(--coral); font-style:normal; font-weight:600}
 
-  /* mechanism panel (specific to this viz) */
-  .mech{background:var(--inset);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
-  .mech h4{margin:0 0 2px;font-size:12.5px;font-weight:600}
-  .mech .cap{font-size:11px;color:var(--muted);margin-bottom:10px}
-  .mech canvas{width:100%;height:88px;display:block}
-  .mech .legend{display:flex;gap:14px;margin-top:8px;font-size:10.5px;font-family:var(--font-mono);flex-wrap:wrap}
-  .mech .legend i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px;position:relative;top:1px}
-  .conv{color:var(--teal)}.stuck{color:var(--coral)}
+  .verdict{margin:16px 0 0; max-width:70ch}
 
-  /* plot stage */
-  .plotwrap{flex:1;min-width:0;position:relative;display:flex;flex-direction:column}
-  .stage{flex:1;position:relative;min-height:0}
-  canvas#plot{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
-
-  .overlay{position:absolute;top:14px;left:16px;display:flex;gap:10px;flex-wrap:wrap;pointer-events:none}
-  .chip .cw{color:var(--teal)}.chip .cg{color:var(--trace)}.chip .ce{color:var(--coral)}
-
-  /* ledger: the numeric read of the picture above */
-  .ledger{
-    border-top:1px solid var(--line);background:var(--panel);
-    padding:12px 18px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+  .controls{
+    display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:30px 40px; margin-top:34px; padding-top:4px;
   }
-  .ledger .pcol{display:flex;flex-direction:column;gap:1px}
-  .ledger .pcol .k{font-size:10px;font-family:var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-  .ledger .pcol .v{font-family:var(--font-mono);font-size:15px;color:var(--text)}
-  .ledger .pcol .v.gap{color:var(--trace);font-weight:500}
-  .ledger .pcol .v.eps{color:var(--coral);font-weight:500}
-  .ledger .note{font-size:11.5px;color:var(--muted);max-width:300px;line-height:1.4}
-  .ledger .note b{color:var(--teal)}
-  #contribChart{width:150px;height:46px;display:block}
-  .ledger .act{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  /* Greek lowercase must not be uppercased — α would become Α, which reads as A. */
+  .section-label .lc{text-transform:none}
+  .picks{display:flex; flex-direction:column; align-items:flex-start; gap:7px}
+  .picks .btn{text-align:left}
+  .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
 
-  @media (max-width:880px){
-    body{overflow:auto}
-    .app{height:auto;min-height:100dvh}
-    header.top{padding:12px 14px;gap:12px}
-    .brand{min-width:0}
-    .brand .eyebrow{letter-spacing:.2em;font-size:9.5px;white-space:normal}
-    .badge{width:100%;justify-content:flex-start}
-    .formula{white-space:normal}
-    main{flex-direction:column}
-    aside{width:100%;border-right:none;border-bottom:1px solid var(--line);order:2;overflow:visible}
-    .plotwrap{order:1}
-    .stage{height:60vh;min-height:380px}
-    .formula{font-size:13px}
-    .ledger .act{margin-left:0;width:100%}
+  details.help{margin-top:40px}
+  .mech{margin:6px 0 18px; max-width:58ch}
+  .mech canvas{width:100%; height:120px; min-height:0}
+  .mech figcaption{font-size:13px; margin-top:7px; padding-top:7px}
+  .mech .key{display:flex; gap:18px; flex-wrap:wrap; font-size:13px}
+  .mech .key i{width:16px; height:2px; display:inline-block; margin-right:6px; position:relative; top:-4px}
+
+  @media (max-width:860px){
+    .controls{grid-template-columns:1fr; gap:26px}
+    canvas{height:auto; aspect-ratio:4/3; min-height:0}
   }
 </style>
 </head>
 <body class="viz-page">
-<div class="app viz">
-  <header class="top">
-    <div class="brand">
-      <div class="eyebrow">Real Analysis · Riemann–Stieltjes Integration</div>
-      <h1>Making the Gap Small</h1>
-    </div>
-    <div class="formula" aria-label="U of P minus L of P equals the sum over i of M sub i minus m sub i, times delta alpha sub i">
-      U(<span class="var">P</span>)&nbsp;&minus;&nbsp;L(<span class="var">P</span>)&nbsp;=&nbsp;
-      <span class="sig">&Sigma;</span>
-      <span>(M<sub>i</sub>&nbsp;&minus;&nbsp;m<sub>i</sub>)&nbsp;&Delta;&alpha;<sub>i</sub></span>
-    </div>
-    <div class="badge">
-      <div class="verdict" id="verdict">
-        <span class="dot"></span>
-        <span id="verdictText"></span>
-      </div>
-    </div>
+<div class="viz viz-column page">
+
+  <header class="head">
+    <p class="eyebrow">Real Analysis · Riemann–Stieltjes Integration</p>
+    <h1>Making the gap small</h1>
+    <p class="lede">
+      On each interval the oscillation <em>M<sub>i</sub></em> − <em>m<sub>i</sub></em> is multiplied
+      by the weight Δ<em>α<sub>i</sub></em>. Their sum is the gap between the upper and lower sums —
+      and in the lower box below, <b>that sum is an area you can look at</b>.
+    </p>
+    <p class="formula">
+      U(<span class="var">P</span>) − L(<span class="var">P</span>) =
+      Σ (<span class="var">M<sub>i</sub></span> − <span class="var">m<sub>i</sub></span>)
+      <span class="wt">Δα<sub>i</sub></span>
+    </p>
   </header>
 
-  <main>
-    <aside>
-      <div class="group">
-        <div class="section-label">Choose f</div>
-        <div class="presets" id="fPresets"></div>
-        <div class="hint" id="fHint"></div>
+  <figure>
+    <canvas id="plot" role="img" aria-label="Above: f, the integrator alpha, and one shaded region per interval running from its infimum to its supremum. Below: the same intervals redrawn with width equal to their alpha-weight, so the shaded area equals the gap, against a dashed box of area epsilon."></canvas>
+    <figcaption>
+      <span class="fignum">Figure 1</span>
+      <span id="capText"></span>
+      <span class="nums">gap <b id="rGap">—</b> &nbsp;·&nbsp; ε <i id="rEps">—</i></span>
+    </figcaption>
+  </figure>
+
+  <p class="verdict" id="verdict"><span class="dot"></span><span id="verdictText"></span></p>
+
+  <div class="controls">
+    <div>
+      <div class="section-label">Choose f</div>
+      <div class="picks" id="fPresets"></div>
+      <p class="hint" id="fHint"></p>
+    </div>
+
+    <div>
+      <div class="section-label">Choose <span class="lc">α</span></div>
+      <div class="picks" id="aPresets"></div>
+      <p class="hint" id="aHint"></p>
+    </div>
+
+    <div>
+      <div class="section-label">Partition</div>
+
+      <div class="ctl">
+        <div class="row">
+          <div class="name">Intervals <span class="sub">uniform P</span></div>
+          <div class="val mono" id="nVal">8</div>
+        </div>
+        <input type="range" id="n" min="2" max="40" step="1" value="8"
+               aria-label="Number of intervals in the partition">
+        <p class="hint">Rebuilds P as a uniform partition, discarding any splits.</p>
       </div>
 
-      <div class="group">
-        <div class="section-label">Choose &alpha;</div>
-        <div class="presets" id="aPresets"></div>
-        <div class="hint" id="aHint"></div>
+      <div class="ctl teal">
+        <div class="row">
+          <div class="name">Target <span class="sub">ε</span></div>
+          <div class="val mono" id="eVal">0.12</div>
+        </div>
+        <input type="range" class="teal" id="eps" min="0.03" max="0.5" step="0.01" value="0.12"
+               aria-label="Target epsilon">
+        <p class="hint">Integrability asks whether <em>some</em> P works, for <em>every</em> ε &gt; 0.</p>
       </div>
 
-      <div class="group">
-        <div class="section-label">Partition</div>
-
-        <div class="ctl teal">
-          <div class="row">
-            <div class="name">Intervals <span class="sub">uniform P</span></div>
-            <div class="val mono" id="nVal">8</div>
-          </div>
-          <input type="range" class="teal" id="n" min="2" max="40" step="1" value="8" aria-label="Number of intervals in the partition">
-          <div class="hint">Moving this rebuilds P as a uniform partition and discards any splits.</div>
-        </div>
-
-        <div class="ctl">
-          <div class="row">
-            <div class="name">Target&nbsp; <span class="sub">&epsilon;</span></div>
-            <div class="val mono" id="eVal">0.12</div>
-          </div>
-          <input type="range" id="eps" min="0.03" max="0.5" step="0.01" value="0.12" aria-label="Target epsilon">
-          <div class="hint">Integrability asks: for <em>every</em> &epsilon; &gt; 0, is there a P with U(P) &minus; L(P) &lt; &epsilon;?</div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn ghost" id="split">Split largest term</button>
-          <button class="btn ghost" id="reset">Reset</button>
-        </div>
+      <div class="toggle" id="tRefine" role="switch" aria-checked="false" tabindex="0">
+        <div class="t-name">Common refinement P ∪ Q<span>overlay a second partition</span></div>
+        <div class="switch"></div>
       </div>
 
-      <div class="group">
-        <div class="section-label">Display</div>
-        <div class="toggle on" id="tGrid" role="switch" aria-checked="true" tabindex="0">
-          <div class="t-name">Grid &amp; axes</div><div class="switch"></div>
-        </div>
-        <div class="toggle on" id="tAlpha" role="switch" aria-checked="true" tabindex="0">
-          <div class="t-name">Plot &alpha;(x)<span>the integrator, in teal</span></div><div class="switch"></div>
-        </div>
-        <div class="toggle" id="tRefine" role="switch" aria-checked="false" tabindex="0">
-          <div class="t-name">Common refinement P &cup; Q<span>overlay a second partition Q</span></div><div class="switch"></div>
-        </div>
-      </div>
-
-      <div class="group">
-        <div class="section-label">Why it works</div>
-        <div class="mech">
-          <h4>Does refinement drive the gap down?</h4>
-          <div class="cap">Gap for a uniform partition as the number of intervals grows, for the current f and &alpha;.</div>
-          <canvas id="mechCanvas" width="560" height="176" role="img" aria-label="The gap for a uniform partition, plotted against the number of intervals from 2 to 40, with the target epsilon marked as a dashed line."></canvas>
-          <div class="legend">
-            <span class="conv"><i style="background:var(--teal)"></i>U(P<sub>n</sub>) &minus; L(P<sub>n</sub>)</span>
-            <span class="stuck"><i style="background:var(--coral)"></i>&epsilon;</span>
-          </div>
-        </div>
-      </div>
-
-      <details class="help">
-        <summary>How to use this</summary>
-        <div class="body">
-          <b>The idea.</b> On each interval the oscillation M<sub>i</sub> &minus; m<sub>i</sub> is multiplied by the weight &Delta;&alpha;<sub>i</sub>. The gap is the sum of those products &mdash; and in the lower box it is literally an <b>area</b>, because the widths &Delta;&alpha;<sub>i</sub> add up to 1.<br><br>
-          <b>Two ways to win.</b> Make the oscillation small (a continuous f on short intervals), or make the weight small (&alpha; barely moves there). Either shrinks a term. Try <b>Only the middle</b> and watch the outer intervals contribute nothing at all.<br><br>
-          <b>Refinement.</b> Drag <b>Intervals</b>, or press <kbd>Split largest contribution</kbd> to cut the worst interval in half. Adding points can only lower U and raise L, so the gap never grows.<br><br>
-          <b>Where it fails.</b> Choose <b>Dirichlet f</b>. Every nondegenerate interval holds both rationals and irrationals, so M<sub>i</sub> &minus; m<sub>i</sub> = 1 no matter how fine P gets. The shaded area stays the whole box: the gap is stuck at 1 and f is not integrable.<br><br>
-          <b>Common refinement.</b> Turn it on to replace P by P &cup; Q. Rudin's lemma says the common refinement is at least as good as either partition &mdash; the gap you read can only drop.
-        </div>
-      </details>
-    </aside>
-
-    <div class="plotwrap" id="plotwrap">
-      <div class="stage">
-        <canvas id="plot" role="img" aria-label="Upper panel: f, the integrator alpha, and one box per interval spanning from its infimum to its supremum. Lower panel: the same intervals redrawn with width equal to their alpha-weight, so the shaded area equals the gap."></canvas>
-        <div class="overlay">
-          <div class="chip" id="partChip"></div>
-          <div class="chip" id="gapChip"></div>
-        </div>
-      </div>
-      <div class="ledger">
-        <div class="pcol"><span class="k">U(P) &minus; L(P)</span><span class="v mono gap" id="rGap">&mdash;</span></div>
-        <div class="pcol"><span class="k">target &epsilon;</span><span class="v mono eps" id="rEps">&mdash;</span></div>
-        <div class="pcol"><span class="k">largest term</span><span class="v mono" id="rMax">&mdash;</span></div>
-        <div class="pcol"><span class="k">contribution per interval</span><canvas id="contribChart" width="300" height="92" role="img" aria-label="One bar per interval, sized by its contribution to the gap."></canvas></div>
-        <div class="note" id="rNote"></div>
-        <div class="act"><button class="btn" id="split2">Split largest</button></div>
+      <div class="actions">
+        <button class="btn action" type="button" id="split">Split largest term</button>
+        <button class="btn action" type="button" id="reset">Reset</button>
       </div>
     </div>
-  </main>
+  </div>
+
+  <details class="help">
+    <summary>Why refinement works, and where it stops working</summary>
+    <div class="body">
+      <figure class="mech">
+        <canvas id="mechCanvas" role="img" aria-label="The gap for a uniform partition plotted against the number of intervals from 2 to 40, with the target epsilon marked as a dashed line."></canvas>
+        <figcaption>
+          <span class="key">
+            <span style="color:var(--teal)"><i style="background:var(--teal)"></i>U(P<sub>n</sub>) − L(P<sub>n</sub>)</span>
+            <span style="color:var(--coral)"><i style="background:var(--coral)"></i>ε</span>
+          </span>
+        </figcaption>
+      </figure>
+
+      <p style="margin:0 0 12px"><b>Two ways to make a term small.</b> Shrink the oscillation — a
+      continuous f on a short interval — or shrink the weight, where α barely moves. Try
+      <kbd>Only the middle</kbd> and watch the outer intervals stop contributing entirely.</p>
+
+      <p style="margin:0 0 12px"><b>Refinement never hurts.</b> Adding a point can only lower U and
+      raise L, so the gap never grows. <kbd>Split largest term</kbd> cuts the worst interval in half;
+      the common refinement P ∪ Q is at least as good as either partition on its own.</p>
+
+      <p style="margin:0"><b>Where it fails.</b> Choose <kbd>Dirichlet f</kbd>. Every nondegenerate
+      interval contains both rationals and irrationals, so <em>M<sub>i</sub></em> − <em>m<sub>i</sub></em> = 1
+      however fine P becomes. The shaded area fills the whole box: the gap is stuck at 1, and f is not
+      integrable.</p>
+    </div>
+  </details>
 </div>
 
 <script>
@@ -247,15 +196,15 @@
     { id:"smooth",    label:"Continuous f", sub:"one smooth wave",
       hint:"Uniform continuity makes every Mᵢ − mᵢ small at once, once the intervals are short enough." },
     { id:"monotone",  label:"Monotone f",   sub:"rises, jumps at ⅓ and ⅔",
-      hint:"Individual oscillations are not all small, but they telescope: they sum to the total rise." },
+      hint:"The oscillations are not all small, but they telescope: they sum to the total rise." },
     { id:"dirichlet", label:"Dirichlet f",  sub:"1 on rationals, 0 elsewhere",
       hint:"Every nondegenerate interval has Mᵢ = 1 and mᵢ = 0. Refinement cannot help." },
   ];
   const A_PRESETS = [
     { id:"linear",    label:"Ordinary width", sub:"α(x) = x",
       hint:"Δαᵢ is the ordinary length of the interval — this is the Riemann integral." },
-    { id:"quadratic", label:"Quadratic α", sub:"α(x) = x²",
-      hint:"α moves slowly near 0 and quickly near 1, so equal widths carry very unequal weight." },
+    { id:"quadratic", label:"Quadratic α",    sub:"α(x) = x²",
+      hint:"α moves slowly near 0 and quickly near 1, so equal widths carry unequal weight." },
     { id:"middle",    label:"Only the middle", sub:"α flat outside [¼, ¾]",
       hint:"Outside [¼, ¾] the weight Δαᵢ is zero, so those intervals contribute nothing at all." },
   ];
@@ -267,7 +216,7 @@
     if(id === "linear")   return x;
     if(id === "smooth")   return fSmooth(x);
     if(id === "monotone") return fMono(x);
-    return NaN; // Dirichlet has no drawable graph
+    return NaN;                                    // Dirichlet has no drawable graph
   }
 
   // Exact sup and inf of f on the closed interval [l, r].
@@ -277,7 +226,7 @@
     if(id === "monotone")  return { m:fMono(l), M:fMono(r) };   // nondecreasing, right-continuous
     let m = Math.min(fSmooth(l), fSmooth(r));
     let M = Math.max(fSmooth(l), fSmooth(r));
-    for(let k = 0; k < 4; k++){                                  // interior critical points of sin(3.5 pi x)
+    for(let k = 0; k < 4; k++){                                  // critical points of sin(3.5πx)
       const c = (0.5 + k)/1.75;
       if(c >= r) break;
       if(c > l){ const v = fSmooth(c); if(v < m) m = v; if(v > M) M = v; }
@@ -296,14 +245,12 @@
   const mergeSorted = arr => [...new Set(arr.map(v => +v.toFixed(10)))].sort((a,b) => a-b);
 
   function analyse(fid, aid, pts){
-    const intervals = [];
-    let gap = 0;
+    const intervals = []; let gap = 0;
     for(let i = 1; i < pts.length; i++){
       const l = pts[i-1], r = pts[i];
       const { m, M } = extrema(fid, l, r);
       const dA = alphaVal(aid, r) - alphaVal(aid, l);
-      const osc = M - m;
-      const c = osc*dA;
+      const osc = M - m, c = osc*dA;
       gap += c;
       intervals.push({ l, r, m, M, osc, dA, c });
     }
@@ -312,22 +259,14 @@
 
   /* ---- state ------------------------------------------------------------ */
 
-  const S = {
-    f:"smooth", a:"linear", n:8, eps:0.12,
-    P:uniform(8), custom:false,
-    grid:true, alpha:true, refine:false,
-  };
+  const S = { f:"smooth", a:"linear", n:8, eps:0.12, P:uniform(8), custom:false, refine:false };
   const activePoints = () => S.refine ? mergeSorted([...S.P, ...Q_POINTS]) : S.P;
-
   let R = analyse(S.f, S.a, activePoints());
-  const recompute = () => { R = analyse(S.f, S.a, activePoints()); };
 
   /* ---- canvas plumbing -------------------------------------------------- */
 
   const plot = $("plot"), ctx = plot.getContext("2d");
-  const stage = plot.parentElement;
   const mechCanvas = $("mechCanvas"), mctx = mechCanvas.getContext("2d");
-  const contribChart = $("contribChart"), cctx = contribChart.getContext("2d");
   let CW = 0, CH = 0;
 
   function fitCanvas(c, cx){
@@ -339,38 +278,23 @@
     return [r.width, r.height];
   }
   const snap = v => Math.round(v) + 0.5;
-
-  // Canvas text with a soft ground behind it, so labels stay readable over marks.
-  function label(cx, text, x, y, color, align, baseline, size){
-    cx.font = (size || 11) + "px 'JetBrains Mono', ui-monospace, monospace";
-    cx.textAlign = align || "left";
-    cx.textBaseline = baseline || "top";
-    const w = cx.measureText(text).width, h = (size || 11) + 4;
-    const bx = align === "right" ? x - w - 4 : align === "center" ? x - w/2 - 4 : x - 4;
-    const by = baseline === "bottom" ? y - h + 2 : baseline === "middle" ? y - h/2 : y - 2;
-    cx.save();
-    cx.globalAlpha = 0.72; cx.fillStyle = getCSS("--bg");
-    cx.fillRect(bx, by, w + 8, h);
-    cx.restore();
-    cx.fillStyle = color;
-    cx.fillText(text, x, y);
-  }
+  const serif = () => getCSS("--font-ui") || "Georgia, serif";
 
   let raf = 0;
   const requestDraw = () => { if(!raf) raf = requestAnimationFrame(() => { raf = 0; draw(); }); };
 
-  /* ---- the main picture -------------------------------------------------- */
+  /* ---- the figure --------------------------------------------------------
+     Above: f, α, and one shaded region per interval from mᵢ up to Mᵢ.
+     Below: the same intervals with width Δαᵢ and height Mᵢ − mᵢ. Because the
+     weights sum to 1 and every oscillation is at most 1, the shaded area in
+     that box IS the gap, and a full-height box of width ε has area exactly ε. */
 
-  // Geometry: an upper panel showing f, alpha and the oscillation boxes over x,
-  // and a lower unit box whose widths are the alpha-weights. Because the weights
-  // sum to 1 and every oscillation is at most 1, the shaded area in that box IS
-  // the gap, and a full-height box of width eps has area exactly eps.
   function geom(){
-    const padL = 48, padR = 18, padT = 18, padB = 26;
-    const capH = 18, midGap = 34;
+    const padL = 40, padR = 12, padT = 14, padB = 24;
+    const capH = 17, midGap = 30;
     const innerW = Math.max(10, CW - padL - padR);
-    let stripH = Math.min(120, Math.max(58, (CH - padT - padB - capH - midGap)*0.34));
-    let plotH  = Math.max(60, CH - padT - padB - capH - midGap - stripH);
+    const stripH = Math.min(112, Math.max(54, (CH - padT - padB - capH - midGap)*0.30));
+    const plotH  = Math.max(60, CH - padT - padB - capH - midGap - stripH);
     return { padL, padR, padT, padB, innerW, plotH, stripH, midGap, capH,
              plotTop:padT, plotBot:padT + plotH,
              stripTop:padT + plotH + midGap, stripBot:padT + plotH + midGap + stripH };
@@ -381,272 +305,198 @@
   function draw(){
     ctx.clearRect(0, 0, CW, CH);
     const g = geom();
-    const X  = x => g.padL + x*g.innerW;
-    const Y  = y => g.plotBot - (y/YMAX)*(g.plotBot - g.plotTop);
-
-    if(S.grid) drawGrid(g, X, Y);
-    drawOscBoxes(g, X, Y);
-    if(S.alpha) drawAlpha(g, X, Y);
-    drawF(g, X, Y);
-    drawStrip(g);
-    updateChips();
-    drawContribChart();
-  }
-
-  function drawGrid(g, X, Y){
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = getCSS("--grid-minor");
-    ctx.beginPath();
-    for(let i = 1; i < 20; i++){ const x = snap(X(i/20)); ctx.moveTo(x, g.plotTop); ctx.lineTo(x, g.plotBot); }
-    for(let i = 1; i < 8; i++){ const y = snap(Y(i/8)); ctx.moveTo(g.padL, y); ctx.lineTo(g.padL + g.innerW, y); }
-    ctx.stroke();
-
-    ctx.strokeStyle = getCSS("--grid-major");
-    ctx.beginPath();
-    for(let i = 1; i <= 4; i++){ const x = snap(X(i/4)); ctx.moveTo(x, g.plotTop); ctx.lineTo(x, g.plotBot); }
-    for(let i = 1; i <= 2; i++){ const y = snap(Y(i/2)); ctx.moveTo(g.padL, y); ctx.lineTo(g.padL + g.innerW, y); }
-    ctx.stroke();
-
-    ctx.strokeStyle = getCSS("--axis"); ctx.lineWidth = 1.2;
-    ctx.beginPath();
-    ctx.moveTo(g.padL, snap(Y(0))); ctx.lineTo(g.padL + g.innerW, snap(Y(0)));
-    ctx.moveTo(snap(X(0)), g.plotTop); ctx.lineTo(snap(X(0)), Y(0));
-    ctx.stroke();
-
-    ctx.fillStyle = getCSS("--muted");
-    ctx.font = "11px 'JetBrains Mono', ui-monospace, monospace";
-    ctx.textAlign = "center"; ctx.textBaseline = "top";
-    for(let i = 0; i <= 4; i++) ctx.fillText((i/4).toFixed(2), X(i/4), Y(0) + 6);
-    ctx.textAlign = "right"; ctx.textBaseline = "middle";
-    for(let i = 0; i <= 2; i++) ctx.fillText((i/2).toFixed(1), g.padL - 8, Y(i/2));
-    ctx.textAlign = "left";
-  }
-
-  function drawOscBoxes(g, X, Y){
+    const X = x => g.padL + x*g.innerW;
+    const Y = y => g.plotBot - (y/YMAX)*(g.plotBot - g.plotTop);
+    const ink = getCSS("--text"), muted = getCSS("--muted"), line = getCSS("--line");
+    const crimson = getCSS("--trace"), teal = getCSS("--teal"), ochre = getCSS("--coral");
+    const paper = getCSS("--bg"), axis = getCSS("--axis");
     const maxC = Math.max(1e-9, ...R.intervals.map(d => d.c));
-    const trace = getCSS("--trace");
+
+    /* shaded regions — a light crimson tint, with Mᵢ ruled firmly */
     R.intervals.forEach(d => {
-      const x0 = X(d.l), x1 = X(d.r), w = Math.max(0.6, x1 - x0);
-      const yT = Y(d.M), yB = Y(d.m);
+      const x0 = X(d.l), w = Math.max(0.7, X(d.r) - X(d.l));
+      const yT = Y(d.M), h = Math.max(1, Y(d.m) - Y(d.M));
+      ctx.save();
       if(d.dA <= 1e-12){
-        ctx.save();
-        ctx.globalAlpha = 0.09; ctx.fillStyle = getCSS("--muted");  // weightless: quiet, not amber
-        ctx.fillRect(x0, yT, w, Math.max(1, yB - yT));
-        ctx.restore();
+        ctx.globalAlpha = 0.07; ctx.fillStyle = muted;     // weightless: it contributes nothing
+        ctx.fillRect(x0, yT, w, h);
       } else {
-        ctx.save();
-        ctx.globalAlpha = 0.08 + 0.26*(d.c/maxC);
-        ctx.fillStyle = trace;
-        ctx.fillRect(x0, yT, w, Math.max(1, yB - yT));
-        ctx.globalAlpha = 0.45 + 0.35*(d.c/maxC);                   // Mᵢ and mᵢ edges
-        ctx.strokeStyle = trace; ctx.lineWidth = 1;
+        const k = d.c/maxC;
+        ctx.globalAlpha = 0.09 + 0.24*k; ctx.fillStyle = crimson;
+        ctx.fillRect(x0, yT, w, h);
+        ctx.globalAlpha = 0.55 + 0.30*k; ctx.strokeStyle = crimson; ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(x0, snap(yT)); ctx.lineTo(x0 + w, snap(yT));
-        ctx.moveTo(x0, snap(yB)); ctx.lineTo(x0 + w, snap(yB));
+        ctx.moveTo(x0, snap(yT + h)); ctx.lineTo(x0 + w, snap(yT + h));
         ctx.stroke();
-        ctx.restore();
       }
-      ctx.strokeStyle = getCSS("--line");
+      ctx.restore();
+      ctx.strokeStyle = line; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(snap(x0), g.plotTop); ctx.lineTo(snap(x0), Y(0)); ctx.stroke();
     });
-    ctx.strokeStyle = getCSS("--line");
+    ctx.strokeStyle = line; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(snap(X(1)), g.plotTop); ctx.lineTo(snap(X(1)), Y(0)); ctx.stroke();
-  }
 
-  function drawAlpha(g, X, Y){
-    ctx.strokeStyle = getCSS("--teal"); ctx.lineWidth = 1.4;
-    ctx.setLineDash([5, 4]);
+    /* axes and ticks — hairlines, figures set in the text face */
+    ctx.strokeStyle = axis; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(g.padL, snap(Y(0))); ctx.lineTo(g.padL + g.innerW, snap(Y(0)));
+    ctx.moveTo(snap(g.padL), g.plotTop); ctx.lineTo(snap(g.padL), Y(0));
+    ctx.stroke();
+    ctx.font = `12px ${serif()}`; ctx.fillStyle = muted;
+    ctx.textAlign = "center"; ctx.textBaseline = "top";
+    for(let i = 0; i <= 4; i++) ctx.fillText(i === 0 ? "0" : (i/4).toFixed(2), X(i/4), Y(0) + 6);
+    ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    ["0", "½", "1"].forEach((t, i) => ctx.fillText(t, g.padL - 8, Y(i/2)));
+
+    /* α — the second voice, dashed teal */
+    ctx.strokeStyle = teal; ctx.lineWidth = 1.6; ctx.setLineDash([6, 4]);
     ctx.beginPath();
     for(let i = 0; i <= 300; i++){
       const x = i/300, y = alphaVal(S.a, x);
-      i === 0 ? ctx.moveTo(X(x), Y(y)) : ctx.lineTo(X(x), Y(y));
+      i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y));
     }
     ctx.stroke(); ctx.setLineDash([]);
-    label(ctx, "α(x)", X(0.55) + 10, Y(alphaVal(S.a, 0.55)) + 8, getCSS("--teal"), "left", "top");
-  }
 
-  function drawF(g, X, Y){
-    const trace = getCSS("--trace");
-    ctx.lineWidth = 1.9; ctx.lineJoin = "round"; ctx.lineCap = "round";
-
+    /* f — black ink, as in a printed plate */
+    ctx.strokeStyle = ink; ctx.lineWidth = 1.8; ctx.lineJoin = "round"; ctx.lineCap = "round";
     if(S.f === "dirichlet"){
-      ctx.strokeStyle = trace; ctx.setLineDash([2, 5]);
+      ctx.setLineDash([2, 5]);
       ctx.beginPath(); ctx.moveTo(X(0), Y(1)); ctx.lineTo(X(1), Y(1)); ctx.stroke();
-      ctx.strokeStyle = getCSS("--muted");
-      ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(1), Y(0)); ctx.stroke();
       ctx.setLineDash([]);
-      ctx.fillStyle = trace;
-      for(let i = 0; i < 26; i++){ ctx.beginPath(); ctx.arc(X((i*0.3861)%1), Y(1), 2.4, 0, 7); ctx.fill(); }
-      ctx.fillStyle = getCSS("--muted");
-      for(let i = 0; i < 26; i++){ ctx.beginPath(); ctx.arc(X((i*0.2794 + 0.07)%1), Y(0), 2.4, 0, 7); ctx.fill(); }
-      label(ctx, "rationals · f = 1",   X(1) - 8, Y(1) + 9, trace, "right", "top");
-      label(ctx, "irrationals · f = 0", X(1) - 8, Y(0) - 9, getCSS("--muted"), "right", "bottom");
-      return;
+      ctx.fillStyle = ink;
+      for(let i = 0; i < 24; i++){ ctx.beginPath(); ctx.arc(X((i*0.3861)%1), Y(1), 2.2, 0, 7); ctx.fill(); }
+      ctx.fillStyle = muted;
+      for(let i = 0; i < 24; i++){ ctx.beginPath(); ctx.arc(X((i*0.2794 + 0.07)%1), Y(0), 2.2, 0, 7); ctx.fill(); }
+    } else {
+      ctx.beginPath();
+      let prev = null;
+      for(let i = 0; i <= 600; i++){
+        const x = i/600, y = fVal(S.f, x);
+        if(prev !== null && Math.abs(y - prev) > 0.12) ctx.moveTo(X(x), Y(y));
+        else i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y));
+        prev = y;
+      }
+      ctx.stroke();
+      if(S.f === "monotone"){
+        ctx.strokeStyle = line; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
+        [1/3, 2/3].forEach(j => {
+          ctx.beginPath();
+          ctx.moveTo(snap(X(j)), Y(fMono(j - 1e-9)));
+          ctx.lineTo(snap(X(j)), Y(fMono(j)));
+          ctx.stroke();
+        });
+        ctx.setLineDash([]);
+      }
     }
 
-    ctx.strokeStyle = trace;
-    ctx.beginPath();
-    let prev = null;
-    for(let i = 0; i <= 600; i++){
-      const x = i/600, y = fVal(S.f, x);
-      if(prev !== null && Math.abs(y - prev) > 0.12) ctx.moveTo(X(x), Y(y));
-      else i === 0 ? ctx.moveTo(X(x), Y(y)) : ctx.lineTo(X(x), Y(y));
-      prev = y;
-    }
-    ctx.stroke();
+    /* two labels, set in italic like variables in the text */
+    ctx.font = `italic 15px ${serif()}`; ctx.textBaseline = "top"; ctx.textAlign = "left";
+    ctx.fillStyle = ink;  ctx.fillText("f", g.padL + 6, g.plotTop + 1);
+    ctx.fillStyle = teal; ctx.fillText("α", X(0.93), Y(alphaVal(S.a, 0.93)) + 5);
 
-    if(S.f === "monotone"){
-      ctx.strokeStyle = getCSS("--line-strong"); ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
-      [1/3, 2/3].forEach(j => {
-        ctx.beginPath();
-        ctx.moveTo(snap(X(j)), Y(fMono(j - 1e-9)));
-        ctx.lineTo(snap(X(j)), Y(fMono(j)));
-        ctx.stroke();
-      });
-      ctx.setLineDash([]);
-    }
-    label(ctx, "f(x)", g.padL + 6, g.plotTop + 2, trace, "left", "top");
-  }
-
-  function drawStrip(g){
-    const x0 = g.padL, w = g.innerW, yT = g.stripTop, h = g.stripBot - g.stripTop;
-    const trace = getCSS("--trace");
-
-    ctx.fillStyle = getCSS("--inset");
-    ctx.fillRect(x0, yT, w, h);
-
+    /* the α-weight box */
     let acc = 0;
     R.intervals.forEach(d => {
-      const bw = d.dA*w;
-      if(bw > 0.2){
-        const bh = Math.min(1, d.osc)*h;
-        ctx.fillStyle = trace; ctx.globalAlpha = 0.78;
-        ctx.fillRect(x0 + acc, yT + h - bh, bw, bh);
-        ctx.globalAlpha = 1;
+      const bw = d.dA*g.innerW, bh = Math.min(1, d.osc)*(g.stripH - 1);
+      if(bw > 0.25){
+        ctx.save();
+        ctx.globalAlpha = 0.68; ctx.fillStyle = crimson;
+        ctx.fillRect(g.padL + acc, g.stripBot - bh, bw, bh);
+        ctx.restore();
         if(bw > 3){
-          ctx.strokeStyle = getCSS("--bg"); ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.moveTo(snap(x0 + acc), yT + h - bh); ctx.lineTo(snap(x0 + acc), yT + h); ctx.stroke();
+          ctx.strokeStyle = paper; ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(snap(g.padL + acc), g.stripBot - bh);
+          ctx.lineTo(snap(g.padL + acc), g.stripBot - 1);
+          ctx.stroke();
         }
       }
       acc += bw;
     });
 
-    // the epsilon budget: a full-height box of width eps has area exactly eps
-    const ew = Math.max(2, S.eps*w);
-    const coral = getCSS("--coral");
+    /* ε budget — a full-height box of width ε has area exactly ε */
     ctx.save();
-    ctx.globalAlpha = 0.10; ctx.fillStyle = coral;
-    ctx.fillRect(x0, yT, ew, h - 1);
+    ctx.strokeStyle = ochre; ctx.lineWidth = 1.4; ctx.setLineDash([5, 4]);
+    ctx.strokeRect(snap(g.padL), snap(g.stripTop), Math.max(3, S.eps*g.innerW), g.stripH - 1);
     ctx.restore();
-    ctx.strokeStyle = coral; ctx.lineWidth = 1.4; ctx.setLineDash([5, 4]);
-    ctx.strokeRect(snap(x0), snap(yT), ew, h - 1);
-    ctx.setLineDash([]);
-    label(ctx, "ε budget", x0 + ew + 6, yT + 4, coral, "left", "top", 10.5);
 
     ctx.strokeStyle = getCSS("--line-strong"); ctx.lineWidth = 1;
-    ctx.strokeRect(snap(x0), snap(yT), w, h - 1);
+    ctx.strokeRect(snap(g.padL), snap(g.stripTop), g.innerW, g.stripH - 1);
 
-    ctx.save();
-    ctx.translate(x0 - 13, yT + h/2);
-    ctx.rotate(-PI/2);
-    ctx.font = "10.5px 'JetBrains Mono', ui-monospace, monospace";
-    ctx.fillStyle = getCSS("--muted");
-    ctx.textAlign = "center"; ctx.textBaseline = "bottom";
-    ctx.fillText("Mᵢ − mᵢ", 0, 0);
-    ctx.restore();
+    ctx.font = `12px ${serif()}`; ctx.textBaseline = "top";
+    ctx.fillStyle = ochre; ctx.textAlign = "left";
+    ctx.fillText("ε", g.padL + Math.max(3, S.eps*g.innerW) + 6, g.stripTop + 4);
 
-    ctx.font = "10.5px 'JetBrains Mono', ui-monospace, monospace";
-    const rightCap = "shaded area = U(P) − L(P) = " + R.gap.toFixed(4);
-    ctx.textBaseline = "top";
-    if(w > ctx.measureText(rightCap).width + 130){
-      ctx.fillStyle = getCSS("--muted");
-      ctx.textAlign = "left";
-      ctx.fillText("α-weight  Δαᵢ  →", x0, g.stripBot + 6);
+    const cap = "shaded area = U(P) − L(P)";
+    ctx.textAlign = "right"; ctx.fillStyle = crimson;
+    ctx.fillText(cap, g.padL + g.innerW, g.stripBot + 5);
+    if(g.innerW > ctx.measureText(cap).width + 150){
+      ctx.textAlign = "left"; ctx.fillStyle = muted;
+      ctx.fillText("width = α-weight  Δαᵢ", g.padL, g.stripBot + 5);
     }
-    ctx.textAlign = "right";
-    ctx.fillStyle = getCSS("--trace");
-    ctx.fillText(rightCap, x0 + w, g.stripBot + 6);
     ctx.textAlign = "left";
   }
 
-  /* ---- sidebar mechanism chart ------------------------------------------ */
-
+  /* ---- the sidebar chart, now inside the disclosure --------------------- */
   function drawMech(){
     const [w, h] = fitCanvas(mechCanvas, mctx);
     mctx.clearRect(0, 0, w, h);
-    const pad = 4;
+    const pad = 5;
     const vals = [];
     for(let n = 2; n <= 40; n++) vals.push(analyse(S.f, S.a, uniform(n)).gap);
     const top = Math.max(0.25, ...vals, S.eps*1.2);
     const X = i => pad + i/(vals.length - 1)*(w - 2*pad);
     const Y = v => (h - pad) - (v/top)*(h - 2*pad);
 
-    mctx.strokeStyle = getCSS("--coral"); mctx.lineWidth = 1.2; mctx.setLineDash([4, 4]);
+    mctx.strokeStyle = getCSS("--coral"); mctx.lineWidth = 1.3; mctx.setLineDash([4, 4]);
     mctx.beginPath(); mctx.moveTo(pad, snap(Y(S.eps))); mctx.lineTo(w - pad, snap(Y(S.eps))); mctx.stroke();
     mctx.setLineDash([]);
 
-    mctx.strokeStyle = getCSS("--teal"); mctx.lineWidth = 1.8;
-    mctx.lineJoin = "round"; mctx.beginPath();
-    vals.forEach((v, i) => i === 0 ? mctx.moveTo(X(i), Y(v)) : mctx.lineTo(X(i), Y(v)));
+    mctx.strokeStyle = getCSS("--teal"); mctx.lineWidth = 1.8; mctx.lineJoin = "round";
+    mctx.beginPath();
+    vals.forEach((v, i) => i ? mctx.lineTo(X(i), Y(v)) : mctx.moveTo(X(i), Y(v)));
     mctx.stroke();
 
-    mctx.fillStyle = getCSS("--muted");
-    mctx.font = "9.5px 'JetBrains Mono', ui-monospace, monospace";
-    mctx.textBaseline = "bottom";
+    mctx.fillStyle = getCSS("--muted"); mctx.font = `11px ${serif()}`;
+    mctx.textBaseline = "bottom"; mctx.textAlign = "left";
     mctx.fillText("n = 2", pad, h - 1);
     mctx.textAlign = "right"; mctx.fillText("n = 40", w - pad, h - 1);
     mctx.textAlign = "left";
   }
 
-  function drawContribChart(){
-    const [w, h] = fitCanvas(contribChart, cctx);
-    cctx.clearRect(0, 0, w, h);
-    const d = R.intervals;
-    const maxC = Math.max(1e-9, ...d.map(v => v.c));
-    const bw = w/d.length;
-    cctx.fillStyle = getCSS("--trace");
-    d.forEach((v, i) => {
-      const bh = (v.c/maxC)*(h - 3);
-      cctx.globalAlpha = v.c > 0 ? 0.45 + 0.55*(v.c/maxC) : 0.14;
-      cctx.fillRect(i*bw + 0.5, h - Math.max(1, bh), Math.max(1, bw - 1), Math.max(1, bh));
-    });
-    cctx.globalAlpha = 1;
-  }
-
   /* ---- readouts ---------------------------------------------------------- */
 
-  function updateChips(){
-    const pts = activePoints();
-    $("partChip").innerHTML = (S.refine ? "P ∪ Q" : "P") +
-      " · <b>" + (pts.length - 1) + "</b> intervals" + (S.custom && !S.refine ? " · split" : "");
-    $("gapChip").innerHTML = "<span class='cg'>gap <b>" + R.gap.toFixed(4) + "</b></span> · " +
-      "<span class='ce'>ε <b>" + S.eps.toFixed(2) + "</b></span>";
-  }
-
   function updateReadouts(){
+    const pts = activePoints();
     $("rGap").textContent = R.gap.toFixed(4);
     $("rEps").textContent = S.eps.toFixed(2);
-    let bi = 0;
-    R.intervals.forEach((d, i) => { if(d.c > R.intervals[bi].c) bi = i; });
-    const b = R.intervals[bi];
-    $("rMax").textContent = "I" + (bi + 1) + " · " + b.c.toFixed(4);
-    $("rNote").innerHTML = b.c <= 1e-12
-      ? "Every interval carries zero <b>α-weight</b> where f oscillates — the gap is already 0."
-      : "Largest term: oscillation <b>" + b.osc.toFixed(3) + "</b> × weight <b>" + b.dA.toFixed(3) + "</b>.";
+    $("capText").textContent =
+      (S.refine ? "P ∪ Q, " : "") + (pts.length - 1) + " intervals" +
+      (S.custom && !S.refine ? ", one split" : "") +
+      " · widths below are α-weights, so the shaded area is the gap itself.";
 
     const el = $("verdict"), t = $("verdictText");
     if(R.gap < S.eps){
       el.className = "verdict good";
-      t.innerHTML = "<b>This partition works.</b> &nbsp;<span class='mono'>" +
-        R.gap.toFixed(4) + " &lt; " + S.eps.toFixed(2) + "</span> — the Cauchy criterion is met at this ε.";
+      t.innerHTML = "<b>This partition works.</b> The gap <span class='mono'>" + R.gap.toFixed(4) +
+        "</span> is below ε = <span class='mono'>" + S.eps.toFixed(2) +
+        "</span>, so the Cauchy criterion is met at this ε.";
+    } else if(S.f === "dirichlet"){
+      el.className = "verdict bad";
+      t.innerHTML = "<b>The gap is stuck at 1.</b> Every interval has oscillation 1, so no partition " +
+        "brings it below ε = <span class='mono'>" + S.eps.toFixed(2) + "</span>. f is not integrable.";
     } else {
       el.className = "verdict bad";
-      t.innerHTML = "<b>Not small enough yet.</b> &nbsp;<span class='mono'>" +
-        R.gap.toFixed(4) + " ≥ " + S.eps.toFixed(2) + "</span> — refine P, or the gap may be stuck.";
+      t.innerHTML = "<b>Not small enough yet.</b> The gap <span class='mono'>" + R.gap.toFixed(4) +
+        "</span> still exceeds ε = <span class='mono'>" + S.eps.toFixed(2) + "</span>. Refine P.";
     }
   }
 
-  function sync(){ recompute(); updateReadouts(); drawMech(); requestDraw(); }
+  function sync(){
+    R = analyse(S.f, S.a, activePoints());
+    updateReadouts(); drawMech(); requestDraw();
+  }
 
   /* ---- controls ---------------------------------------------------------- */
 
@@ -655,11 +505,12 @@
     list.forEach(p => {
       const b = document.createElement("button");
       b.type = "button";
-      b.className = "btn" + (S[key] === p.id ? " on" : "");
-      b.setAttribute("aria-pressed", S[key] === p.id);
-      b.innerHTML = "<b>" + p.label + "</b><i>" + p.sub + "</i>";
+      b.className = "btn";
+      b.setAttribute("aria-pressed", String(S[key] === p.id));
+      b.innerHTML = p.label + " <small>" + p.sub + "</small>";
       b.addEventListener("click", () => {
         S[key] = p.id;
+        if(key === "f") S.custom = false, S.P = uniform(S.n);
         buildPresets(host, list, key, hintEl);
         sync();
       });
@@ -684,7 +535,7 @@
     fillSlider(epsEl); sync();
   });
 
-  function splitLargest(){
+  $("split").addEventListener("click", () => {
     const base = analyse(S.f, S.a, S.P);
     let bi = 0;
     base.intervals.forEach((d, i) => { if(d.c > base.intervals[bi].c) bi = i; });
@@ -692,41 +543,37 @@
     S.P = mergeSorted([...S.P, (d.l + d.r)/2]);
     S.custom = true;
     sync();
-  }
-  $("split").addEventListener("click", splitLargest);
-  $("split2").addEventListener("click", splitLargest);
+  });
 
   $("reset").addEventListener("click", () => {
     S.n = 8; S.eps = 0.12; S.P = uniform(8); S.custom = false; S.refine = false;
     nEl.value = 8; epsEl.value = 0.12; fillSlider(nEl); fillSlider(epsEl);
     $("nVal").textContent = "8"; $("eVal").textContent = "0.12";
-    const tr = $("tRefine"); tr.classList.remove("on"); tr.setAttribute("aria-checked", "false");
+    const tr = $("tRefine");
+    tr.classList.remove("on"); tr.setAttribute("aria-checked", "false");
     sync();
   });
 
-  function bindToggle(id, key, after){
-    const el = $(id);
+  (() => {
+    const el = $("tRefine");
     const flip = () => {
-      S[key] = !S[key];
-      el.classList.toggle("on", S[key]);
-      el.setAttribute("aria-checked", S[key]);
-      if(after) after();
+      S.refine = !S.refine;
+      el.classList.toggle("on", S.refine);
+      el.setAttribute("aria-checked", String(S.refine));
       sync();
     };
     el.addEventListener("click", flip);
     el.addEventListener("keydown", e => {
       if(e.key === " " || e.key === "Enter"){ e.preventDefault(); flip(); }
     });
-  }
-  bindToggle("tGrid", "grid");
-  bindToggle("tAlpha", "alpha");
-  bindToggle("tRefine", "refine");
+  })();
 
   /* ---- boot -------------------------------------------------------------- */
 
   function resize(){ [CW, CH] = fitCanvas(plot, ctx); draw(); }
-  new ResizeObserver(() => resize()).observe(stage);
+  new ResizeObserver(() => resize()).observe(plot);
   window.addEventListener("resize", () => { resize(); drawMech(); });
+  document.querySelector("details.help").addEventListener("toggle", drawMech);
   if(document.fonts && document.fonts.ready){
     document.fonts.ready.then(() => { resize(); drawMech(); });
   }
