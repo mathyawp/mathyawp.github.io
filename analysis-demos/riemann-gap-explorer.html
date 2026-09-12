@@ -2,90 +2,141 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Making the Gap Small</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <!-- Shared suite look: tokens + components + fonts all come from here. -->
-<link rel="stylesheet" href="analysis-style.css" />
+<link rel="stylesheet" href="analysis-style.css?v=2" />
 
 <!-- Only gap-explorer-specific layout lives below. Anything reusable belongs
-     in analysis-style.css so every visualization inherits it. -->
+     in analysis-style.css so every visualization inherits it.
+
+     LAYOUT INTENT: this is a fixed-height app, not a scrolling document. The
+     figure and the controls must be on screen together, so that moving a
+     control shows its effect without scrolling — on a phone as much as on a
+     desktop. Nothing below the fold. -->
 <style>
   *{box-sizing:border-box}
-  body{min-height:100dvh}
-  .page{padding-block:44px 64px}
+  html,body{height:100%}
+  body{overflow:hidden}
 
-  .head{max-width:66ch; margin-bottom:30px}
+  .app{
+    height:100dvh; display:flex; flex-direction:column; overflow:hidden;
+    padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right);
+  }
+
+  /* ---- top bar ---------------------------------------------------------- */
+  .topbar{
+    flex:none; display:flex; align-items:baseline; gap:10px 24px; flex-wrap:wrap;
+    padding:11px 22px 10px; border-bottom:1px solid var(--line);
+  }
   .eyebrow{
-    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--muted); font-weight:600; margin:0 0 10px;
+    font-size:10.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--muted); font-weight:600; margin:0 0 3px;
   }
-  h1{
-    font-size:clamp(30px,4.6vw,42px); font-weight:600; line-height:1.1;
-    letter-spacing:-.015em; margin:0 0 14px; text-wrap:balance;
-  }
-  .lede{margin:0 0 18px; font-size:17px; line-height:1.6; color:var(--muted)}
-  .lede b{color:var(--text); font-weight:600}
-  .formula{
-    margin:0; font-size:clamp(17px,2.4vw,21px); color:var(--text);
-    padding:12px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
-    display:inline-block; min-width:min(100%,34ch);
-  }
+  h1{font-size:22px; font-weight:600; line-height:1.15; letter-spacing:-.015em; margin:0}
+  .formula{margin:0; font-size:16px; color:var(--text); margin-left:auto}
   .formula .var{color:var(--trace); font-style:italic}
   .formula .wt{color:var(--teal); font-style:italic}
 
-  figure{margin:0}
-  canvas{display:block; width:100%; height:min(52vh,440px); min-height:300px}
-  figcaption{
-    display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
-    margin-top:10px; padding-top:9px; border-top:1px solid var(--line);
-    font-size:14px; color:var(--muted);
-  }
-  .fignum{font-weight:600; color:var(--text); font-size:13px; letter-spacing:.04em}
-  figcaption .nums{
-    margin-left:auto; font-variant-numeric:tabular-nums lining-nums; color:var(--text);
-  }
-  figcaption .nums b{color:var(--trace); font-weight:600}
-  figcaption .nums i{color:var(--coral); font-style:normal; font-weight:600}
+  /* ---- the two halves --------------------------------------------------- */
+  main{flex:1; display:flex; min-height:0}
 
-  .verdict{margin:16px 0 0; max-width:70ch}
+  .stage{flex:1; min-width:0; display:flex; flex-direction:column; padding:12px 0 8px 20px}
+  .canvas-wrap{flex:1; min-height:0; position:relative}
+  canvas#plot{position:absolute; inset:0; width:100%; height:100%; display:block}
 
-  .controls{
-    display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:30px 40px; margin-top:34px; padding-top:4px;
+  .under{flex:none; padding:8px 20px 0 0; border-top:1px solid var(--line); margin-top:8px}
+  .caption{display:flex; gap:9px; margin:0 0 5px; font-size:13px; color:var(--muted)}
+  .fignum{font-weight:600; color:var(--text); letter-spacing:.03em}
+  .verdict{margin:0; font-size:14.5px; align-items:baseline}
+  .verdict .nums{
+    margin-left:auto; padding-left:14px; white-space:nowrap;
+    font-variant-numeric:tabular-nums lining-nums; color:var(--text);
   }
-  /* Greek lowercase must not be uppercased — α would become Α, which reads as A. */
-  .section-label .lc{text-transform:none}
-  .picks{display:flex; flex-direction:column; align-items:flex-start; gap:7px}
+  .verdict .nums b{color:var(--trace); font-weight:600}
+  .verdict .nums i{color:var(--coral); font-style:normal; font-weight:600}
+
+  aside{
+    width:326px; flex:none; overflow-y:auto; overscroll-behavior:contain;
+    border-left:1px solid var(--line); padding:14px 20px 22px;
+  }
+  .grp{margin-bottom:18px}
+  .picks{display:flex; flex-direction:column; align-items:flex-start; gap:6px}
   .picks .btn{text-align:left}
-  .actions{display:flex; gap:12px; flex-wrap:wrap; margin-top:16px}
+  /* Greek lowercase must not be uppercased — α would become Α, reading as A. */
+  .section-label .lc{text-transform:none}
+  .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px}
+  details.help{margin-top:6px}
+  .mech{margin:4px 0 14px}
+  .mech canvas{width:100%; height:96px; display:block}
+  .mech .key{display:flex; gap:16px; flex-wrap:wrap; font-size:12.5px; margin-top:5px}
+  .mech .key i{width:15px; height:2px; display:inline-block; margin-right:5px; position:relative; top:-4px}
 
-  details.help{margin-top:40px}
-  .mech{margin:6px 0 18px; max-width:58ch}
-  .mech canvas{width:100%; height:120px; min-height:0}
-  .mech figcaption{font-size:13px; margin-top:7px; padding-top:7px}
-  .mech .key{display:flex; gap:18px; flex-wrap:wrap; font-size:13px}
-  .mech .key i{width:16px; height:2px; display:inline-block; margin-right:6px; position:relative; top:-4px}
+  /* ---- phone: stack, and compress the controls so they all stay visible --
+     Budget on an iPhone 16 is roughly 393 × 660 CSS px once Safari's chrome is
+     taken out. The figure flexes; the control panel is capped and compacted:
+     preset sub-labels and hint paragraphs are dropped, presets run as wrapping
+     rows, and the two sliders sit side by side. */
+  @media (max-width:900px){
+    main{flex-direction:column}
 
-  @media (max-width:860px){
-    .controls{grid-template-columns:1fr; gap:26px}
-    canvas{height:auto; aspect-ratio:4/3; min-height:0}
+    .topbar{padding:8px 14px 7px; gap:4px 14px}
+    .eyebrow{display:none}
+    h1{font-size:17px}
+    .formula{font-size:13.5px; margin-left:auto}
+
+    .stage{flex:1 1 auto; min-height:0; padding:8px 14px 6px}
+    .canvas-wrap{flex:1; min-height:186px}
+    .under{padding:7px 0 0; margin-top:7px}
+    .caption{display:none}
+    .verdict{font-size:13.5px}
+    .verdict .nums{padding-left:10px}
+
+    aside{
+      width:100%; flex:0 0 auto; max-height:50dvh;
+      border-left:0; border-top:1px solid var(--line);
+      padding:10px 14px calc(14px + env(safe-area-inset-bottom));
+    }
+    /* These must out-specify analysis-style.css, whose rules are all scoped
+       under `.viz` — an unprefixed `.toggle` here would silently lose. */
+    .grp{margin-bottom:11px}
+    .viz .section-label{font-size:10px; margin-bottom:6px; letter-spacing:.14em}
+    .picks{flex-direction:row; flex-wrap:wrap; gap:2px 16px}
+    .viz .picks .btn{font-size:14px; padding:2px 1px}
+    .viz .picks .btn small{display:none}
+    .viz aside .hint{display:none}
+    .sliders{display:grid; grid-template-columns:1fr 1fr; gap:6px 18px}
+    .viz .sliders .ctl{margin-bottom:0}
+    .viz .ctl .row{margin-bottom:2px}
+    .viz .ctl .name{font-size:13.5px}
+    .viz .ctl .name .sub{font-size:12px}
+    .viz .ctl .val{font-size:14.5px}
+    .viz .toggle{padding:5px 0}
+    .viz .toggle .t-name{font-size:13.5px}
+    .viz .toggle .t-name span{display:none}
+    .actions{margin-top:8px; gap:8px}
+    .viz .actions .btn{font-size:13.5px; padding:4px 10px}
+    .viz details.help summary{padding:8px 0; font-size:13.5px}
+  }
+
+  /* Landscape phone: very little height, so cap the panel harder. */
+  @media (max-width:900px) and (max-height:520px){
+    aside{max-height:56dvh}
+    .canvas-wrap{min-height:150px}
   }
 </style>
 </head>
 <body class="viz-page">
-<div class="viz viz-column page">
+<div class="viz app">
 
-  <header class="head">
-    <p class="eyebrow">Real Analysis · Riemann–Stieltjes Integration</p>
-    <h1>Making the gap small</h1>
-    <p class="lede">
-      On each interval the oscillation <em>M<sub>i</sub></em> − <em>m<sub>i</sub></em> is multiplied
-      by the weight Δ<em>α<sub>i</sub></em>. Their sum is the gap between the upper and lower sums —
-      and in the lower box below, <b>that sum is an area you can look at</b>.
-    </p>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Real Analysis · Riemann–Stieltjes Integration</p>
+      <h1>Making the gap small</h1>
+    </div>
     <p class="formula">
       U(<span class="var">P</span>) − L(<span class="var">P</span>) =
       Σ (<span class="var">M<sub>i</sub></span> − <span class="var">m<sub>i</sub></span>)
@@ -93,92 +144,96 @@
     </p>
   </header>
 
-  <figure>
-    <canvas id="plot" role="img" aria-label="Above: f, the integrator alpha, and one shaded region per interval running from its infimum to its supremum. Below: the same intervals redrawn with width equal to their alpha-weight, so the shaded area equals the gap, against a dashed box of area epsilon."></canvas>
-    <figcaption>
-      <span class="fignum">Figure 1</span>
-      <span id="capText"></span>
-      <span class="nums">gap <b id="rGap">—</b> &nbsp;·&nbsp; ε <i id="rEps">—</i></span>
-    </figcaption>
-  </figure>
+  <main>
+    <section class="stage">
+      <div class="canvas-wrap">
+        <canvas id="plot" role="img" aria-label="Above: f, the integrator alpha, and one shaded region per interval running from its infimum to its supremum. Below: the same intervals redrawn with width equal to their alpha-weight, so the shaded area equals the gap, against a dashed box of area epsilon."></canvas>
+      </div>
+      <div class="under">
+        <p class="caption"><span class="fignum">Figure 1</span> <span id="capText"></span></p>
+        <p class="verdict" id="verdict">
+          <span class="dot"></span><span id="verdictText"></span>
+          <span class="nums">gap <b id="rGap">—</b> · ε <i id="rEps">—</i></span>
+        </p>
+      </div>
+    </section>
 
-  <p class="verdict" id="verdict"><span class="dot"></span><span id="verdictText"></span></p>
+    <aside>
+      <div class="grp">
+        <div class="section-label">Choose f</div>
+        <div class="picks" id="fPresets"></div>
+        <p class="hint" id="fHint"></p>
+      </div>
 
-  <div class="controls">
-    <div>
-      <div class="section-label">Choose f</div>
-      <div class="picks" id="fPresets"></div>
-      <p class="hint" id="fHint"></p>
-    </div>
+      <div class="grp">
+        <div class="section-label">Choose <span class="lc">α</span></div>
+        <div class="picks" id="aPresets"></div>
+        <p class="hint" id="aHint"></p>
+      </div>
 
-    <div>
-      <div class="section-label">Choose <span class="lc">α</span></div>
-      <div class="picks" id="aPresets"></div>
-      <p class="hint" id="aHint"></p>
-    </div>
+      <div class="grp">
+        <div class="section-label">Partition</div>
 
-    <div>
-      <div class="section-label">Partition</div>
+        <div class="sliders">
+          <div class="ctl">
+            <div class="row">
+              <div class="name">Intervals</div>
+              <div class="val mono" id="nVal">8</div>
+            </div>
+            <input type="range" id="n" min="2" max="40" step="1" value="8"
+                   aria-label="Number of intervals in the partition">
+            <p class="hint">Rebuilds P as a uniform partition, discarding any splits.</p>
+          </div>
 
-      <div class="ctl">
-        <div class="row">
-          <div class="name">Intervals <span class="sub">uniform P</span></div>
-          <div class="val mono" id="nVal">8</div>
+          <div class="ctl teal">
+            <div class="row">
+              <div class="name">Target <span class="sub">ε</span></div>
+              <div class="val mono" id="eVal">0.12</div>
+            </div>
+            <input type="range" class="teal" id="eps" min="0.03" max="0.5" step="0.01" value="0.12"
+                   aria-label="Target epsilon">
+            <p class="hint">Integrability asks whether <em>some</em> P works, for <em>every</em> ε &gt; 0.</p>
+          </div>
         </div>
-        <input type="range" id="n" min="2" max="40" step="1" value="8"
-               aria-label="Number of intervals in the partition">
-        <p class="hint">Rebuilds P as a uniform partition, discarding any splits.</p>
-      </div>
 
-      <div class="ctl teal">
-        <div class="row">
-          <div class="name">Target <span class="sub">ε</span></div>
-          <div class="val mono" id="eVal">0.12</div>
+        <div class="toggle" id="tRefine" role="switch" aria-checked="false" tabindex="0">
+          <div class="t-name">Common refinement P ∪ Q<span>overlay a second partition</span></div>
+          <div class="switch"></div>
         </div>
-        <input type="range" class="teal" id="eps" min="0.03" max="0.5" step="0.01" value="0.12"
-               aria-label="Target epsilon">
-        <p class="hint">Integrability asks whether <em>some</em> P works, for <em>every</em> ε &gt; 0.</p>
+
+        <div class="actions">
+          <button class="btn action" type="button" id="split">Split largest</button>
+          <button class="btn action" type="button" id="reset">Reset</button>
+        </div>
       </div>
 
-      <div class="toggle" id="tRefine" role="switch" aria-checked="false" tabindex="0">
-        <div class="t-name">Common refinement P ∪ Q<span>overlay a second partition</span></div>
-        <div class="switch"></div>
-      </div>
+      <details class="help">
+        <summary>Why refinement works</summary>
+        <div class="body">
+          <figure class="mech">
+            <canvas id="mechCanvas" role="img" aria-label="The gap for a uniform partition plotted against the number of intervals from 2 to 40, with the target epsilon marked as a dashed line."></canvas>
+            <div class="key">
+              <span style="color:var(--teal)"><i style="background:var(--teal)"></i>U(P<sub>n</sub>) − L(P<sub>n</sub>)</span>
+              <span style="color:var(--coral)"><i style="background:var(--coral)"></i>ε</span>
+            </div>
+          </figure>
 
-      <div class="actions">
-        <button class="btn action" type="button" id="split">Split largest term</button>
-        <button class="btn action" type="button" id="reset">Reset</button>
-      </div>
-    </div>
-  </div>
+          <p style="margin:0 0 11px"><b>Two ways to make a term small.</b> Shrink the oscillation — a
+          continuous f on a short interval — or shrink the weight, where α barely moves. Try
+          <kbd>Only the middle</kbd> and watch the outer intervals stop contributing entirely.</p>
 
-  <details class="help">
-    <summary>Why refinement works, and where it stops working</summary>
-    <div class="body">
-      <figure class="mech">
-        <canvas id="mechCanvas" role="img" aria-label="The gap for a uniform partition plotted against the number of intervals from 2 to 40, with the target epsilon marked as a dashed line."></canvas>
-        <figcaption>
-          <span class="key">
-            <span style="color:var(--teal)"><i style="background:var(--teal)"></i>U(P<sub>n</sub>) − L(P<sub>n</sub>)</span>
-            <span style="color:var(--coral)"><i style="background:var(--coral)"></i>ε</span>
-          </span>
-        </figcaption>
-      </figure>
+          <p style="margin:0 0 11px"><b>Refinement never hurts.</b> Adding a point can only lower U
+          and raise L, so the gap never grows. <kbd>Split largest</kbd> cuts the worst interval in
+          half; P ∪ Q is at least as good as either partition alone.</p>
 
-      <p style="margin:0 0 12px"><b>Two ways to make a term small.</b> Shrink the oscillation — a
-      continuous f on a short interval — or shrink the weight, where α barely moves. Try
-      <kbd>Only the middle</kbd> and watch the outer intervals stop contributing entirely.</p>
-
-      <p style="margin:0 0 12px"><b>Refinement never hurts.</b> Adding a point can only lower U and
-      raise L, so the gap never grows. <kbd>Split largest term</kbd> cuts the worst interval in half;
-      the common refinement P ∪ Q is at least as good as either partition on its own.</p>
-
-      <p style="margin:0"><b>Where it fails.</b> Choose <kbd>Dirichlet f</kbd>. Every nondegenerate
-      interval contains both rationals and irrationals, so <em>M<sub>i</sub></em> − <em>m<sub>i</sub></em> = 1
-      however fine P becomes. The shaded area fills the whole box: the gap is stuck at 1, and f is not
-      integrable.</p>
-    </div>
-  </details>
+          <p style="margin:0"><b>Where it fails.</b> Choose <kbd>Dirichlet f</kbd>. Every
+          nondegenerate interval holds both rationals and irrationals, so
+          <em>M<sub>i</sub></em> − <em>m<sub>i</sub></em> = 1 however fine P becomes. The shaded area
+          fills the whole box: the gap is stuck at 1, and f is not integrable.</p>
+        </div>
+      </details>
+    </aside>
+  </main>
 </div>
 
 <script>
@@ -290,12 +345,15 @@
      that box IS the gap, and a full-height box of width ε has area exactly ε. */
 
   function geom(){
-    const padL = 40, padR = 12, padT = 14, padB = 24;
-    const capH = 17, midGap = 30;
+    const tight = CH < 330 || CW < 620;
+    const padL = tight ? 28 : 40, padR = tight ? 10 : 14;
+    const padT = tight ? 10 : 14, padB = tight ? 17 : 22;
+    const capH = tight ? 14 : 17, midGap = tight ? 16 : 28;
     const innerW = Math.max(10, CW - padL - padR);
-    const stripH = Math.min(112, Math.max(54, (CH - padT - padB - capH - midGap)*0.30));
-    const plotH  = Math.max(60, CH - padT - padB - capH - midGap - stripH);
-    return { padL, padR, padT, padB, innerW, plotH, stripH, midGap, capH,
+    const avail = CH - padT - padB - capH - midGap;
+    const stripH = Math.min(tight ? 62 : 112, Math.max(tight ? 34 : 54, avail*0.30));
+    const plotH  = Math.max(50, avail - stripH);
+    return { tight, padL, padR, padT, padB, innerW, plotH, stripH, midGap, capH,
              plotTop:padT, plotBot:padT + plotH,
              stripTop:padT + plotH + midGap, stripBot:padT + plotH + midGap + stripH };
   }
@@ -311,14 +369,15 @@
     const crimson = getCSS("--trace"), teal = getCSS("--teal"), ochre = getCSS("--coral");
     const paper = getCSS("--bg"), axis = getCSS("--axis");
     const maxC = Math.max(1e-9, ...R.intervals.map(d => d.c));
+    const tickFont = g.tight ? 10 : 12;
 
-    /* shaded regions — a light crimson tint, with Mᵢ ruled firmly */
+    /* shaded regions — a light crimson tint, with Mᵢ and mᵢ ruled firmly */
     R.intervals.forEach(d => {
       const x0 = X(d.l), w = Math.max(0.7, X(d.r) - X(d.l));
       const yT = Y(d.M), h = Math.max(1, Y(d.m) - Y(d.M));
       ctx.save();
       if(d.dA <= 1e-12){
-        ctx.globalAlpha = 0.07; ctx.fillStyle = muted;     // weightless: it contributes nothing
+        ctx.globalAlpha = 0.07; ctx.fillStyle = muted;     // weightless: contributes nothing
         ctx.fillRect(x0, yT, w, h);
       } else {
         const k = d.c/maxC;
@@ -337,17 +396,18 @@
     ctx.strokeStyle = line; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(snap(X(1)), g.plotTop); ctx.lineTo(snap(X(1)), Y(0)); ctx.stroke();
 
-    /* axes and ticks — hairlines, figures set in the text face */
+    /* axes and ticks */
     ctx.strokeStyle = axis; ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(g.padL, snap(Y(0))); ctx.lineTo(g.padL + g.innerW, snap(Y(0)));
     ctx.moveTo(snap(g.padL), g.plotTop); ctx.lineTo(snap(g.padL), Y(0));
     ctx.stroke();
-    ctx.font = `12px ${serif()}`; ctx.fillStyle = muted;
+    ctx.font = `${tickFont}px ${serif()}`; ctx.fillStyle = muted;
     ctx.textAlign = "center"; ctx.textBaseline = "top";
-    for(let i = 0; i <= 4; i++) ctx.fillText(i === 0 ? "0" : (i/4).toFixed(2), X(i/4), Y(0) + 6);
+    const xt = g.tight ? [0, 0.5, 1] : [0, 0.25, 0.5, 0.75, 1];
+    xt.forEach(t => ctx.fillText(t === 0 ? "0" : (t === 1 ? "1" : t.toFixed(2)), X(t), Y(0) + 5));
     ctx.textAlign = "right"; ctx.textBaseline = "middle";
-    ["0", "½", "1"].forEach((t, i) => ctx.fillText(t, g.padL - 8, Y(i/2)));
+    ["0", "½", "1"].forEach((t, i) => ctx.fillText(t, g.padL - 7, Y(i/2)));
 
     /* α — the second voice, dashed teal */
     ctx.strokeStyle = teal; ctx.lineWidth = 1.6; ctx.setLineDash([6, 4]);
@@ -364,10 +424,11 @@
       ctx.setLineDash([2, 5]);
       ctx.beginPath(); ctx.moveTo(X(0), Y(1)); ctx.lineTo(X(1), Y(1)); ctx.stroke();
       ctx.setLineDash([]);
+      const dots = g.tight ? 16 : 24;
       ctx.fillStyle = ink;
-      for(let i = 0; i < 24; i++){ ctx.beginPath(); ctx.arc(X((i*0.3861)%1), Y(1), 2.2, 0, 7); ctx.fill(); }
+      for(let i = 0; i < dots; i++){ ctx.beginPath(); ctx.arc(X((i*0.3861)%1), Y(1), 2.2, 0, 7); ctx.fill(); }
       ctx.fillStyle = muted;
-      for(let i = 0; i < 24; i++){ ctx.beginPath(); ctx.arc(X((i*0.2794 + 0.07)%1), Y(0), 2.2, 0, 7); ctx.fill(); }
+      for(let i = 0; i < dots; i++){ ctx.beginPath(); ctx.arc(X((i*0.2794 + 0.07)%1), Y(0), 2.2, 0, 7); ctx.fill(); }
     } else {
       ctx.beginPath();
       let prev = null;
@@ -391,9 +452,10 @@
     }
 
     /* two labels, set in italic like variables in the text */
-    ctx.font = `italic 15px ${serif()}`; ctx.textBaseline = "top"; ctx.textAlign = "left";
-    ctx.fillStyle = ink;  ctx.fillText("f", g.padL + 6, g.plotTop + 1);
-    ctx.fillStyle = teal; ctx.fillText("α", X(0.93), Y(alphaVal(S.a, 0.93)) + 5);
+    ctx.font = `italic ${g.tight ? 13 : 15}px ${serif()}`;
+    ctx.textBaseline = "top"; ctx.textAlign = "left";
+    ctx.fillStyle = ink;  ctx.fillText("f", g.padL + 5, g.plotTop);
+    ctx.fillStyle = teal; ctx.fillText("α", X(0.93), Y(alphaVal(S.a, 0.93)) + 4);
 
     /* the α-weight box */
     let acc = 0;
@@ -424,22 +486,23 @@
     ctx.strokeStyle = getCSS("--line-strong"); ctx.lineWidth = 1;
     ctx.strokeRect(snap(g.padL), snap(g.stripTop), g.innerW, g.stripH - 1);
 
-    ctx.font = `12px ${serif()}`; ctx.textBaseline = "top";
+    ctx.font = `${tickFont}px ${serif()}`; ctx.textBaseline = "top";
     ctx.fillStyle = ochre; ctx.textAlign = "left";
-    ctx.fillText("ε", g.padL + Math.max(3, S.eps*g.innerW) + 6, g.stripTop + 4);
+    ctx.fillText("ε", g.padL + Math.max(3, S.eps*g.innerW) + 5, g.stripTop + 3);
 
-    const cap = "shaded area = U(P) − L(P)";
+    const cap = g.tight ? "area = U(P) − L(P)" : "shaded area = U(P) − L(P)";
     ctx.textAlign = "right"; ctx.fillStyle = crimson;
-    ctx.fillText(cap, g.padL + g.innerW, g.stripBot + 5);
+    ctx.fillText(cap, g.padL + g.innerW, g.stripBot + 4);
     if(g.innerW > ctx.measureText(cap).width + 150){
       ctx.textAlign = "left"; ctx.fillStyle = muted;
-      ctx.fillText("width = α-weight  Δαᵢ", g.padL, g.stripBot + 5);
+      ctx.fillText("width = α-weight  Δαᵢ", g.padL, g.stripBot + 4);
     }
     ctx.textAlign = "left";
   }
 
-  /* ---- the sidebar chart, now inside the disclosure --------------------- */
+  /* ---- the mechanism chart, inside the disclosure ----------------------- */
   function drawMech(){
+    if(!mechCanvas.getBoundingClientRect().width) return;   // collapsed: nothing to draw
     const [w, h] = fitCanvas(mechCanvas, mctx);
     mctx.clearRect(0, 0, w, h);
     const pad = 5;
@@ -474,22 +537,18 @@
     $("capText").textContent =
       (S.refine ? "P ∪ Q, " : "") + (pts.length - 1) + " intervals" +
       (S.custom && !S.refine ? ", one split" : "") +
-      " · widths below are α-weights, so the shaded area is the gap itself.";
+      " · widths in the lower box are α-weights, so the shaded area is the gap itself.";
 
     const el = $("verdict"), t = $("verdictText");
     if(R.gap < S.eps){
       el.className = "verdict good";
-      t.innerHTML = "<b>This partition works.</b> The gap <span class='mono'>" + R.gap.toFixed(4) +
-        "</span> is below ε = <span class='mono'>" + S.eps.toFixed(2) +
-        "</span>, so the Cauchy criterion is met at this ε.";
+      t.textContent = "This partition works — the gap is below ε.";
     } else if(S.f === "dirichlet"){
       el.className = "verdict bad";
-      t.innerHTML = "<b>The gap is stuck at 1.</b> Every interval has oscillation 1, so no partition " +
-        "brings it below ε = <span class='mono'>" + S.eps.toFixed(2) + "</span>. f is not integrable.";
+      t.textContent = "Stuck at 1: every interval has oscillation 1, so no partition helps.";
     } else {
       el.className = "verdict bad";
-      t.innerHTML = "<b>Not small enough yet.</b> The gap <span class='mono'>" + R.gap.toFixed(4) +
-        "</span> still exceeds ε = <span class='mono'>" + S.eps.toFixed(2) + "</span>. Refine P.";
+      t.textContent = "Not small enough yet — refine P.";
     }
   }
 
@@ -510,7 +569,7 @@
       b.innerHTML = p.label + " <small>" + p.sub + "</small>";
       b.addEventListener("click", () => {
         S[key] = p.id;
-        if(key === "f") S.custom = false, S.P = uniform(S.n);
+        if(key === "f"){ S.custom = false; S.P = uniform(S.n); }
         buildPresets(host, list, key, hintEl);
         sync();
       });
@@ -571,7 +630,8 @@
   /* ---- boot -------------------------------------------------------------- */
 
   function resize(){ [CW, CH] = fitCanvas(plot, ctx); draw(); }
-  new ResizeObserver(() => resize()).observe(plot);
+  new ResizeObserver(() => resize()).observe(plot.parentElement);
+  new ResizeObserver(() => drawMech()).observe(mechCanvas);
   window.addEventListener("resize", () => { resize(); drawMech(); });
   document.querySelector("details.help").addEventListener("toggle", drawMech);
   if(document.fonts && document.fonts.ready){
@@ -582,7 +642,6 @@
   buildPresets($("aPresets"), A_PRESETS, "a", $("aHint"));
   sync();
   resize();
-  drawMech();
 })();
 </script>
 </body>
