@@ -38,6 +38,10 @@
   header > div > *:first-child { position: relative; top: 2px; }
   @media (max-width: 760px) {
     [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+    .footer-grid { grid-template-columns: 1fr !important; grid-template-areas: 'name' 'email' 'cover' 'links' 'socials' !important; column-gap: 0 !important; }
+    .footer-grid .footer-cover { margin: 0 0 17px !important; }
+    .footer-grid [style*="grid-area:name"], .footer-grid [style*="grid-area: name"] { margin-bottom: 8px !important; }
+    .footer-grid [style*="grid-area:email"], .footer-grid [style*="grid-area: email"] { margin-bottom: 19px !important; }
     [style*="margin:0 auto"]:not([style*="aspect-ratio"]), [style*="margin: 0px auto"]:not([style*="aspect-ratio"]) { padding-left: 22px !important; padding-right: 22px !important; }
     header nav { flex-wrap: wrap !important; gap: 12px clamp(14px, 4.44vw - 3.78px, 30px) !important; font-size: clamp(13px, 0.56vw + 10.78px, 15px) !important; justify-content: flex-start !important; }
     header > div { transition: padding 0.22s ease; }
@@ -157,27 +161,25 @@
 
     <footer id="contact" style="background:#241c28; color:#e8e4dc;">
       <div style="max-width:1140px; margin:0 auto; padding:52px 40px 28px;">
-        <div style="display:flex; gap:32px; align-items:flex-start; padding-bottom:32px; border-bottom:1px solid #33302b; flex-wrap:wrap;">
-          <a href="/flourishing/" style="flex-shrink:0; display:block;"><img src="flourishing-cover.webp" alt="Mathematics for Human Flourishing cover" style="width:73px; height:auto; border-radius:2px; display:block; box-shadow:0 6px 16px -8px rgba(0,0,0,0.6);" loading="lazy" decoding="async"></a>
-          <div style="flex:1; min-width:220px;">
-            <div style="font-family:'Space Mono',monospace; font-size:14px; letter-spacing:0.22em; text-transform:uppercase; font-weight:700; margin-bottom:20px;">Francis Su</div>
-            <div style="display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; font-size:14px; color:#c8c3b8; margin-bottom:10px;">
+        <div class="footer-grid" style="display:grid; grid-template-columns:auto 1fr; grid-template-areas:'cover name' 'cover email' 'cover links' 'cover socials'; column-gap:32px; align-items:start; padding-bottom:20px; border-bottom:1px solid #33302b;">
+          <div style="grid-area:name; font-family:'Space Mono',monospace; font-size:14px; letter-spacing:0.22em; text-transform:uppercase; font-weight:700; margin-bottom:20px;">Francis Su</div>
+          <div style="grid-area:email; display:flex; flex-wrap:wrap; align-items:baseline; gap:6px 14px; font-size:14px; color:#c8c3b8; margin-bottom:10px;">
               <span>[mylastname] @ hmc.edu</span>
             </div>
-            <div style="font-size:14px; color:#c8c3b8; margin-bottom:10px; padding-left:16px; text-indent:-16px;">
-              <a href="https://math.hmc.edu/su/" style="color:#c8c3b8; margin-right:14px;" style-hover="color:#fff;">My HMC site</a>
+            <div style="grid-area:links; font-size:14px; color:#c8c3b8; margin-bottom:10px;">
+              <a href="https://math.hmc.edu/su/" style="color:#c8c3b8; margin-right:14px;" style-hover="color:#fff;">HMC&nbsp;site</a>
               <a href="https://francissu.substack.com/" style="color:#c8c3b8; margin-right:14px;" style-hover="color:#fff;">Blog</a>
               <a href="https://scholar.google.com/citations?hl=en&user=Av1e9qQAAAAJ" style="color:#c8c3b8; margin-right:14px; white-space:nowrap;" style-hover="color:#fff;">Google Scholar</a>
               <a href="cv-short.pdf" style="color:#c8c3b8;" style-hover="color:#fff;">CV</a>
             </div>
-            <div style="font-size:14px; color:#c8c3b8; padding-left:16px; text-indent:-16px;">
+            <div style="grid-area:socials; font-size:14px; color:#c8c3b8;">
               <a href="https://www.linkedin.com/in/francissu/" style="color:#c8c3b8; margin-right:14px;" style-hover="color:#fff;">LinkedIn</a>
               <a href="https://www.facebook.com/francis.su" style="color:#c8c3b8; margin-right:14px;" style-hover="color:#fff;">Facebook</a>
               <a href="https://bsky.app/profile/mathyawp.bsky.social" style="color:#c8c3b8; margin-right:14px;" style-hover="color:#fff;">Bluesky</a>
               <a href="https://www.instagram.com/mathyawp" style="color:#c8c3b8; margin-right:14px;" style-hover="color:#fff;">Instagram</a>
               <a href="https://x.com/mathyawp" style="color:#c8c3b8;" style-hover="color:#fff;">X</a>
             </div>
-          </div>
+          <a href="/flourishing/" class="footer-cover" style="grid-area:cover; flex-shrink:0; display:block;"><img src="flourishing-cover.webp" alt="Mathematics for Human Flourishing cover" style="width:73px; height:auto; border-radius:2px; display:block; box-shadow:0 6px 16px -8px rgba(0,0,0,0.6);" loading="lazy" decoding="async"></a>
         </div>
         <div style="padding-top:22px; display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; font-size:13px; color:#8f887b;">
           <span>© 2026 Francis Edward Su</span>
