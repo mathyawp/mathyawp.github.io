@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Where (2k+1)π/2 Comes From</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Shared suite look: tokens + components + fonts all come from here. -->
+<link rel="stylesheet" href="analysis-style.css" />
+
+<!-- Only page-specific layout lives below. The app-shell block and the helper
+     functions at the top of the script are now identical across THREE files
+     (this, fourier-question.html, weierstrass-explorer.html) — worth lifting
+     into analysis-style.css and a viz-kit.js on the next pass. -->
+<style>
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{overflow:hidden}
+
+  /* app shell */
+  .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+  header.top{
+    display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+    padding:14px 22px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(19,40,58,0.55),rgba(19,40,58,0));
+  }
+  .brand{display:flex;flex-direction:column;gap:2px;min-width:max-content}
+  .brand .eyebrow{
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.32em;
+    text-transform:uppercase;color:var(--teal);
+  }
+  .brand h1{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .formula{
+    font-family:var(--font-mono);font-size:15px;color:var(--text);
+    background:var(--inset);border:1px solid var(--line);border-radius:8px;
+    padding:8px 14px;display:flex;align-items:center;gap:6px;white-space:nowrap;
+  }
+  .formula sub,.formula sup{font-size:9px;font-family:var(--font-mono)}
+  .formula .lx{color:var(--trace)}
+  .formula .ly{color:var(--teal)}
+  .formula .res{color:var(--muted);font-size:12px;margin-left:6px}
+  .badge{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+
+  main{display:flex;flex:1;min-height:0}
+
+  aside{
+    width:330px;flex:none;border-right:1px solid var(--line);
+    background:linear-gradient(180deg,var(--panel),#0b1a27);
+    overflow-y:auto;padding:18px 18px 40px;
+    scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent;
+  }
+  aside::-webkit-scrollbar{width:8px}
+  aside::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:8px}
+  .group{margin-bottom:22px}
+
+  /* mode picker */
+  .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .modes button{
+    font-family:var(--font-mono);font-size:12px;color:var(--muted);text-align:center;
+    background:var(--inset);border:1px solid var(--line);border-radius:var(--radius-sm);
+    padding:9px 6px;cursor:pointer;line-height:1.35;
+    transition:border-color .15s,color .15s,background .15s;
+  }
+  .modes button .k{
+    display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:3px;
+  }
+  .modes button:hover{border-color:var(--line-strong);color:var(--text)}
+  .modes button.on{border-color:var(--teal);color:var(--text);background:var(--panel-2)}
+  .modes button.on .k{color:var(--teal)}
+  .modes button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+  /* mechanism panels */
+  .mech{background:var(--inset);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-bottom:14px}
+  .mech h4{margin:0 0 2px;font-size:12.5px;font-weight:600}
+  .mech .cap{font-size:11px;color:var(--muted);margin-bottom:10px}
+  .mech canvas{width:100%;height:92px;display:block}
+  .mech .legend{display:flex;gap:14px;margin-top:8px;font-size:10.5px;font-family:var(--font-mono);color:var(--muted)}
+  .mech .legend i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px;position:relative;top:1px}
+
+  /* plot stage */
+  .plotwrap{flex:1;min-width:0;position:relative;display:flex;flex-direction:column}
+  .stage{flex:1;position:relative;min-height:0}
+  canvas#plot{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+
+  .overlay{
+    position:absolute;bottom:14px;left:16px;display:flex;gap:10px;flex-wrap:wrap;
+    pointer-events:none;max-width:calc(100% - 32px);
+  }
+  .chip .lx{color:var(--trace)}
+  .chip .ly{color:var(--teal)}
+  .chip .prod{color:var(--text)}
+
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0 0 0 0);white-space:nowrap;border:0;
+  }
+
+  @media (max-width:900px){
+    body{overflow:auto}
+    .app{height:auto;min-height:100dvh}
+    main{flex-direction:column}
+    aside{width:100%;border-right:none;border-bottom:1px solid var(--line);order:2}
+    .plotwrap{order:1}
+    .stage{min-height:430px}
+    header.top{padding:12px 16px;gap:12px}
+    .badge{margin-left:0;width:100%;justify-content:flex-start}
+  }
+</style>
+</head>
+
+<body class="viz-page">
+<div class="app viz">
+
+  <header class="top">
+    <div class="brand">
+      <div class="eyebrow">Math 132 · 01 · Separation of variables</div>
+      <h1>Where (2k+1)π/2 Comes From</h1>
+    </div>
+
+    <div class="formula" aria-hidden="true">
+      u(x,y) = e<sup>−<span class="lx">λ<sub>x</sub></span>x</sup> · cos(<span class="ly">λ<sub>y</sub></span>y)
+      <span class="res">⟹ Δu = (<span class="lx">λ<sub>x</sub></span><sup>2</sup> − <span class="ly">λ<sub>y</sub></span><sup>2</sup>) u</span>
+    </div>
+
+    <div class="badge">
+      <div class="chip mono" id="cssWarn" hidden>
+        analysis-style.css didn't load — using fallback colours.
+        Keep this file in the same folder as it.
+      </div>
+      <div class="verdict" id="vPde"><span class="dot"></span><span id="vPdeText">—</span></div>
+      <div class="verdict" id="vBc"><span class="dot"></span><span id="vBcText">—</span></div>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+
+      <div class="group">
+        <div class="section-label">Separation constants</div>
+
+        <div class="ctl">
+          <div class="row">
+            <div class="name">Decay rate <span class="sub">λ<sub>x</sub></span></div>
+            <div class="val mono" id="lxVal">1.571</div>
+          </div>
+          <input type="range" id="lx" min="0.2" max="8.5" step="0.001" value="1.571"
+                 aria-label="Decay rate lambda x" />
+          <div class="hint">Sets φ(x) = e<sup>−λ<sub>x</sub>x</sup>, the amber curve under the plate.</div>
+        </div>
+
+        <div class="ctl teal">
+          <div class="row">
+            <div class="name">Frequency <span class="sub">λ<sub>y</sub></span></div>
+            <div class="val mono" id="lyVal">1.571</div>
+          </div>
+          <input type="range" class="teal" id="ly" min="0.2" max="8.5" step="0.001" value="1.571"
+                 aria-label="Frequency lambda y" />
+          <div class="hint">Sets ψ(y) = cos(λ<sub>y</sub>y), the teal curve beside the plate.</div>
+        </div>
+
+        <div class="toggle" id="tLock" role="switch" aria-checked="false" tabindex="0">
+          <div class="t-name">Lock λ<sub>x</sub> = λ<sub>y</sub><span>satisfies the PDE automatically</span></div>
+          <div class="switch"></div>
+        </div>
+        <div class="toggle" id="tSnap" role="switch" aria-checked="false" tabindex="0">
+          <div class="t-name">Snap to the zeros of cos<span>satisfies the boundary automatically</span></div>
+          <div class="switch"></div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="section-label">Jump to a mode</div>
+        <div class="modes" id="modes">
+          <button data-k="0"><span class="k">k = 0</span>π/2</button>
+          <button data-k="1"><span class="k">k = 1</span>3π/2</button>
+          <button data-k="2"><span class="k">k = 2</span>5π/2</button>
+        </div>
+        <div class="hint">These are the only λ that clear both tests at once.</div>
+      </div>
+
+      <div class="group">
+        <div class="section-label">Mechanism</div>
+
+        <div class="mech">
+          <h4>Test 1 — the PDE</h4>
+          <div class="cap">φ″/φ = λ<sub>x</sub><sup>2</sup> and −ψ″/ψ = λ<sub>y</sub><sup>2</sup> are both constants. Δu = 0 exactly when they agree, so close the coral band.</div>
+          <canvas id="pdeChart"></canvas>
+          <div class="legend">
+            <span><i style="background:var(--trace)"></i>λ<sub>x</sub><sup>2</sup></span>
+            <span><i style="background:var(--teal)"></i>λ<sub>y</sub><sup>2</sup></span>
+            <span><i style="background:var(--coral)"></i>the gap</span>
+          </div>
+        </div>
+
+        <div class="mech">
+          <h4>Test 2 — the boundary</h4>
+          <div class="cap">u = 0 on y = ±1 needs cos λ<sub>y</sub> = 0. A continuous curve, but only its zeros will do.</div>
+          <canvas id="bcChart"></canvas>
+          <div class="legend">
+            <span><i style="background:var(--teal)"></i>cos λ<sub>y</sub></span>
+            <span><i style="background:var(--trace)"></i>you are here</span>
+          </div>
+        </div>
+      </div>
+
+      <details class="help">
+        <summary>What am I looking at?</summary>
+        <div class="body">
+          <p style="margin:0 0 9px">The same plate as <b>The Fourier Question</b>, but one step earlier in the argument. Fourier looked for solutions of the special form <b>u(x,y) = φ(x)ψ(y)</b> — a function of x times a function of y. Here φ decays and ψ oscillates, and you set the rate of each independently.</p>
+          <p style="margin:0 0 9px"><b>The layout is the algebra.</b> The teal curve down the left is ψ(y); the amber curve along the bottom is φ(x); the plate between them is their product. Hover anywhere on the plate and it will show you the two factors it multiplied.</p>
+          <p style="margin:0 0 9px"><b>Test 1.</b> Feed u into the Laplacian and the derivatives fall on separate variables: Δu = (λ<sub>x</sub><sup>2</sup> − λ<sub>y</sub><sup>2</sup>)u. The residual is a scaled copy of u itself, so it can only vanish when the scalar does — when <b>λ<sub>x</sub> = λ<sub>y</sub></b>. That is a <em>continuous</em> condition: any common value works. Watch the Δu inset go black as you close the band.</p>
+          <p style="margin:0 0 9px"><b>Test 2.</b> The top and bottom edges are held at 0, so ψ(±1) = cos λ<sub>y</sub> must be 0. That is a <em>discrete</em> condition: λ<sub>y</sub> ∈ {π/2, 3π/2, 5π/2, …}, which is exactly (2k+1)π/2. The eigenvalues are not handed down — they are whatever survives both filters.</p>
+          <p style="margin:0">Each surviving mode solves the problem <b>exactly</b>, with no analysis needed. So does any finite sum of them, since Δ is linear. Whether an <em>infinite</em> sum still does, and whether it can match an arbitrary edge temperature, is the question the next visualization opens. Press <kbd>Space</kbd> or <kbd>Enter</kbd> on a switch to toggle it.</p>
+        </div>
+      </details>
+    </aside>
+
+    <div class="plotwrap" id="plotwrap">
+      <div class="stage">
+        <canvas id="plot" role="img" aria-label="Product solution, its two factor curves, and the residual"></canvas>
+        <div class="overlay">
+          <div class="chip mono" id="chipHover">hover the plate to factor a point</div>
+        </div>
+      </div>
+      <p class="sr-only" id="altText"></p>
+    </div>
+  </main>
+
+</div>
+
+<script>
+/* ---- shared helpers (STYLE-GUIDE §6) ------------------------------------- */
+function fillSlider(el){
+  const pct = (el.value - el.min) / (el.max - el.min) * 100;
+  el.style.setProperty('--fill', pct.toFixed(1) + '%');
+}
+function bindToggle(el, onChange){
+  let on = el.classList.contains('on');
+  const flip = () => {
+    on = !on;
+    el.classList.toggle('on', on);
+    el.setAttribute('aria-checked', on);
+    onChange && onChange(on);
+  };
+  el.addEventListener('click', flip);
+  el.addEventListener('keydown', e => {
+    if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); flip(); }
+  });
+}
+/* Colours come from analysis-style.css. The fallbacks are only reached if that
+   sheet is missing: an absent token reads as "", Canvas silently ignores an
+   unparseable colour and keeps black, so without this the whole plot would
+   render black-on-black. The token always wins when it's there. */
+const FALLBACK = {
+  '--inset':'#0a1825', '--trace':'#F5A623', '--teal':'#46d6c4', '--coral':'#ff6f5e',
+  '--axis':'rgba(160,205,225,0.45)',
+  '--grid-major':'rgba(96,178,210,0.16)', '--grid-minor':'rgba(96,178,210,0.06)',
+  '--text':'#dde8f0', '--muted':'#6f8aa1', '--line':'rgba(96,178,210,0.14)',
+  '--line-strong':'rgba(96,178,210,0.28)', '--bg':'#091420', '--panel':'#0e1d2b',
+  '--panel-2':'#13283a', '--ok':'#46d6a0', '--warn':'#f5b94a',
+  '--radius':'10px', '--radius-sm':'8px',
+  '--font-ui':'system-ui, sans-serif', '--font-mono':'ui-monospace, monospace'
+};
+function getCSS(v){
+  const s = getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  return s || FALLBACK[v] || '#888888';
+}
+function ensureTokens(){
+  if(getComputedStyle(document.documentElement).getPropertyValue('--trace').trim()) return;
+  for(const k in FALLBACK) document.documentElement.style.setProperty(k, FALLBACK[k]);
+  const w = document.getElementById('cssWarn');
+  if(w) w.hidden = false;
+}
+function hex2rgb(h){
+  h = String(h).replace('#','').trim();
+  if(h.length === 3) h = h.split('').map(c => c + c).join('');
+  if(!/^[0-9a-fA-F]{6}$/.test(h)) return [136, 136, 136];
+  const n = parseInt(h, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+
+/* ---- the mathematics -----------------------------------------------------
+   Try u(x,y) = phi(x)psi(y) with phi = exp(-Lx x), psi = cos(Ly y). Then
+        phi'' = Lx^2 phi,   psi'' = -Ly^2 psi
+   so   Du = phi''psi + phi psi'' = (Lx^2 - Ly^2) u.
+   The residual is a SCALED COPY of u, which is the whole trick: it cannot be
+   killed by reshaping anything, only by making the scalar zero. That gives the
+   continuous condition Lx = Ly. The plate's held edges then give the discrete
+   one: psi(±1) = cos(Ly) = 0, i.e. Ly = (2k+1)pi/2.
+-------------------------------------------------------------------------- */
+const XMAX = 1;                       // same x-window as fourier-question.html
+const LMIN = 0.2, LMAX = 8.5;
+const PDE_TOL = 0.15;                 // on |Lx^2 - Ly^2|
+const BC_TOL  = 0.02;                 // on |cos Ly|
+const EIGEN = [Math.PI/2, 3*Math.PI/2, 5*Math.PI/2];
+
+let Lx = Math.PI/2, Ly = Math.PI/2;
+let locked = false, snapping = false;
+
+const pdeGap = () => Lx*Lx - Ly*Ly;
+const bcMiss = () => Math.abs(Math.cos(Ly));
+const pdeOk  = () => Math.abs(pdeGap()) < PDE_TOL;
+const bcOk   = () => bcMiss() < BC_TOL;
+const phi = x => Math.exp(-Lx * x);
+const psi = y => Math.cos(Ly * y);
+
+function fmt(x, d){ return x.toFixed(d === undefined ? 3 : d); }
+
+function updateVerdicts(){
+  const a = document.getElementById('vPde'), at = document.getElementById('vPdeText');
+  if(pdeOk()){
+    a.className = 'verdict good';
+    at.innerHTML = '<b>Δu = 0</b> &middot; the constants agree';
+  }else{
+    a.className = 'verdict bad';
+    at.innerHTML = '<b>Δu = ' + (pdeGap() > 0 ? '+' : '') + fmt(pdeGap(), 2) + '·u</b> &middot; not a solution';
+  }
+  const b = document.getElementById('vBc'), bt = document.getElementById('vBcText');
+  if(bcOk()){
+    b.className = 'verdict good';
+    bt.innerHTML = '<b>u = 0 on y = ±1</b> &middot; edges held';
+  }else{
+    b.className = 'verdict bad';
+    bt.innerHTML = '<b>u = ' + fmt(psi(1), 2) + ' on y = ±1</b> &middot; edges not held';
+  }
+}
+
+/* ---- colour tokens ------------------------------------------------------- */
+let COL = {};
+function readTokens(){
+  COL = {
+    inset: hex2rgb(getCSS('--inset')),
+    trace: hex2rgb(getCSS('--trace')),
+    teal:  hex2rgb(getCSS('--teal')),
+    coral: hex2rgb(getCSS('--coral')),
+    sTrace: getCSS('--trace'), sTeal: getCSS('--teal'), sCoral: getCSS('--coral'),
+    sAxis: getCSS('--axis'), sMin: getCSS('--grid-minor'), sMuted: getCSS('--muted'),
+    sText: getCSS('--text'), sLine: getCSS('--line'), sInset: getCSS('--inset')
+  };
+}
+
+/* ---- offscreen fields ---------------------------------------------------- */
+const uCanvas = document.createElement('canvas'), uctx = uCanvas.getContext('2d');
+const rCanvas = document.createElement('canvas'), rctx = rCanvas.getContext('2d');
+
+/* u is signed: amber for positive, teal for negative, dark at zero. */
+function renderU(w, h){
+  uCanvas.width = w; uCanvas.height = h;
+  const img = uctx.createImageData(w, h), d = img.data;
+  const A = COL.inset, P = COL.trace, N = COL.teal;
+  const ex = new Float64Array(w), cy = new Float64Array(h);
+  for(let i = 0; i < w; i++) ex[i] = phi((i + 0.5) / w * XMAX);
+  for(let r = 0; r < h; r++) cy[r] = psi(1 - (r + 0.5) / h * 2);
+  for(let r = 0, q = 0; r < h; r++){
+    for(let i = 0; i < w; i++, q += 4){
+      const t = ex[i] * cy[r];
+      const s = Math.pow(Math.min(1, Math.abs(t)), 0.8);
+      const B = t >= 0 ? P : N;
+      d[q]   = A[0] + (B[0] - A[0]) * s;
+      d[q+1] = A[1] + (B[1] - A[1]) * s;
+      d[q+2] = A[2] + (B[2] - A[2]) * s;
+      d[q+3] = 255;
+    }
+  }
+  uctx.putImageData(img, 0, 0);
+}
+
+/* The residual, on a fixed scale so "closing the gap" reads as going dark
+   rather than as a rescaled picture of the same thing. */
+function renderResidual(w, h){
+  rCanvas.width = w; rCanvas.height = h;
+  const img = rctx.createImageData(w, h), d = img.data;
+  const A = COL.inset, C = COL.coral, k = Math.abs(pdeGap());
+  const ex = new Float64Array(w), cy = new Float64Array(h);
+  for(let i = 0; i < w; i++) ex[i] = phi((i + 0.5) / w * XMAX);
+  for(let r = 0; r < h; r++) cy[r] = psi(1 - (r + 0.5) / h * 2);
+  for(let r = 0, q = 0; r < h; r++){
+    for(let i = 0; i < w; i++, q += 4){
+      const s = Math.pow(Math.min(1, k * Math.abs(ex[i] * cy[r]) / 8), 0.8);
+      d[q]   = A[0] + (C[0] - A[0]) * s;
+      d[q+1] = A[1] + (C[1] - A[1]) * s;
+      d[q+2] = A[2] + (C[2] - A[2]) * s;
+      d[q+3] = 255;
+    }
+  }
+  rctx.putImageData(img, 0, 0);
+}
+
+/* ---- geometry ------------------------------------------------------------ */
+const plot = document.getElementById('plot');
+const pctx = plot.getContext('2d');
+const wrap = document.getElementById('plotwrap');
+let W = 0, H = 0, dpr = 1, geom = {};
+
+function computeGeom(){
+  const padT = 26, padB = 26, padL = 30, padR = 18, gap = 12;
+  const psiW = Math.min(190, Math.max(96, W * 0.21));
+  const phiH = Math.min(84, Math.max(52, H * 0.19));
+  const px0 = padL + psiW + gap, px1 = W - padR;
+  const pt = padT, pb = H - padB - phiH - gap;
+  geom = {
+    psi:   { x0: padL, x1: padL + psiW },
+    plate: { x0: px0, x1: px1, top: pt, bot: pb },
+    phi:   { top: pb + gap, bot: pb + gap + phiH }
+  };
+}
+function sizeCanvas(){
+  const r = wrap.querySelector('.stage').getBoundingClientRect();
+  dpr = Math.min(2, window.devicePixelRatio || 1);
+  W = Math.max(320, r.width);
+  H = Math.max(300, r.height);
+  plot.width  = Math.round(W * dpr);
+  plot.height = Math.round(H * dpr);
+  pctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  computeGeom();
+}
+const PSIV = -1.25, PSIVMAX = 1.25, PHIVMAX = 1.15;
+const PY = y => geom.plate.top + (1 - y) / 2 * (geom.plate.bot - geom.plate.top);
+const PX = x => geom.plate.x0 + x / XMAX * (geom.plate.x1 - geom.plate.x0);
+const PV = v => geom.psi.x1 - (v - PSIV) / (PSIVMAX - PSIV) * (geom.psi.x1 - geom.psi.x0);
+const PF = v => geom.phi.bot - (v / PHIVMAX) * (geom.phi.bot - geom.phi.top);
+const snap = p => Math.round(p) + 0.5;
+const MONO = s => s + 'px "JetBrains Mono", ui-monospace, monospace';
+
+/* ---- the main canvas ----------------------------------------------------- */
+let hover = null;
+
+function paint(){
+  const g = geom, pl = g.plate;
+  const plW = pl.x1 - pl.x0, plH = pl.bot - pl.top;
+  pctx.clearRect(0, 0, W, H);
+
+  /* --- psi(y): the left factor --- */
+  pctx.fillStyle = COL.sInset;
+  pctx.fillRect(g.psi.x0, pl.top, g.psi.x1 - g.psi.x0, plH);
+  pctx.strokeStyle = COL.sAxis; pctx.lineWidth = 1;
+  pctx.beginPath(); pctx.moveTo(snap(PV(0)), pl.top); pctx.lineTo(snap(PV(0)), pl.bot); pctx.stroke();
+
+  pctx.strokeStyle = COL.sTeal; pctx.lineWidth = 2.2; pctx.lineJoin = 'round';
+  pctx.beginPath();
+  for(let r = 0; r <= 240; r++){
+    const y = 1 - 2 * r / 240;
+    pctx.lineTo(PV(psi(y)), PY(y));
+  }
+  pctx.stroke();
+
+  // the boundary test lives at the two ends of this curve
+  [1, -1].forEach(y => {
+    const v = psi(y), ok = bcOk();
+    pctx.strokeStyle = ok ? COL.sTeal : COL.sCoral;
+    pctx.lineWidth = 1.6;
+    pctx.beginPath();
+    pctx.moveTo(PV(0), PY(y)); pctx.lineTo(PV(v), PY(y));
+    pctx.stroke();
+    pctx.fillStyle = ok ? COL.sTeal : COL.sCoral;
+    pctx.beginPath(); pctx.arc(PV(v), PY(y), 3.4, 0, 6.2832); pctx.fill();
+  });
+
+  pctx.font = MONO(10.5); pctx.textAlign = 'left'; pctx.textBaseline = 'alphabetic';
+  pctx.fillStyle = COL.sTeal;
+  pctx.fillText('ψ(y) = cos(λy)', g.psi.x0 + 2, pl.top - 9);
+  pctx.font = MONO(9.5); pctx.fillStyle = COL.sMuted;
+  pctx.textAlign = 'right'; pctx.textBaseline = 'middle';
+  pctx.fillText('y = 1',  g.psi.x0 - 5, pl.top + 4);
+  pctx.fillText('y = −1', g.psi.x0 - 5, pl.bot - 4);
+
+  /* --- the plate: the product --- */
+  pctx.save();
+  pctx.beginPath(); pctx.rect(pl.x0, pl.top, plW, plH); pctx.clip();
+  pctx.imageSmoothingEnabled = true; pctx.imageSmoothingQuality = 'high';
+  pctx.drawImage(uCanvas, pl.x0, pl.top, plW, plH);
+  pctx.restore();
+  pctx.strokeStyle = COL.sLine; pctx.lineWidth = 1;
+  pctx.strokeRect(snap(pl.x0) - 0.5, snap(pl.top) - 0.5, plW, plH);
+
+  pctx.font = MONO(9.5); pctx.fillStyle = COL.sMuted;
+  pctx.textAlign = 'center'; pctx.textBaseline = 'top';
+  pctx.fillText('u = 0', pl.x0 + plW / 2, pl.top + 5);
+  pctx.textBaseline = 'bottom';
+  pctx.fillText('u = 0', pl.x0 + plW / 2, pl.bot - 5);
+
+  /* --- the residual inset --- */
+  const rw = Math.min(150, plW * 0.28), rh = rw * (plH / plW);
+  const rx = pl.x1 - rw - 10, ry = pl.top + 10;
+  pctx.save();
+  pctx.beginPath(); pctx.rect(rx, ry, rw, rh); pctx.clip();
+  pctx.imageSmoothingEnabled = true;
+  pctx.drawImage(rCanvas, rx, ry, rw, rh);
+  pctx.restore();
+  pctx.strokeStyle = pdeOk() ? COL.sTeal : COL.sCoral;
+  pctx.lineWidth = 1.2;
+  pctx.strokeRect(snap(rx) - 0.5, snap(ry) - 0.5, rw, rh);
+  pctx.font = MONO(9.5);
+  pctx.fillStyle = pdeOk() ? COL.sTeal : COL.sCoral;
+  pctx.textAlign = 'left'; pctx.textBaseline = 'bottom';
+  pctx.fillText(pdeOk() ? 'Δu = 0' : 'Δu', rx + 1, ry - 4);
+
+  /* --- phi(x): the bottom factor --- */
+  pctx.fillStyle = COL.sInset;
+  pctx.fillRect(pl.x0, g.phi.top, plW, g.phi.bot - g.phi.top);
+  pctx.strokeStyle = COL.sAxis; pctx.lineWidth = 1;
+  pctx.beginPath();
+  pctx.moveTo(pl.x0, snap(PF(0))); pctx.lineTo(pl.x1, snap(PF(0)));
+  pctx.stroke();
+
+  pctx.strokeStyle = COL.sTrace; pctx.lineWidth = 2.4;
+  pctx.beginPath();
+  for(let i = 0; i <= 240; i++){
+    const x = i / 240 * XMAX;
+    pctx.lineTo(PX(x), PF(phi(x)));
+  }
+  pctx.stroke();
+
+  pctx.font = MONO(10.5); pctx.fillStyle = COL.sTrace;
+  pctx.textAlign = 'left'; pctx.textBaseline = 'top';
+  pctx.fillText('φ(x) = e^(−λx)', pl.x0 + 2, g.phi.bot + 4);
+  pctx.font = MONO(9.5); pctx.fillStyle = COL.sMuted;
+  pctx.textAlign = 'right';
+  pctx.fillText('x = 1', pl.x1, g.phi.bot + 4);
+
+  /* --- hover: show the plate point as a product of its two factors --- */
+  if(hover){
+    const hx = PX(hover.x), hy = PY(hover.y);
+    pctx.strokeStyle = COL.sLine; pctx.lineWidth = 1;
+    pctx.setLineDash([3, 3]);
+    pctx.beginPath();
+    pctx.moveTo(g.psi.x0, snap(hy)); pctx.lineTo(hx, snap(hy));      // across to psi
+    pctx.moveTo(snap(hx), hy); pctx.lineTo(snap(hx), g.phi.bot);     // down to phi
+    pctx.stroke();
+    pctx.setLineDash([]);
+
+    pctx.fillStyle = COL.sTeal;
+    pctx.beginPath(); pctx.arc(PV(psi(hover.y)), hy, 3.2, 0, 6.2832); pctx.fill();
+    pctx.fillStyle = COL.sTrace;
+    pctx.beginPath(); pctx.arc(hx, PF(phi(hover.x)), 3.2, 0, 6.2832); pctx.fill();
+    pctx.strokeStyle = COL.sText; pctx.lineWidth = 1.4;
+    pctx.beginPath(); pctx.arc(hx, hy, 4.2, 0, 6.2832); pctx.stroke();
+  }
+}
+
+/* ---- mechanism charts ---------------------------------------------------- */
+function prepChart(cv){
+  const r = cv.getBoundingClientRect();
+  const d = Math.min(2, window.devicePixelRatio || 1);
+  cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d);
+  const c = cv.getContext('2d');
+  c.setTransform(d, 0, 0, d, 0, 0);
+  c.clearRect(0, 0, r.width, r.height);
+  return { c, w: r.width, h: r.height };
+}
+
+function drawPdeChart(){
+  const cv = document.getElementById('pdeChart');
+  if(!cv.getBoundingClientRect().width) return;
+  const { c, w, h } = prepChart(cv);
+  const VMAXQ = LMAX * LMAX + 2;
+  const py = v => h - 8 - (v / VMAXQ) * (h - 18);
+  const a = py(Lx * Lx), b = py(Ly * Ly);
+
+  c.fillStyle = COL.sCoral; c.globalAlpha = 0.22;             // the gap to close
+  c.fillRect(0, Math.min(a, b), w, Math.abs(a - b));
+  c.globalAlpha = 1;
+
+  c.strokeStyle = COL.sTrace; c.lineWidth = 2;
+  c.beginPath(); c.moveTo(0, snap(a)); c.lineTo(w, snap(a)); c.stroke();
+  c.strokeStyle = COL.sTeal; c.lineWidth = 2;
+  c.beginPath(); c.moveTo(0, snap(b)); c.lineTo(w, snap(b)); c.stroke();
+
+  const gap = pdeGap();
+  c.font = MONO(10); c.textAlign = 'center'; c.textBaseline = 'middle';
+  if(pdeOk()){
+    c.fillStyle = COL.sTeal;
+    c.fillText('closed', w / 2, Math.min(a, b) - 9);
+  }else{
+    c.fillStyle = COL.sCoral;
+    c.fillText((gap > 0 ? '+' : '') + fmt(gap, 2), w / 2, (a + b) / 2);
+  }
+  c.font = MONO(8.5); c.fillStyle = COL.sMuted;
+  c.textAlign = 'left'; c.textBaseline = 'bottom';
+  c.fillText('0', 1, h - 1);
+}
+
+function drawBcChart(){
+  const cv = document.getElementById('bcChart');
+  if(!cv.getBoundingClientRect().width) return;
+  const { c, w, h } = prepChart(cv);
+  const px = l => (l - LMIN) / (LMAX - LMIN) * w;
+  const py = v => h / 2 - v * (h / 2 - 8);
+
+  c.strokeStyle = COL.sAxis; c.lineWidth = 1;
+  c.beginPath(); c.moveTo(0, snap(py(0))); c.lineTo(w, snap(py(0))); c.stroke();
+
+  EIGEN.forEach((e, i) => {                                   // the only valid stops
+    if(e < LMIN || e > LMAX) return;
+    c.strokeStyle = COL.sMin; c.lineWidth = 1;
+    c.setLineDash([2, 3]);
+    c.beginPath(); c.moveTo(snap(px(e)), 0); c.lineTo(snap(px(e)), h); c.stroke();
+    c.setLineDash([]);
+    c.fillStyle = COL.sMuted; c.font = MONO(8.5);
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    c.fillText('k=' + i, px(e), 1);
+  });
+
+  c.strokeStyle = COL.sTeal; c.lineWidth = 1.8; c.lineJoin = 'round';
+  c.beginPath();
+  for(let i = 0; i <= 200; i++){
+    const l = LMIN + (LMAX - LMIN) * i / 200;
+    i === 0 ? c.moveTo(px(l), py(Math.cos(l))) : c.lineTo(px(l), py(Math.cos(l)));
+  }
+  c.stroke();
+
+  c.fillStyle = COL.sTrace;
+  c.beginPath(); c.arc(px(Ly), py(Math.cos(Ly)), 3.6, 0, 6.2832); c.fill();
+  c.font = MONO(9); c.fillStyle = bcOk() ? COL.sTeal : COL.sCoral;
+  c.textAlign = 'right'; c.textBaseline = 'bottom';
+  c.fillText('|cos λy| = ' + fmt(bcMiss()), w - 1, h - 1);
+}
+
+/* ---- draw cycle ---------------------------------------------------------- */
+let idleTimer = null;
+function draw(interactive){
+  const w = interactive ? 150 : 320;
+  const h = interactive ? 130 : 280;
+  renderU(w, h);
+  renderResidual(interactive ? 90 : 170, interactive ? 78 : 150);
+  paint();
+  drawPdeChart();
+  drawBcChart();
+  updateVerdicts();
+
+  const alt = 'A product solution with decay rate ' + fmt(Lx) + ' and frequency ' + fmt(Ly)
+    + '. The Laplacian leaves a residual of ' + fmt(pdeGap(), 2) + ' times u, so the PDE is '
+    + (pdeOk() ? 'satisfied' : 'not satisfied')
+    + '. On the held edges the solution takes the value ' + fmt(psi(1), 2) + ', so the boundary condition is '
+    + (bcOk() ? 'satisfied.' : 'not satisfied.');
+  plot.setAttribute('aria-label', alt);
+  document.getElementById('altText').textContent = alt;
+
+  if(interactive){
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => draw(false), 140);   // STYLE-GUIDE §7
+  }
+}
+
+/* ---- controls ------------------------------------------------------------ */
+const lxEl = document.getElementById('lx'), lyEl = document.getElementById('ly');
+const lxVal = document.getElementById('lxVal'), lyVal = document.getElementById('lyVal');
+
+function nearestEigen(l){
+  let best = l, dist = Infinity;
+  EIGEN.forEach(e => { const d = Math.abs(e - l); if(d < dist){ dist = d; best = e; } });
+  return dist < 0.25 ? best : l;
+}
+function syncUI(){
+  lxEl.value = Lx; lyEl.value = Ly;
+  lxVal.textContent = fmt(Lx); lyVal.textContent = fmt(Ly);
+  fillSlider(lxEl); fillSlider(lyEl);
+  document.querySelectorAll('#modes button').forEach(b => {
+    const e = EIGEN[+b.dataset.k];
+    b.classList.toggle('on', Math.abs(Ly - e) < 1e-6 && Math.abs(Lx - e) < 1e-6);
+  });
+}
+function setLambdas(nx, ny, interactive){
+  Lx = Math.min(LMAX, Math.max(LMIN, nx));
+  Ly = Math.min(LMAX, Math.max(LMIN, ny));
+  syncUI();
+  draw(interactive);
+}
+
+lxEl.addEventListener('input', () => {
+  let v = +lxEl.value;
+  if(locked){
+    if(snapping) v = nearestEigen(v);
+    setLambdas(v, v, true);
+  }else{
+    setLambdas(v, Ly, true);
+  }
+});
+lyEl.addEventListener('input', () => {
+  let v = +lyEl.value;
+  if(snapping) v = nearestEigen(v);
+  setLambdas(locked ? v : Lx, v, true);
+});
+
+bindToggle(document.getElementById('tLock'), on => {
+  locked = on;
+  if(locked) setLambdas(Ly, Ly, false); else draw(false);
+});
+bindToggle(document.getElementById('tSnap'), on => {
+  snapping = on;
+  if(snapping){
+    const v = nearestEigen(Ly);
+    setLambdas(locked ? v : Lx, v, false);
+  }else draw(false);
+});
+
+document.getElementById('modes').addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if(!b) return;
+  const v = EIGEN[+b.dataset.k];
+  setLambdas(v, v, false);
+});
+
+/* ---- hover: factor a point ----------------------------------------------- */
+plot.addEventListener('pointermove', e => {
+  const r = plot.getBoundingClientRect();
+  const p = { x: e.clientX - r.left, y: e.clientY - r.top };
+  const pl = geom.plate;
+  const chip = document.getElementById('chipHover');
+  if(p.x >= pl.x0 && p.x <= pl.x1 && p.y >= pl.top && p.y <= pl.bot){
+    const x = (p.x - pl.x0) / (pl.x1 - pl.x0) * XMAX;
+    const y = 1 - 2 * (p.y - pl.top) / (pl.bot - pl.top);
+    hover = { x, y };
+    chip.innerHTML = 'u(' + fmt(x, 2) + ', ' + fmt(y, 2) + ') = '
+      + '<span class="lx">φ = ' + fmt(phi(x)) + '</span> × '
+      + '<span class="ly">ψ = ' + fmt(psi(y)) + '</span> = '
+      + '<span class="prod">' + fmt(phi(x) * psi(y)) + '</span>';
+    paint();
+  }else if(hover){
+    hover = null;
+    chip.textContent = 'hover the plate to factor a point';
+    paint();
+  }
+});
+plot.addEventListener('pointerleave', () => {
+  if(!hover) return;
+  hover = null;
+  document.getElementById('chipHover').textContent = 'hover the plate to factor a point';
+  paint();
+});
+
+/* ---- boot ---------------------------------------------------------------- */
+ensureTokens();
+readTokens();
+sizeCanvas();
+setLambdas(Math.PI / 2, Math.PI / 2, false);
+
+let resizeTimer = null;
+new ResizeObserver(() => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { sizeCanvas(); draw(false); }, 90);
+}).observe(wrap.querySelector('.stage'));
+
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(() => draw(false));
+</script>
+</body>
+</html>

@@ -1,0 +1,763 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Composition Can Kill You</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Shared suite look: tokens + components + fonts all come from here. -->
+<link rel="stylesheet" href="analysis-style.css?v=2" />
+
+<!-- Only composition-explorer-specific layout lives below. Anything reusable
+     belongs in analysis-style.css so every visualization inherits it.
+
+     LAYOUT INTENT: a fixed-height app, not a scrolling document. The figure and
+     the controls must be on screen together, so moving a control shows its
+     effect without scrolling — on a phone as much as on a desktop.
+
+     FIGURE INTENT: two stacked unit boxes sharing one x-axis. Upper box is f,
+     lower box is h = φ ∘ f. In each, the shaded rectangles have height Mᵢ − mᵢ
+     and width Δxᵢ, so the shaded FRACTION of the box is exactly U(P) − L(P).
+     α(x) = x throughout, which is what lets the area be read off directly. -->
+<style>
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{overflow:hidden}
+
+  .app{
+    height:100dvh; display:flex; flex-direction:column; overflow:hidden;
+    padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right);
+  }
+
+  /* ---- top bar ---------------------------------------------------------- */
+  .topbar{
+    flex:none; display:flex; align-items:baseline; gap:10px 24px; flex-wrap:wrap;
+    padding:11px 22px 10px; border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-size:10.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--muted); font-weight:600; margin:0 0 3px;
+  }
+  h1{font-size:22px; font-weight:600; line-height:1.15; letter-spacing:-.015em; margin:0}
+  .formula{margin:0; font-size:16px; color:var(--text); margin-left:auto}
+  .formula .var{color:var(--trace); font-style:italic}
+  .formula .wt{color:var(--teal); font-style:italic}
+  .formula .op{font-style:italic}
+
+  /* ---- the two halves --------------------------------------------------- */
+  main{flex:1; display:flex; min-height:0}
+
+  .stage{flex:1; min-width:0; display:flex; flex-direction:column; padding:12px 0 8px 20px}
+  .canvas-wrap{flex:1; min-height:0; position:relative}
+  canvas#plot{position:absolute; inset:0; width:100%; height:100%; display:block}
+
+  .under{flex:none; padding:8px 20px 0 0; border-top:1px solid var(--line); margin-top:8px}
+  .caption{display:flex; gap:9px; margin:0 0 5px; font-size:13px; color:var(--muted)}
+  .fignum{font-weight:600; color:var(--text); letter-spacing:.03em}
+  .viz .verdict{margin:0; font-size:14.5px; align-items:baseline}
+  .viz .verdict .nums{
+    margin-left:auto; padding-left:14px; white-space:nowrap;
+    font-variant-numeric:tabular-nums lining-nums; color:var(--muted);
+  }
+  .viz .verdict .nums b{color:var(--trace); font-weight:600}
+  .viz .verdict .nums i{color:var(--teal); font-style:normal; font-weight:600}
+
+  aside{
+    width:326px; flex:none; overflow-y:auto; overscroll-behavior:contain;
+    border-left:1px solid var(--line); padding:14px 20px 22px;
+  }
+  .grp{margin-bottom:18px}
+  .picks{display:flex; flex-direction:column; align-items:flex-start; gap:6px}
+  .viz .picks .btn{text-align:left}
+  /* Greek lowercase must not be uppercased — φ would become Φ. */
+  .viz .section-label .lc{text-transform:none}
+
+  /* the φ chooser's own little plate */
+  .phi-plate{margin:9px 0 0}
+  .phi-plate canvas{width:100%; height:66px; display:block}
+
+  .viz details.help{margin-top:6px}
+  .mech{margin:4px 0 14px}
+  .mech canvas{width:100%; height:96px; display:block}
+  .mech .key{display:flex; gap:16px; flex-wrap:wrap; font-size:12.5px; margin-top:5px}
+  .mech .key i{width:15px; height:2px; display:inline-block; margin-right:5px; position:relative; top:-4px}
+
+  /* ---- phone: stack, and compress the controls so they all stay visible --
+     Budget on an iPhone 16 is roughly 393 × 660 CSS px once Safari's chrome is
+     taken out. The figure flexes; the control panel is capped and compacted:
+     preset sub-labels and hint paragraphs are dropped, presets run as wrapping
+     rows, and the φ plate shrinks rather than disappearing — it is the one
+     picture that says what the chooser above it means. */
+  @media (max-width:900px){
+    main{flex-direction:column}
+
+    .topbar{padding:8px 14px 7px; gap:4px 14px}
+    .eyebrow{display:none}
+    h1{font-size:17px}
+    .formula{font-size:13.5px; margin-left:auto}
+
+    .stage{flex:1 1 auto; min-height:0; padding:8px 14px 6px}
+    .canvas-wrap{flex:1; min-height:200px}
+    .under{padding:7px 0 0; margin-top:7px}
+    .caption{display:none}
+    /* Let the two numbers drop onto their own line rather than squeezing the
+       sentence into a narrow column four lines deep. */
+    .viz .verdict{font-size:13.5px; flex-wrap:wrap; gap:0 9px}
+    .viz .verdict .nums{width:100%; margin-left:0; padding-left:17px; margin-top:1px}
+
+    aside{
+      width:100%; flex:0 0 auto; max-height:50dvh;
+      border-left:0; border-top:1px solid var(--line);
+      padding:10px 14px calc(14px + env(safe-area-inset-bottom));
+    }
+    /* These must out-specify analysis-style.css, whose rules are all scoped
+       under `.viz` — an unprefixed `.hint` here would silently lose. */
+    .grp{margin-bottom:11px}
+    .viz .section-label{font-size:10px; margin-bottom:6px; letter-spacing:.14em}
+    .picks{flex-direction:row; flex-wrap:wrap; gap:2px 16px}
+    .viz .picks .btn{font-size:14px; padding:2px 1px}
+    .viz .picks .btn small{display:none}
+    .viz aside .hint{display:none}
+    .phi-plate{margin:6px 0 0}
+    .phi-plate canvas{height:44px}
+    .viz .ctl{margin-bottom:0}
+    .viz .ctl .row{margin-bottom:2px}
+    .viz .ctl .name{font-size:13.5px}
+    .viz .ctl .val{font-size:14.5px}
+    .viz details.help summary{padding:8px 0; font-size:13.5px}
+  }
+
+  /* Landscape phone: very little height, so cap the panel harder. */
+  @media (max-width:900px) and (max-height:520px){
+    aside{max-height:58dvh}
+    .canvas-wrap{min-height:150px}
+    .phi-plate canvas{height:38px}
+  }
+</style>
+</head>
+<body class="viz-page">
+<div class="viz app">
+
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Real Analysis · Integrability Theorems</p>
+      <h1>Composition can kill you</h1>
+    </div>
+    <p class="formula">
+      <span class="var">h</span>(x) = <span class="op">φ</span>(<span class="wt">f</span>(x))
+    </p>
+  </header>
+
+  <main>
+    <section class="stage">
+      <div class="canvas-wrap">
+        <canvas id="plot" role="img" aria-label="Two stacked unit boxes over the same interval. The upper box holds f with one shaded rectangle per partition interval running from its infimum to its supremum; the lower box holds the composite phi of f with the same shading. In each box the shaded fraction of the area is that function's upper sum minus lower sum."></canvas>
+      </div>
+      <div class="under">
+        <p class="caption"><span class="fignum">Figure 1</span> <span id="capText"></span></p>
+        <p class="verdict" id="verdict">
+          <span class="dot"></span><span id="verdictText"></span>
+          <span class="nums">gap <em>f</em> <i id="rF">—</i> · gap <em>φ∘f</em> <b id="rH">—</b></span>
+        </p>
+      </div>
+    </section>
+
+    <aside>
+      <div class="grp">
+        <div class="section-label">Choose f</div>
+        <div class="picks" id="fPresets"></div>
+        <p class="hint" id="fHint"></p>
+      </div>
+
+      <div class="grp">
+        <div class="section-label">Compose with <span class="lc">φ</span></div>
+        <div class="picks" id="pPresets"></div>
+        <figure class="phi-plate">
+          <canvas id="phiCanvas" role="img" aria-label="The graph of the chosen phi on the range of f, with any jump marked."></canvas>
+        </figure>
+        <p class="hint" id="pHint"></p>
+      </div>
+
+      <div class="grp">
+        <div class="section-label">Partition</div>
+        <div class="ctl">
+          <div class="row">
+            <div class="name">Intervals</div>
+            <div class="val mono" id="nVal">12</div>
+          </div>
+          <input type="range" id="n" min="2" max="120" step="1" value="12"
+                 aria-label="Number of intervals in the uniform partition">
+          <p class="hint">Both boxes always carry the same uniform partition <em>P</em>.</p>
+        </div>
+      </div>
+
+      <details class="help">
+        <summary>Why continuity of <span class="lc">φ</span> is the hypothesis</summary>
+        <div class="body">
+          <figure class="mech">
+            <canvas id="mechCanvas" role="img" aria-label="The two gaps plotted against the number of intervals from 2 to 120. One curve is the gap for f, the other for the composite; when the composite is not integrable its curve stays flat at 1."></canvas>
+            <div class="key">
+              <span style="color:var(--teal)"><i style="background:var(--teal)"></i>gap of f</span>
+              <span style="color:var(--trace)"><i style="background:var(--trace)"></i>gap of φ ∘ f</span>
+            </div>
+          </figure>
+
+          <p style="margin:0 0 11px"><b>The theorem (Rudin 6.11).</b> If <em>f</em> is integrable with respect
+          to <em>α</em>, with <em>m</em> ≤ <em>f</em> ≤ <em>M</em>, and <em>φ</em> is continuous on [<em>m</em>, <em>M</em>],
+          then <em>φ</em> ∘ <em>f</em> is integrable too. The proof leans on <em>uniform</em> continuity:
+          [<em>m</em>, <em>M</em>] is compact, so a single <em>δ</em> serves the whole range at once, and every
+          interval on which <em>f</em> oscillates by less than <em>δ</em> has its composite oscillation
+          controlled for free. The remaining intervals — where <em>f</em> still swings wide — carry only a
+          small total weight, and <em>φ</em> is bounded there.</p>
+
+          <p style="margin:0 0 11px"><b>The counterexample.</b> Take <kbd>Thomae's f</kbd> with
+          <kbd>φ = 1 above 0</kbd>. Thomae's function is integrable — it is discontinuous only at the
+          rationals — but <em>φ</em> jumps exactly at <em>u</em> = 0, the value <em>f</em> takes at every
+          irrational. The composite is 1 on the rationals and 0 on the irrationals: Dirichlet's function,
+          with oscillation 1 on every interval. The lower box fills solid and stays that way.</p>
+
+          <p style="margin:0 0 11px"><b>The hypothesis is sufficient, not necessary.</b> Try
+          <kbd>φ = 1 above ½</kbd>. It is just as discontinuous, so the theorem says nothing — yet each
+          <em>f</em> here meets the level <em>u</em> = ½ only finitely often, so the composite has finitely
+          many jumps and survives. A jump in <em>φ</em> only bites where <em>f</em> keeps returning to it.</p>
+
+          <p style="margin:0"><b>Continuity sets the rate, too.</b> On Thomae's f, <kbd>φ(u) = u²</kbd>
+          drives the gap down faster than <em>f</em>'s own, while <kbd>φ(u) = √u</kbd> — continuous but not
+          Lipschitz at 0 — drives it down more slowly. Both converge. Continuity is all the theorem asks for.</p>
+        </div>
+      </details>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const PI = Math.PI;
+  const $ = id => document.getElementById(id);
+  const getCSS = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+  /* ---- the mathematics ---------------------------------------------------
+     Every f below attains both its sup and its inf on each closed interval,
+     which is what lets the composite oscillation be read off from (m, M)
+     alone — see oscPhi(). α(x) = x throughout. */
+
+  const F_PRESETS = [
+    { id:"smooth",   label:"Continuous f", sub:"f(x) = sin²(2πx)",
+      hint:"Continuous on a compact interval, so integrable — and it comes back down to 0 at x = 0, ½ and 1." },
+    { id:"monotone", label:"Monotone f",   sub:"rises, jumps at ⅓ and ⅔",
+      hint:"Monotone functions are integrable no matter how many jumps they have, so long as there are countably many." },
+    { id:"thomae",   label:"Thomae's f",   sub:"1/q at p/q, 0 on the irrationals",
+      hint:"Integrable, with integral 0: it is discontinuous exactly on the rationals, a set of measure zero." },
+  ];
+
+  const P_PRESETS = [
+    { id:"square",   label:"φ(u) = u²",    sub:"continuous",
+      hint:"Continuous, so 6.11 applies. Squaring contracts near 0, so the composite's gap falls faster than f's." },
+    { id:"sqrt",     label:"φ(u) = √u",    sub:"continuous, steep at 0",
+      hint:"Continuous but not Lipschitz at 0. Still enough — the composite's gap falls, just more slowly." },
+    { id:"stephalf", label:"φ = 1 above ½", sub:"0 on [0, ½], 1 on (½, 1]",
+      hint:"Discontinuous at u = ½, so the theorem is silent. Each f here crosses that level finitely often." },
+    { id:"step0",    label:"φ = 1 above 0", sub:"0 at u = 0, 1 on (0, 1]",
+      hint:"The indicator of (0, ∞) — discontinuous exactly at the value Thomae's f returns to on every interval." },
+  ];
+
+  const fSmooth = x => (1 - Math.cos(4*PI*x))/2;          // = sin²(2πx), exactly 0 at 0, ½, 1
+  const fMono   = x => 0.30*x + (x >= 1/3 ? 0.25 : 0) + (x >= 2/3 ? 0.25 : 0);
+
+  // Smallest denominator q carrying a rational p/q inside [l, r]. This is the
+  // supremum of Thomae's f there, since t(p/q) = 1/q and t = 0 off the rationals.
+  const qCache = new Map();
+  function qmin(l, r){
+    const key = l + "," + r;
+    const hit = qCache.get(key);
+    if(hit !== undefined) return hit;
+    const t = 1e-9;
+    let q = 1;
+    for(; q <= 4000; q++) if(Math.ceil(l*q - t) <= r*q + t) break;
+    if(qCache.size > 40000) qCache.clear();
+    qCache.set(key, q);
+    return q;
+  }
+
+  // Exact sup and inf of f on the closed interval [l, r].
+  function extrema(id, l, r){
+    if(id === "thomae")   return { m:0, M:1/qmin(l, r) };
+    if(id === "monotone") return { m:fMono(l), M:fMono(r) };      // nondecreasing, right-continuous
+    let m = Math.min(fSmooth(l), fSmooth(r));
+    let M = Math.max(fSmooth(l), fSmooth(r));
+    for(let k = 1; k <= 3; k++){                                  // critical points of sin²(2πx)
+      const c = k/4;
+      if(c >= r) break;
+      if(c > l){ const v = fSmooth(c); if(v < m) m = v; if(v > M) M = v; }
+    }
+    return { m, M };
+  }
+
+  function fVal(id, x){
+    if(id === "smooth")   return fSmooth(x);
+    if(id === "monotone") return fMono(x);
+    return NaN;                                    // Thomae has no drawable curve — dots instead
+  }
+
+  // φ, on the range of f. "mono" means continuous and increasing, so
+  // sup(φ∘f) = φ(sup f) and inf(φ∘f) = φ(inf f). "step" is 0 up to and
+  // including the level c, then 1 — the discontinuity sits exactly at c.
+  const PHI = {
+    square:   { kind:"mono", val: u => u*u },
+    sqrt:     { kind:"mono", val: u => Math.sqrt(Math.max(0, u)) },
+    stephalf: { kind:"step", c:0.5, cLabel:"½", val: u => (u > 0.5 ? 1 : 0) },
+    step0:    { kind:"step", c:0,   cLabel:"0", val: u => (u > 0   ? 1 : 0) },
+  };
+
+  // Oscillation of φ ∘ f on an interval whose f-values have inf m and sup M,
+  // both attained. For a step at c the composite takes both values exactly when
+  // f rises above c somewhere and sits at or below c somewhere.
+  function oscPhi(ph, m, M){
+    if(ph.kind === "mono") return ph.val(M) - ph.val(m);
+    const t = 1e-9;
+    return (M > ph.c + t && m <= ph.c + t) ? 1 : 0;
+  }
+
+  const uniform = n => Array.from({length:n+1}, (_, i) => i/n);
+
+  function analyse(fid, pid, pts){
+    const ph = PHI[pid];
+    const intervals = []; let gapF = 0, gapH = 0;
+    for(let i = 1; i < pts.length; i++){
+      const l = pts[i-1], r = pts[i], w = r - l;
+      const { m, M } = extrema(fid, l, r);
+      const oF = M - m, oH = oscPhi(ph, m, M);
+      gapF += oF*w; gapH += oH*w;
+      intervals.push({ l, r, m, M, oF, oH, pm:ph.val(m), pM:ph.val(M) });
+    }
+    return { intervals, gapF, gapH };
+  }
+
+  // Does the composite's gap refuse to come down? Computed once per pair, at a
+  // partition far finer than anything the slider reaches.
+  const stuckCache = new Map();
+  function isStuck(fid, pid){
+    const k = fid + "|" + pid;
+    if(!stuckCache.has(k)) stuckCache.set(k, analyse(fid, pid, uniform(300)).gapH > 0.9);
+    return stuckCache.get(k);
+  }
+
+  // The rationals p/q in lowest terms with q ≤ Q — the dots of Thomae's graph.
+  const gcd = (a, b) => b ? gcd(b, a % b) : a;
+  const ratCache = new Map();
+  function rationals(Q){
+    if(ratCache.has(Q)) return ratCache.get(Q);
+    const out = [];
+    for(let q = 1; q <= Q; q++)
+      for(let p = 0; p <= q; p++)
+        if(gcd(p, q) === 1) out.push({ x:p/q, q });
+    ratCache.set(Q, out);
+    return out;
+  }
+
+  /* ---- state ------------------------------------------------------------ */
+
+  const N_MIN = 2, N_MAX = 120;
+  const S = { f:"thomae", p:"sqrt", n:12 };
+  let R = analyse(S.f, S.p, uniform(S.n));
+
+  /* ---- canvas plumbing -------------------------------------------------- */
+
+  const plot = $("plot"), ctx = plot.getContext("2d");
+  const phiCanvas = $("phiCanvas"), pctx = phiCanvas.getContext("2d");
+  const mechCanvas = $("mechCanvas"), mctx = mechCanvas.getContext("2d");
+  let CW = 0, CH = 0;
+
+  function fitCanvas(c, cx){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const r = c.getBoundingClientRect();
+    c.width  = Math.max(1, Math.round(r.width*dpr));
+    c.height = Math.max(1, Math.round(r.height*dpr));
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return [r.width, r.height];
+  }
+  const snap = v => Math.round(v) + 0.5;
+  const serif = () => getCSS("--font-ui") || "Georgia, serif";
+
+  let raf = 0;
+  const requestDraw = () => { if(!raf) raf = requestAnimationFrame(() => { raf = 0; draw(); }); };
+
+  /* ---- the figure -------------------------------------------------------- */
+
+  function geom(){
+    const tight = CH < 330 || CW < 620;
+    const padL = tight ? 22 : 32, padR = tight ? 12 : 16;
+    const padT = tight ? 8 : 12, padB = tight ? 16 : 20;
+    const midGap = tight ? 20 : 28;
+    const innerW = Math.max(10, CW - padL - padR);
+    const avail  = CH - padT - padB - midGap;
+    const panelH = Math.max(34, avail/2);
+    return { tight, padL, padR, padT, padB, midGap, innerW, panelH,
+             aTop:padT, aBot:padT + panelH,
+             bTop:padT + panelH + midGap, bBot:padT + panelH + midGap + panelH };
+  }
+
+  // One unit box. `tint` shades each interval from mᵢ to Mᵢ; because the box is
+  // the unit square in data coordinates, the shaded fraction IS U(P) − L(P).
+  function drawPanel(g, top, bot, opts){
+    const X = x => g.padL + x*g.innerW;
+    const Y = y => bot - y*(bot - top);
+    const ink = getCSS("--text"), muted = getCSS("--muted"), line = getCSS("--line");
+    const paper = getCSS("--bg"), ochre = getCSS("--coral");
+    const tickFont = g.tight ? 10 : 11.5;
+    const cellW = g.innerW/R.intervals.length;
+
+    /* the oscillation rectangles */
+    ctx.save();
+    R.intervals.forEach(d => {
+      const lo = opts.lo(d), hi = opts.hi(d);
+      if(hi - lo <= 1e-12) return;
+      const x0 = X(d.l), w = Math.max(0.7, X(d.r) - X(d.l));
+      const yT = Y(hi), h = Math.max(1, Y(lo) - Y(hi));
+      ctx.globalAlpha = 0.16; ctx.fillStyle = opts.color;
+      ctx.fillRect(x0, yT, w, h);
+      if(cellW > 2.5){
+        ctx.globalAlpha = 0.62; ctx.strokeStyle = opts.color; ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x0, snap(yT));     ctx.lineTo(x0 + w, snap(yT));
+        ctx.moveTo(x0, snap(yT + h)); ctx.lineTo(x0 + w, snap(yT + h));
+        ctx.stroke();
+      }
+    });
+    ctx.restore();
+
+    /* partition rules, only while they can still be told apart */
+    if(cellW > 4){
+      ctx.strokeStyle = line; ctx.lineWidth = 1;
+      ctx.beginPath();
+      R.intervals.forEach(d => { ctx.moveTo(snap(X(d.l)), top); ctx.lineTo(snap(X(d.l)), bot); });
+      ctx.stroke();
+    }
+
+    /* the box itself */
+    ctx.strokeStyle = getCSS("--line-strong"); ctx.lineWidth = 1;
+    ctx.strokeRect(snap(g.padL), snap(top), g.innerW, bot - top);
+
+    /* Levels the graph takes on a DENSE set of x — the irrational floor, and
+       the rational ceiling once the composite is Dirichlet. No finite scatter
+       of dots can show these honestly, so they are ruled in as part of the
+       graph rather than sampled. */
+    (opts.dense || []).forEach(y => {
+      ctx.save();
+      ctx.strokeStyle = ink; ctx.globalAlpha = 0.8;
+      ctx.lineWidth = 1.8; ctx.setLineDash([2.5, 4.5]);
+      ctx.beginPath(); ctx.moveTo(X(0), snap(Y(y))); ctx.lineTo(X(1), snap(Y(y))); ctx.stroke();
+      ctx.restore();
+    });
+
+    /* the graph */
+    ctx.strokeStyle = ink; ctx.lineWidth = 1.8; ctx.lineJoin = "round"; ctx.lineCap = "round";
+    ctx.fillStyle = ink;
+    if(opts.mode === "dots"){
+      const Q = g.tight ? 22 : 34, rad = g.tight ? 1.7 : 2.1;
+      rationals(Q).forEach(pt => {
+        const y = opts.dot(pt.q);
+        ctx.beginPath(); ctx.arc(X(pt.x), Y(y), rad, 0, 7); ctx.fill();
+      });
+    } else if(opts.mode === "step"){
+      const SAMP = 1200;
+      let a = 0, v = opts.step(0);
+      const segs = [];
+      for(let i = 1; i <= SAMP; i++){
+        const nv = opts.step(i/SAMP);
+        if(nv !== v){ segs.push({ a, b:(i-1)/SAMP, v }); a = i/SAMP; v = nv; }
+      }
+      segs.push({ a, b:1, v });
+      segs.forEach(s => {
+        if((s.b - s.a)*g.innerW < 2.5){
+          ctx.beginPath(); ctx.arc(X((s.a + s.b)/2), Y(s.v), 2.4, 0, 7); ctx.fill();
+        } else {
+          ctx.beginPath(); ctx.moveTo(X(s.a), Y(s.v)); ctx.lineTo(X(s.b), Y(s.v)); ctx.stroke();
+        }
+      });
+    } else {
+      ctx.beginPath();
+      let prev = null;
+      for(let i = 0; i <= 600; i++){
+        const x = i/600, y = opts.curve(x);
+        if(prev !== null && Math.abs(y - prev) > 0.12) ctx.moveTo(X(x), Y(y));
+        else i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y));
+        prev = y;
+      }
+      ctx.stroke();
+    }
+
+    /* the level where φ breaks, drawn on f's box so you can see whether f visits it */
+    if(opts.danger !== undefined){
+      ctx.save();
+      ctx.strokeStyle = ochre; ctx.lineWidth = 1.5; ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(X(0), snap(Y(opts.danger))); ctx.lineTo(X(1), snap(Y(opts.danger))); ctx.stroke();
+      ctx.restore();
+      ctx.font = `${tickFont}px ${serif()}`;
+      ctx.textAlign = "right"; ctx.textBaseline = "bottom";
+      const dt = g.tight ? `φ jumps at u = ${opts.dangerLabel}`
+                         : `φ jumps here · u = ${opts.dangerLabel}`;
+      const dw = ctx.measureText(dt).width;
+      ctx.save(); ctx.globalAlpha = 0.9; ctx.fillStyle = paper;
+      ctx.fillRect(X(1) - dw - 8, Y(opts.danger) - tickFont - 6, dw + 8, tickFont + 5); ctx.restore();
+      ctx.fillStyle = ochre;
+      ctx.fillText(dt, X(1) - 5, Y(opts.danger) - 3);
+    }
+
+    /* y labels, name, and this panel's gap */
+    ctx.font = `${tickFont}px ${serif()}`; ctx.fillStyle = muted;
+    ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    ctx.fillText("1", g.padL - 6, Y(1));
+    ctx.fillText("0", g.padL - 6, Y(0));
+
+    ctx.font = `italic ${g.tight ? 13 : 15}px ${serif()}`;
+    ctx.textAlign = "left"; ctx.textBaseline = "top";
+    ctx.fillStyle = ink;
+    const nameX = g.padL + 6, nameY = top + 4;
+    const nw = ctx.measureText(opts.name).width;
+    ctx.save(); ctx.globalAlpha = 0.88; ctx.fillStyle = paper;
+    ctx.fillRect(nameX - 3, nameY - 2, nw + 6, (g.tight ? 15 : 17)); ctx.restore();
+    ctx.fillText(opts.name, nameX, nameY);
+
+    ctx.font = `${g.tight ? 11.5 : 13}px ${serif()}`;
+    ctx.textAlign = "right"; ctx.textBaseline = "top";
+    const gt = "U − L = " + opts.gap.toFixed(3);
+    const gw = ctx.measureText(gt).width;
+    ctx.save(); ctx.globalAlpha = 0.88; ctx.fillStyle = paper;
+    ctx.fillRect(X(1) - gw - 6, nameY - 2, gw + 9, (g.tight ? 14 : 16)); ctx.restore();
+    ctx.fillStyle = opts.color;
+    ctx.fillText(gt, X(1) - 3, nameY);
+  }
+
+  function draw(){
+    ctx.clearRect(0, 0, CW, CH);
+    const g = geom();
+    const X = x => g.padL + x*g.innerW;
+    const ph = PHI[S.p];
+    const teal = getCSS("--teal"), crimson = getCSS("--trace"), muted = getCSS("--muted");
+    const isStep = ph.kind === "step";
+
+    /* upper box: f itself, with φ's break level laid across it */
+    drawPanel(g, g.aTop, g.aBot, {
+      name:"f", color:teal, gap:R.gapF,
+      lo: d => d.m, hi: d => d.M,
+      mode: S.f === "thomae" ? "dots" : "curve",
+      dot: q => 1/q,
+      curve: x => fVal(S.f, x),
+      dense: S.f === "thomae" ? [0] : [],
+      danger: isStep ? ph.c : undefined,
+      dangerLabel: isStep ? ph.cLabel : "",
+    });
+
+    /* lower box: the composite */
+    const denseH = [];
+    if(S.f === "thomae"){
+      denseH.push(ph.val(0));                              // the irrationals
+      if(isStep && ph.c === 0) denseH.push(1);             // ... and the rationals: Dirichlet
+    }
+    drawPanel(g, g.bTop, g.bBot, {
+      name:"φ ∘ f", color:crimson, gap:R.gapH,
+      lo: d => d.pm,                      // φ is increasing on both kinds, so φ(mᵢ) is the inf
+      hi: d => d.pm + d.oH,
+      mode: S.f === "thomae" ? "dots" : (isStep ? "step" : "curve"),
+      dot: q => ph.val(1/q),
+      step: x => ph.val(fVal(S.f, x)),
+      curve: x => ph.val(fVal(S.f, x)),
+      dense: denseH,
+    });
+
+    /* one shared x-axis, under the lower box */
+    ctx.font = `${g.tight ? 10 : 11.5}px ${serif()}`; ctx.fillStyle = muted;
+    ctx.textAlign = "center"; ctx.textBaseline = "top";
+    (g.tight ? [0, 0.5, 1] : [0, 0.25, 0.5, 0.75, 1]).forEach(t => {
+      ctx.fillText(t === 0 ? "0" : (t === 1 ? "1" : t.toFixed(2)), X(t), g.bBot + 4);
+    });
+    ctx.textAlign = "left";
+  }
+
+  /* ---- the φ plate, in the chooser --------------------------------------- */
+  function drawPhi(){
+    if(!phiCanvas.getBoundingClientRect().width) return;
+    const [w, h] = fitCanvas(phiCanvas, pctx);
+    pctx.clearRect(0, 0, w, h);
+    const ph = PHI[S.p];
+    const padX = 16, padY = 6;
+    const base = h - padY, span = h - 2*padY;
+    const X = u => padX + u*(w - 2*padX);
+    const Y = y => base - (0.13 + 0.74*y)*span;            // headroom, so φ never rides the rules
+    const ink = getCSS("--text"), muted = getCSS("--muted"), ochre = getCSS("--coral");
+
+    /* hairlines, not a box: a u-axis and a left rule */
+    pctx.strokeStyle = getCSS("--line"); pctx.lineWidth = 1;
+    pctx.beginPath();
+    pctx.moveTo(X(0), snap(base)); pctx.lineTo(X(1), snap(base));
+    pctx.moveTo(snap(X(0)), base); pctx.lineTo(snap(X(0)), h - padY - span);
+    pctx.stroke();
+
+    if(ph.kind === "step"){
+      pctx.save();
+      pctx.strokeStyle = ochre; pctx.lineWidth = 1.4; pctx.setLineDash([4, 3]);
+      pctx.beginPath(); pctx.moveTo(snap(X(ph.c)), Y(1) - 4); pctx.lineTo(snap(X(ph.c)), base); pctx.stroke();
+      pctx.restore();
+
+      pctx.strokeStyle = ink; pctx.lineWidth = 1.8; pctx.lineCap = "round";
+      if(ph.c > 0){
+        pctx.beginPath(); pctx.moveTo(X(0), Y(0)); pctx.lineTo(X(ph.c), Y(0)); pctx.stroke();
+      }
+      pctx.beginPath(); pctx.moveTo(X(ph.c), Y(1)); pctx.lineTo(X(1), Y(1)); pctx.stroke();
+      pctx.fillStyle = ink;                                   // φ(c) = 0 is attained
+      pctx.beginPath(); pctx.arc(X(ph.c), Y(0), 2.6, 0, 7); pctx.fill();
+      pctx.fillStyle = getCSS("--bg");                        // φ(c⁺) = 1 is not
+      pctx.beginPath(); pctx.arc(X(ph.c), Y(1), 2.6, 0, 7); pctx.fill();
+      pctx.strokeStyle = ink; pctx.lineWidth = 1.2;
+      pctx.beginPath(); pctx.arc(X(ph.c), Y(1), 2.6, 0, 7); pctx.stroke();
+    } else {
+      pctx.strokeStyle = ink; pctx.lineWidth = 1.8; pctx.lineJoin = "round";
+      pctx.beginPath();
+      for(let i = 0; i <= 200; i++){
+        const u = i/200;
+        i ? pctx.lineTo(X(u), Y(ph.val(u))) : pctx.moveTo(X(u), Y(ph.val(u)));
+      }
+      pctx.stroke();
+    }
+
+    pctx.font = `italic 11px ${serif()}`; pctx.fillStyle = muted;
+    pctx.textAlign = "left"; pctx.textBaseline = "top";
+    pctx.fillText("u", X(1) + 3, base - 12);
+    pctx.textAlign = "right"; pctx.textBaseline = "middle";
+    pctx.fillText("φ", X(0) - 4, Y(1));
+    pctx.textAlign = "left";
+  }
+
+  /* ---- the mechanism chart, inside the disclosure ------------------------ */
+  const mechCache = new Map();
+  function mechSeries(fid, pid){
+    const k = fid + "|" + pid;
+    if(!mechCache.has(k)){
+      const F = [], H = [];
+      for(let n = N_MIN; n <= N_MAX; n++){
+        const a = analyse(fid, pid, uniform(n));
+        F.push(a.gapF); H.push(a.gapH);
+      }
+      mechCache.set(k, { F, H });
+    }
+    return mechCache.get(k);
+  }
+
+  function drawMech(){
+    if(!mechCanvas.getBoundingClientRect().width) return;
+    const [w, h] = fitCanvas(mechCanvas, mctx);
+    mctx.clearRect(0, 0, w, h);
+    const pad = 5;
+    const { F, H } = mechSeries(S.f, S.p);
+    const top = Math.max(0.25, ...F, ...H);
+    const X = i => pad + i/(F.length - 1)*(w - 2*pad);
+    const Y = v => (h - pad) - (v/top)*(h - 2*pad);
+
+    mctx.strokeStyle = getCSS("--line-strong"); mctx.lineWidth = 1; mctx.setLineDash([3, 3]);
+    mctx.beginPath(); mctx.moveTo(snap(X(S.n - N_MIN)), pad); mctx.lineTo(snap(X(S.n - N_MIN)), h - pad); mctx.stroke();
+    mctx.setLineDash([]);
+
+    [[F, getCSS("--teal")], [H, getCSS("--trace")]].forEach(([vals, col]) => {
+      mctx.strokeStyle = col; mctx.lineWidth = 1.8; mctx.lineJoin = "round";
+      mctx.beginPath();
+      vals.forEach((v, i) => i ? mctx.lineTo(X(i), Y(v)) : mctx.moveTo(X(i), Y(v)));
+      mctx.stroke();
+    });
+
+    mctx.fillStyle = getCSS("--muted"); mctx.font = `11px ${serif()}`;
+    mctx.textBaseline = "bottom"; mctx.textAlign = "left";
+    mctx.fillText("n = " + N_MIN, pad, h - 1);
+    mctx.textAlign = "right"; mctx.fillText("n = " + N_MAX, w - pad, h - 1);
+    mctx.textAlign = "left";
+  }
+
+  /* ---- readouts ---------------------------------------------------------- */
+
+  function updateReadouts(){
+    const ph = PHI[S.p];
+    $("rF").textContent = R.gapF.toFixed(4);
+    $("rH").textContent = R.gapH.toFixed(4);
+    $("capText").textContent =
+      S.n + " intervals · in each box the shaded fraction of the unit square is that function's U(P) − L(P).";
+
+    const narrow = window.matchMedia("(max-width: 900px)").matches;
+    const el = $("verdict"), t = $("verdictText");
+    if(isStuck(S.f, S.p)){
+      el.className = "verdict bad";
+      t.textContent = narrow
+        ? "φ ∘ f is Dirichlet's function — no partition helps."
+        : "φ ∘ f is Dirichlet's function: oscillation 1 on every interval, so no partition brings the gap down.";
+    } else if(ph.kind === "mono"){
+      el.className = "verdict good";
+      t.textContent = narrow
+        ? "φ is continuous, so φ ∘ f is integrable."
+        : "φ is continuous on the range of f, so 6.11 applies — φ ∘ f is integrable.";
+    } else {
+      el.className = "verdict good";
+      t.textContent = narrow
+        ? "φ jumps at u = " + ph.cLabel + ", but f meets that level only finitely often."
+        : "φ jumps at u = " + ph.cLabel + ", so the theorem is silent — but f meets that level only finitely often, and φ ∘ f survives anyway.";
+    }
+  }
+
+  function sync(){
+    R = analyse(S.f, S.p, uniform(S.n));
+    updateReadouts(); drawPhi(); drawMech(); requestDraw();
+  }
+
+  /* ---- controls ---------------------------------------------------------- */
+
+  function buildPresets(host, list, key, hintEl){
+    host.innerHTML = "";
+    list.forEach(p => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "btn";
+      b.setAttribute("aria-pressed", String(S[key] === p.id));
+      b.innerHTML = p.label + " <small>" + p.sub + "</small>";
+      b.addEventListener("click", () => {
+        S[key] = p.id;
+        buildPresets(host, list, key, hintEl);
+        sync();
+      });
+      host.appendChild(b);
+    });
+    hintEl.textContent = list.find(p => p.id === S[key]).hint;
+  }
+
+  function fillSlider(el){
+    const pct = (+el.value - +el.min)/(+el.max - +el.min)*100;
+    el.style.setProperty("--fill", pct.toFixed(1) + "%");
+  }
+
+  const nEl = $("n");
+  fillSlider(nEl);
+  nEl.addEventListener("input", () => {
+    S.n = +nEl.value;
+    $("nVal").textContent = S.n; fillSlider(nEl); sync();
+  });
+
+  /* ---- boot -------------------------------------------------------------- */
+
+  function resize(){ [CW, CH] = fitCanvas(plot, ctx); draw(); }
+  new ResizeObserver(() => resize()).observe(plot.parentElement);
+  new ResizeObserver(() => drawPhi()).observe(phiCanvas);
+  new ResizeObserver(() => drawMech()).observe(mechCanvas);
+  window.addEventListener("resize", () => { updateReadouts(); resize(); drawPhi(); drawMech(); });
+  document.querySelector("details.help").addEventListener("toggle", drawMech);
+  if(document.fonts && document.fonts.ready){
+    document.fonts.ready.then(() => { resize(); drawPhi(); drawMech(); });
+  }
+
+  buildPresets($("fPresets"), F_PRESETS, "f", $("fHint"));
+  buildPresets($("pPresets"), P_PRESETS, "p", $("pHint"));
+  sync();
+  resize();
+})();
+</script>
+</body>
+</html>

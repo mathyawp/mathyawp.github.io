@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Real Analysis · Visualizations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="analysis-style.css" />
+<style>
+  body{min-height:100dvh}
+  .wrap{max-width:1040px;margin:0 auto;padding:40px 24px 80px}
+  .masthead{margin-bottom:40px}
+  .masthead h1{margin:6px 0 8px;font-size:30px;font-weight:600;letter-spacing:-.02em}
+  .masthead p{margin:0;color:var(--muted);max-width:60ch}
+  .viz-entry{margin:34px 0}
+  .viz-entry .head{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+  .viz-entry h2{margin:0;font-size:19px;font-weight:600}
+  .viz-entry .head a{margin-left:auto;font-size:13px;color:var(--teal);text-decoration:none}
+  .viz-entry .head a:hover{text-decoration:underline}
+  .viz-entry p{margin:0 0 14px;color:var(--muted);max-width:70ch;font-size:14px}
+  .frame{width:100%;height:660px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg)}
+  .soon{color:var(--muted);font-size:14px;padding:18px;border:1px dashed var(--line);border-radius:var(--radius)}
+  footer{margin-top:50px;color:var(--muted);font-size:13px;padding-top:14px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body class="viz-page">
+<div class="wrap viz">
+
+  <div class="masthead">
+    <div class="section-label">Math 132 · Rudin, Principles of Mathematical Analysis</div>
+    <h1>Interactive visualizations</h1>
+    <p>Pictures for a text that has none. Each panel below is a self-contained page embedded here with an <code>&lt;iframe&gt;</code>; open any of them full-screen with the link on the right.</p>
+  </div>
+
+  <div class="viz-entry">
+    <div class="head">
+      <h2>The Weierstrass function</h2>
+      <a href="weierstrass-explorer.html" target="_blank" rel="noopener">open full page ↗</a>
+    </div>
+    <p>Continuous everywhere, differentiable nowhere. Vary the number of terms in the partial sum, adjust a and b, and zoom in to watch the roughness persist at every scale.</p>
+    <iframe class="frame" src="weierstrass-explorer.html" title="Weierstrass function explorer" loading="lazy"></iframe>
+  </div>
+
+  <div class="viz-entry">
+    <div class="head">
+      <h2>Making the gap small</h2>
+      <a href="riemann-gap-explorer.html" target="_blank" rel="noopener">open full page ↗</a>
+    </div>
+    <p>The Riemann–Stieltjes criterion for integrability. Choose f and α, refine the partition, and watch U(P) − L(P) = Σ (Mᵢ − mᵢ) Δαᵢ as an area you can compare against ε — including the Dirichlet function, where that area never shrinks.</p>
+    <iframe class="frame" src="riemann-gap-explorer.html" title="Making the gap small" loading="lazy"></iframe>
+  </div>
+
+  <div class="viz-entry">
+    <div class="head"><h2>Not yet listed</h2></div>
+    <p class="soon"><code>separation-of-variables.html</code> and <code>fourier-question.html</code> are in this folder but have no entry here yet. Copy a block above and change the title, description, and the two <code>src</code> paths.</p>
+  </div>
+
+  <footer>
+    Shared look defined in <code>analysis-style.css</code> · edit the tokens there to re-skin the whole suite at once. The conventions are written down in <code>STYLE-GUIDE.md</code>.
+  </footer>
+</div>
+</body>
+</html>

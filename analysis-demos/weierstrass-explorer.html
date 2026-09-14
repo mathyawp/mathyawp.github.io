@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Weierstrass Function Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<!-- Shared suite look: tokens + components + fonts all come from here. -->
+<link rel="stylesheet" href="analysis-style.css" />
+
+<!-- Only Weierstrass-specific layout lives below. Anything reusable belongs
+     in analysis-style.css so every visualization inherits it. -->
+<style>
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{overflow:hidden}
+
+  /* app shell */
+  .app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+  header.top{
+    display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+    padding:14px 22px;border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(19,40,58,0.55),rgba(19,40,58,0));
+  }
+  .brand{display:flex;flex-direction:column;gap:2px;min-width:max-content}
+  .brand .eyebrow{
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.32em;
+    text-transform:uppercase;color:var(--teal);
+  }
+  .brand h1{margin:0;font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .formula{
+    font-family:var(--font-mono);font-size:15px;color:var(--text);
+    background:var(--inset);border:1px solid var(--line);border-radius:8px;
+    padding:8px 14px;display:flex;align-items:center;gap:6px;white-space:nowrap;
+  }
+  .formula .sig{font-size:24px;line-height:1;position:relative;top:1px;color:var(--trace)}
+  .formula sub,.formula sup{font-size:9px;font-family:var(--font-mono)}
+  .formula .var{color:var(--teal)}
+  .badge{margin-left:auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+
+  main{display:flex;flex:1;min-height:0}
+
+  aside{
+    width:330px;flex:none;border-right:1px solid var(--line);
+    background:linear-gradient(180deg,var(--panel),#0b1a27);
+    overflow-y:auto;padding:18px 18px 40px;
+    scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent;
+  }
+  aside::-webkit-scrollbar{width:8px}
+  aside::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:8px}
+  .group{margin-bottom:22px}
+  .btn-row{display:flex;gap:8px;flex-wrap:wrap}
+
+  /* mechanism panel (specific to this viz) */
+  .mech{background:var(--inset);border:1px solid var(--line);border-radius:var(--radius);padding:14px}
+  .mech h4{margin:0 0 2px;font-size:12.5px;font-weight:600}
+  .mech .cap{font-size:11px;color:var(--muted);margin-bottom:10px}
+  .mech canvas{width:100%;height:88px;display:block}
+  .mech .legend{display:flex;gap:14px;margin-top:8px;font-size:10.5px;font-family:var(--font-mono)}
+  .mech .legend i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px;position:relative;top:1px}
+  .conv{color:var(--teal)}.div{color:var(--coral)}
+
+  /* plot stage */
+  .plotwrap{flex:1;min-width:0;position:relative;display:flex;flex-direction:column}
+  .stage{flex:1;position:relative;min-height:0}
+  canvas#plot{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+  .plotwrap.panning canvas#plot{cursor:grabbing}
+  .plotwrap.probe canvas#plot{cursor:pointer}
+
+  .overlay{position:absolute;top:14px;left:16px;display:flex;gap:10px;flex-wrap:wrap;pointer-events:none}
+  .chip .cx{color:var(--teal)}.chip .cy{color:var(--trace)}
+
+  .ztools{position:absolute;top:14px;right:16px;display:flex;flex-direction:column;gap:7px}
+  .ztools button{
+    width:34px;height:34px;border-radius:8px;border:1px solid var(--line);
+    background:rgba(9,20,32,.8);color:var(--text);font-size:17px;cursor:pointer;
+    backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-mono);transition:border-color .15s,background .15s;
+  }
+  .ztools button:hover{border-color:var(--line-strong);background:#163045}
+  .ztools button.reset{font-size:12px}
+  .ztools button:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+  .probebar{
+    border-top:1px solid var(--line);background:var(--panel);
+    padding:12px 18px;display:none;align-items:center;gap:22px;flex-wrap:wrap;
+  }
+  .plotwrap.probe-active .probebar{display:flex}
+  .probebar .pcol{display:flex;flex-direction:column;gap:1px}
+  .probebar .pcol .k{font-size:10px;font-family:var(--font-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  .probebar .pcol .v{font-family:var(--font-mono);font-size:15px;color:var(--text)}
+  .probebar .pcol .v.slope{color:var(--coral);font-weight:500}
+  .probebar .note{font-size:11.5px;color:var(--muted);max-width:300px;line-height:1.4}
+  .probebar .note b{color:var(--teal)}
+  #derivChart{width:150px;height:46px;display:block}
+  .probebar .clearp{margin-left:auto}
+
+  @media (max-width:880px){
+    body{overflow:auto}
+    .app{height:auto;min-height:100dvh}
+    header.top{padding:12px 14px;gap:12px}
+    .badge{width:100%;justify-content:flex-start}
+    main{flex-direction:column}
+    aside{width:100%;border-right:none;border-bottom:1px solid var(--line);order:2;overflow:visible}
+    .plotwrap{order:1}
+    .stage{height:56vh;min-height:340px}
+    .formula{font-size:13px}
+  }
+</style>
+</head>
+<body class="viz-page">
+<div class="app viz">
+  <header class="top">
+    <div class="brand">
+      <div class="eyebrow">Real Analysis · Pathological Functions</div>
+      <h1>Weierstrass Function Explorer</h1>
+    </div>
+    <div class="formula" aria-label="W of x equals the sum from n equals 0 to infinity of a to the n cosine of b to the n pi x">
+      <span class="var">W</span>(x)&nbsp;=&nbsp;
+      <span class="sig">∑</span>
+      <span style="display:inline-flex;flex-direction:column;font-size:9px;line-height:1.1;margin:0 2px">
+        <span>∞</span><span>n=0</span>
+      </span>
+      <span><span class="var">a</span><sup>n</sup>&nbsp;cos(<span class="var">b</span><sup>n</sup>&nbsp;πx)</span>
+    </div>
+    <div class="badge">
+      <div class="verdict" id="verdict">
+        <span class="dot"></span>
+        <span id="verdictText"></span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+      <div class="group">
+        <div class="section-label">Parameters</div>
+
+        <div class="ctl teal">
+          <div class="row">
+            <div class="name">Terms in the sum <span class="sub">partial sum N</span></div>
+            <div class="val mono" id="kVal">10</div>
+          </div>
+          <input type="range" class="teal" id="k" min="1" max="60" step="1" value="10" aria-label="Number of terms">
+          <div class="hint">Summing n = 0 … N−1. Each W<sub>N</sub> is a finite sum of smooth cosines — so every partial sum <em>is</em> differentiable. The pathology lives only in the limit.</div>
+        </div>
+
+        <div class="ctl">
+          <div class="row">
+            <div class="name">Amplitude factor&nbsp; <span class="sub">a</span></div>
+            <div class="val mono" id="aVal">0.50</div>
+          </div>
+          <input type="range" id="a" min="0.05" max="0.95" step="0.01" value="0.5" aria-label="Amplitude factor a">
+          <div class="hint">Term heights shrink like aⁿ. Need 0 &lt; a &lt; 1 so the sum converges.</div>
+        </div>
+
+        <div class="ctl">
+          <div class="row">
+            <div class="name">Frequency factor&nbsp; <span class="sub">b</span></div>
+            <div class="val mono" id="bVal">3</div>
+          </div>
+          <input type="range" id="b" min="2" max="21" step="1" value="3" aria-label="Frequency factor b">
+          <div class="hint" id="bHint">Frequencies grow like bⁿ. The original theorem needs b to be an odd integer.</div>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="section-label">View</div>
+        <div class="btn-row">
+          <button class="btn ghost" id="reset">Reset view</button>
+          <button class="btn ghost" id="fitY">Fit height</button>
+        </div>
+        <div class="hint" style="margin-top:10px">
+          Scroll to zoom about the cursor · drag to pan.
+          Hold <span class="mono" style="color:var(--text)">Shift</span> to zoom height only,
+          <span class="mono" style="color:var(--text)">Alt</span> for width only.
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="section-label">Display</div>
+        <div class="toggle on" id="tGrid" role="switch" aria-checked="true" tabindex="0">
+          <div class="t-name">Grid &amp; axes</div><div class="switch"></div>
+        </div>
+        <div class="toggle" id="tGhost" role="switch" aria-checked="false" tabindex="0">
+          <div class="t-name">Highlight newest term<span>show aᴺ⁻¹cos(bᴺ⁻¹πx) alone</span></div><div class="switch"></div>
+        </div>
+        <div class="toggle" id="tProbe" role="switch" aria-checked="false" tabindex="0">
+          <div class="t-name">Slope probe<span>click the curve to read W′<sub>N</sub></span></div><div class="switch"></div>
+        </div>
+        <div class="btn-row" style="margin-top:12px">
+          <button class="btn ghost" id="build">▶ Build up the terms</button>
+        </div>
+      </div>
+
+      <div class="group">
+        <div class="section-label">Why it breaks</div>
+        <div class="mech">
+          <h4>Heights fall, slopes climb</h4>
+          <div class="cap">Per-term amplitude vs. steepest slope, for the current a and b.</div>
+          <canvas id="mechCanvas" width="560" height="176"></canvas>
+          <div class="legend">
+            <span class="conv"><i style="background:var(--teal)"></i>aⁿ → 0&nbsp; (sum converges ⇒ continuous)</span>
+          </div>
+          <div class="legend" style="margin-top:4px">
+            <span class="div"><i style="background:var(--coral)"></i>(ab)ⁿ → ∞&nbsp; (slopes diverge ⇒ not differentiable)</span>
+          </div>
+        </div>
+      </div>
+
+      <details class="help">
+        <summary>How to use this</summary>
+        <div class="body">
+          <b>The idea.</b> Each cosine term is perfectly smooth. Summing more of them keeps the curve bounded — heights decay like aⁿ — yet makes it ever more jagged, because the steepest slope of term n grows like (ab)ⁿ.<br><br>
+          <b>Try this.</b> Drag <b>Terms</b> up slowly and watch detail appear at finer and finer scales. Then zoom in (scroll) anywhere — the roughness never resolves into a smooth arc.<br><br>
+          <b>Self-similarity.</b> Replacing x by x/b and scaling height by a returns a similar picture. To see it, zoom width by about <b>b</b> and height by about <b>1/a</b> (use <kbd>Shift</kbd>+scroll and <kbd>Alt</kbd>+scroll).<br><br>
+          <b>Slope probe.</b> Turn it on and click the curve. You get the true derivative of the partial sum W′<sub>N</sub> there — and the inset shows |W′<sub>j</sub>| exploding as j grows, which is exactly why no finite limiting slope exists.<br><br>
+          At extreme settings the structure becomes finer than a pixel (and finer than floating-point can hold). That limit is the point, not a bug.
+        </div>
+      </details>
+    </aside>
+
+    <div class="plotwrap" id="plotwrap">
+      <div class="stage">
+        <canvas id="plot"></canvas>
+        <div class="overlay">
+          <div class="chip" id="cursorChip">cursor&nbsp; <span class="cx">x —</span>&nbsp; <span class="cy">W —</span></div>
+          <div class="chip" id="rangeChip">x ∈ —&nbsp; · &nbsp;y ∈ —</div>
+        </div>
+        <div class="ztools">
+          <button id="zin" title="Zoom in" aria-label="Zoom in">+</button>
+          <button id="zout" title="Zoom out" aria-label="Zoom out">−</button>
+          <button class="reset" id="zreset" title="Reset view" aria-label="Reset view">⟲</button>
+        </div>
+      </div>
+      <div class="probebar" id="probebar">
+        <div class="pcol"><span class="k">point x₀</span><span class="v mono" id="px">—</span></div>
+        <div class="pcol"><span class="k">W<sub>N</sub>(x₀)</span><span class="v mono" id="pw">—</span></div>
+        <div class="pcol"><span class="k">slope W′<sub>N</sub>(x₀)</span><span class="v mono slope" id="pslope">—</span></div>
+        <div class="pcol"><span class="k">|W′<sub>j</sub>(x₀)| for j = 1…N</span><canvas id="derivChart" width="300" height="92"></canvas></div>
+        <div class="note">The partial sum has a finite slope here, but it <b>grows without bound</b> as you add terms — so the limit has no derivative.</div>
+        <button class="btn clearp" id="clearProbe">Clear point</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+(() => {
+  "use strict";
+  const PI = Math.PI;
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const S = {
+    a: 0.5, b: 3, k: 10,
+    grid: true, ghost: false, probe: false,
+    view: { x0:-2, x1:2, y0:-2.2, y1:2.2 },
+    probePt: null,
+    mouse: null,
+  };
+
+  const $ = id => document.getElementById(id);
+  const plot = $("plot"), ctx = plot.getContext("2d");
+  const stage = plot.parentElement;
+  const wrap = $("plotwrap");
+  const mechCanvas = $("mechCanvas"), mctx = mechCanvas.getContext("2d");
+  const derivChart = $("derivChart"), dctx = derivChart.getContext("2d");
+
+  // W_k(x) = sum_{n=0}^{k-1} a^n cos(b^n * pi * x)
+  function W(x, k=S.k, a=S.a, b=S.b){
+    let s = 0, an = 1, bn = 1;
+    for(let n=0;n<k;n++){
+      s += an * Math.cos(bn * PI * x);
+      if(an < 1e-12) break;
+      an *= a; bn *= b;
+    }
+    return s;
+  }
+  // W_k'(x) = -pi * sum a^n b^n sin(b^n pi x)
+  function dW(x, k=S.k, a=S.a, b=S.b){
+    let s = 0, an = 1, bn = 1;
+    for(let n=0;n<k;n++){
+      s += an * bn * Math.sin(bn * PI * x);
+      an *= a; bn *= b;
+    }
+    return -PI * s;
+  }
+
+  let CW=0, CH=0, dpr=1;
+  function fitCanvas(c, cx){
+    dpr = Math.min(window.devicePixelRatio||1, 2);
+    const r = c.getBoundingClientRect();
+    c.width = Math.max(1,Math.round(r.width*dpr));
+    c.height = Math.max(1,Math.round(r.height*dpr));
+    cx.setTransform(dpr,0,0,dpr,0,0);
+    return [r.width, r.height];
+  }
+  function resize(){ [CW,CH] = fitCanvas(plot, ctx); draw(); }
+
+  const sx = wxv => (wxv - S.view.x0)/(S.view.x1 - S.view.x0) * CW;
+  const sy = wyv => CH - (wyv - S.view.y0)/(S.view.y1 - S.view.y0) * CH;
+  const wx = px => S.view.x0 + px/CW*(S.view.x1 - S.view.x0);
+  const wy = py => S.view.y0 + (CH-py)/CH*(S.view.y1 - S.view.y0);
+
+  function niceStep(range, target){
+    const raw = range/target;
+    const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const norm = raw/mag;
+    let s;
+    if(norm < 1.5) s=1; else if(norm < 3) s=2; else if(norm < 7) s=5; else s=10;
+    return s*mag;
+  }
+  function fmt(v, step){
+    const dec = Math.max(0, -Math.floor(Math.log10(step)));
+    if(Math.abs(v) < step/1e6) v = 0;
+    return v.toFixed(Math.min(dec,6));
+  }
+
+  let interacting = false, hqTimer = null, raf = 0;
+  function requestDraw(){ if(!raf) raf = requestAnimationFrame(()=>{raf=0;draw();}); }
+
+  function draw(){
+    ctx.clearRect(0,0,CW,CH);
+    if(S.grid) drawGrid();
+    if(S.ghost && S.k>=1){
+      drawCurve(x => { const n=S.k-1; return Math.pow(S.a,n)*Math.cos(Math.pow(S.b,n)*PI*x); },
+                "rgba(70,214,196,0.55)", 1.1, false);
+    }
+    const OS = interacting ? 1 : 3;
+    if(!interacting) drawCurve(x=>W(x), "var", 4.5, true, OS, "rgba(245,166,35,0.16)");
+    drawCurve(x=>W(x), "var", 1.7, true, OS);
+    if(S.probe && S.probePt!=null) drawProbe();
+    if(S.mouse && !interacting) drawCursor();
+    updateChips();
+  }
+
+  function drawGrid(){
+    const v = S.view;
+    const xStep = niceStep(v.x1-v.x0, Math.max(4, CW/120));
+    const yStep = niceStep(v.y1-v.y0, Math.max(3, CH/90));
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = getCSS("--grid-minor");
+    drawGridLines(v.x0, v.x1, xStep/2, true); drawGridLines(v.y0, v.y1, yStep/2, false);
+    ctx.strokeStyle = getCSS("--grid-major");
+    drawGridLines(v.x0, v.x1, xStep, true); drawGridLines(v.y0, v.y1, yStep, false);
+    ctx.strokeStyle = getCSS("--axis"); ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    if(0>=v.y0 && 0<=v.y1){ const y=Math.round(sy(0))+0.5; ctx.moveTo(0,y); ctx.lineTo(CW,y); }
+    if(0>=v.x0 && 0<=v.x1){ const x=Math.round(sx(0))+0.5; ctx.moveTo(x,0); ctx.lineTo(x,CH); }
+    ctx.stroke();
+    ctx.fillStyle = getCSS("--muted");
+    ctx.font = "11px 'JetBrains Mono', monospace"; ctx.textBaseline = "top";
+    const yAxisPx = (0>=v.x0&&0<=v.x1)? sx(0) : 6;
+    const xAxisPx = (0>=v.y0&&0<=v.y1)? sy(0) : CH-6;
+    let start = Math.ceil(v.x0/xStep)*xStep;
+    ctx.textAlign = "center";
+    for(let x=start; x<=v.x1+1e-9; x+=xStep){
+      if(Math.abs(x)<xStep/1e6) continue;
+      ctx.fillText(fmt(x,xStep), sx(x), Math.min(Math.max(xAxisPx+5,4),CH-16));
+    }
+    ctx.textAlign = "left"; ctx.textBaseline="middle";
+    start = Math.ceil(v.y0/yStep)*yStep;
+    for(let y=start; y<=v.y1+1e-9; y+=yStep){
+      if(Math.abs(y)<yStep/1e6) continue;
+      ctx.fillText(fmt(y,yStep), Math.min(Math.max(yAxisPx+5,4),CW-44), sy(y));
+    }
+    ctx.textAlign="left";
+  }
+  function drawGridLines(lo, hi, step, vertical){
+    ctx.beginPath();
+    let start = Math.ceil(lo/step)*step;
+    for(let t=start; t<=hi+1e-9; t+=step){
+      if(vertical){ const x=Math.round(sx(t))+0.5; ctx.moveTo(x,0); ctx.lineTo(x,CH); }
+      else { const y=Math.round(sy(t))+0.5; ctx.moveTo(0,y); ctx.lineTo(CW,y); }
+    }
+    ctx.stroke();
+  }
+  function drawCurve(fn, color, width, glow, OS=1, glowColor){
+    const n = Math.max(2, Math.floor(CW*OS));
+    ctx.lineWidth = width; ctx.lineJoin = "round"; ctx.lineCap="round";
+    ctx.strokeStyle = (color==="var") ? (glowColor||getCSS("--trace")) : color;
+    ctx.beginPath();
+    const dx = (S.view.x1-S.view.x0)/(n-1);
+    for(let i=0;i<n;i++){
+      const X = S.view.x0 + i*dx, Y = fn(X);
+      const px = (X - S.view.x0)/(S.view.x1-S.view.x0)*CW;
+      const py = CH - (Y - S.view.y0)/(S.view.y1-S.view.y0)*CH;
+      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+  }
+  function drawCursor(){
+    const m = S.mouse, px = sx(m.x), Yv = W(m.x), py = sy(Yv);
+    ctx.save();
+    ctx.strokeStyle = "rgba(160,205,225,0.25)"; ctx.lineWidth = 1; ctx.setLineDash([3,4]);
+    ctx.beginPath(); ctx.moveTo(px,0); ctx.lineTo(px,CH); ctx.moveTo(0,py); ctx.lineTo(CW,py); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = getCSS("--trace");
+    ctx.beginPath(); ctx.arc(px,py,3.2,0,7); ctx.fill();
+    ctx.strokeStyle="rgba(9,20,32,0.9)"; ctx.lineWidth=1.4; ctx.stroke();
+    ctx.restore();
+  }
+  function drawProbe(){
+    const x0 = S.probePt, y0 = W(x0), m = dW(x0);
+    const px = sx(x0), py = sy(y0), xa = S.view.x0, xb = S.view.x1;
+    ctx.save();
+    ctx.strokeStyle = getCSS("--coral"); ctx.lineWidth = 1.4; ctx.setLineDash([6,4]);
+    ctx.beginPath();
+    ctx.moveTo(sx(xa), sy(y0 + m*(xa-x0))); ctx.lineTo(sx(xb), sy(y0 + m*(xb-x0)));
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = getCSS("--coral");
+    ctx.beginPath(); ctx.arc(px,py,4.5,0,7); ctx.fill();
+    ctx.strokeStyle="rgba(9,20,32,0.95)"; ctx.lineWidth=1.6; ctx.stroke();
+    ctx.restore();
+    updateProbeReadout(x0,y0,m);
+  }
+  function getCSS(v){ return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+  function updateChips(){
+    const v=S.view;
+    $("rangeChip").innerHTML = `x ∈ [<b>${v.x0.toFixed(3)}</b>, <b>${v.x1.toFixed(3)}</b>] · y ∈ [<b>${v.y0.toFixed(3)}</b>, <b>${v.y1.toFixed(3)}</b>]`;
+    if(S.mouse){
+      const Yv = W(S.mouse.x);
+      $("cursorChip").innerHTML = `cursor&nbsp; <span class="cx">x ${S.mouse.x.toFixed(4)}</span>&nbsp; <span class="cy">W ${Yv.toFixed(4)}</span>`;
+    }
+  }
+  function updateProbeReadout(x0,y0,m){
+    $("px").textContent = x0.toFixed(4);
+    $("pw").textContent = y0.toFixed(4);
+    $("pslope").textContent = (Math.abs(m)>=1e4 ? m.toExponential(2) : m.toFixed(3));
+    fitCanvas(derivChart, dctx);
+    const r = derivChart.getBoundingClientRect(), w=r.width, h=r.height;
+    dctx.clearRect(0,0,w,h);
+    const vals=[];
+    for(let j=1;j<=S.k;j++) vals.push(Math.max(1e-6, Math.abs(dW(x0,j))));
+    const logs = vals.map(v=>Math.log10(v));
+    const lo=Math.min(...logs,0), hi=Math.max(...logs,1), span=(hi-lo)||1, bw=w/S.k;
+    for(let j=0;j<S.k;j++){
+      const hpx = (logs[j]-lo)/span*(h-6);
+      dctx.fillStyle = getCSS("--coral");
+      dctx.globalAlpha = 0.35 + 0.65*(j/Math.max(1,S.k-1));
+      dctx.fillRect(j*bw+0.5, h-hpx, Math.max(1,bw-1), hpx);
+    }
+    dctx.globalAlpha=1;
+  }
+
+  function drawMech(){
+    fitCanvas(mechCanvas, mctx);
+    const r = mechCanvas.getBoundingClientRect(), w=r.width, h=r.height;
+    mctx.clearRect(0,0,w,h);
+    const N = Math.min(Math.max(S.k,1), 16);
+    const padT=8, midGap=12, colW=w/N, half=(h - midGap)/2;
+    mctx.fillStyle = getCSS("--teal");
+    for(let n=0;n<N;n++){
+      const bh = Math.pow(S.a,n)*(half-2);
+      mctx.globalAlpha = 0.85;
+      mctx.fillRect(n*colW+colW*0.18, padT+(half-bh), colW*0.64, bh);
+    }
+    mctx.fillStyle = getCSS("--coral");
+    const slopes=[]; for(let n=0;n<N;n++) slopes.push(Math.pow(S.a*S.b,n));
+    const lmax = Math.log10(Math.max(slopes[N-1],10));
+    for(let n=0;n<N;n++){
+      const lv = Math.log10(Math.max(slopes[n],1));
+      const bh = (lmax<=0?0:lv/lmax)*(half-2);
+      mctx.globalAlpha = 0.85;
+      mctx.fillRect(n*colW+colW*0.18, padT+half+midGap, colW*0.64, bh);
+    }
+    mctx.globalAlpha=1;
+    mctx.strokeStyle = getCSS("--line"); mctx.lineWidth=1;
+    mctx.beginPath(); mctx.moveTo(0, padT+half+midGap/2+0.5); mctx.lineTo(w, padT+half+midGap/2+0.5); mctx.stroke();
+  }
+
+  function updateVerdict(){
+    const ab = S.a*S.b;
+    const weier = 1 + 1.5*PI;
+    const isOdd = (S.b % 2 === 1);
+    const el = $("verdict"), t = $("verdictText");
+    const abTxt = `ab = ${ab.toFixed(2)}`;
+    if(ab < 1){
+      el.className = "verdict bad";
+      t.innerHTML = `<b>Smooth here (C¹).</b> &nbsp;<span class="mono">${abTxt} &lt; 1</span> — slopes (ab)ⁿ → 0, so the derivative series converges.`;
+    } else {
+      el.className = "verdict good";
+      let extra = "";
+      if(isOdd && ab > weier) extra = ` <span class="mono" style="color:var(--muted)">· also meets Weierstrass's original ab &gt; ${weier.toFixed(2)}</span>`;
+      t.innerHTML = `<b>Continuous everywhere, differentiable nowhere.</b> &nbsp;<span class="mono">${abTxt} ≥ 1</span> (Hardy)${extra}`;
+    }
+  }
+
+  function fillSlider(el){
+    const pct = (+el.value - +el.min)/(+el.max - +el.min)*100;
+    el.style.setProperty("--fill", pct.toFixed(1)+"%");
+  }
+  function syncParams(){
+    $("kVal").textContent = S.k;
+    $("aVal").textContent = S.a.toFixed(2);
+    $("bVal").textContent = S.b;
+    $("bHint").innerHTML = (S.b%2===1)
+      ? `b = ${S.b} is odd ✓ — frequencies grow like bⁿ.`
+      : `b = ${S.b} is even. The original Weierstrass theorem requires an <em>odd</em> integer.`;
+    updateVerdict(); drawMech();
+  }
+
+  function fitHeight(){ const A = 1/(1-S.a); S.view.y0 = -A*1.08; S.view.y1 = A*1.08; }
+  function resetView(){ S.view.x0=-2; S.view.x1=2; fitHeight(); requestDraw(); }
+  function zoomAt(cx, cy, fx, fy){
+    const X = wx(cx), Y = wy(cy);
+    S.view.x0 = X + (S.view.x0-X)*fx; S.view.x1 = X + (S.view.x1-X)*fx;
+    S.view.y0 = Y + (S.view.y0-Y)*fy; S.view.y1 = Y + (S.view.y1-Y)*fy;
+  }
+  function markInteracting(){
+    interacting = true;
+    if(hqTimer) clearTimeout(hqTimer);
+    hqTimer = setTimeout(()=>{ interacting=false; draw(); }, 140);
+  }
+
+  const pointers = new Map();
+  let panStart=null, pinchStart=null, movedDist=0;
+  plot.addEventListener("pointerdown", e=>{
+    plot.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, {x:e.offsetX, y:e.offsetY});
+    movedDist = 0;
+    if(pointers.size===2){
+      const p=[...pointers.values()];
+      pinchStart = { d: Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y), cx:(p[0].x+p[1].x)/2, cy:(p[0].y+p[1].y)/2, view:{...S.view} };
+      panStart=null;
+    } else if(!S.probe){
+      panStart = {x:e.offsetX, y:e.offsetY, view:{...S.view}};
+      wrap.classList.add("panning");
+    }
+  });
+  plot.addEventListener("pointermove", e=>{
+    if(pointers.has(e.pointerId)) pointers.set(e.pointerId,{x:e.offsetX,y:e.offsetY});
+    S.mouse = { x: wx(e.offsetX), y: wy(e.offsetY) };
+    if(pinchStart && pointers.size===2){
+      const p=[...pointers.values()];
+      const d = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y), f = pinchStart.d/Math.max(d,1);
+      S.view = {...pinchStart.view}; zoomAt(pinchStart.cx, pinchStart.cy, f, f);
+      markInteracting(); requestDraw(); return;
+    }
+    if(panStart){
+      const dx = e.offsetX - panStart.x, dy = e.offsetY - panStart.y;
+      movedDist += Math.abs(dx)+Math.abs(dy);
+      const wpp = (panStart.view.x1-panStart.view.x0)/CW, hpp = (panStart.view.y1-panStart.view.y0)/CH;
+      S.view.x0 = panStart.view.x0 - dx*wpp; S.view.x1 = panStart.view.x1 - dx*wpp;
+      S.view.y0 = panStart.view.y0 + dy*hpp; S.view.y1 = panStart.view.y1 + dy*hpp;
+      markInteracting();
+    }
+    requestDraw();
+  });
+  function endPointer(e){
+    const wasProbeClick = S.probe && pointers.has(e.pointerId) && movedDist < 4 && pointers.size===1;
+    pointers.delete(e.pointerId);
+    if(pointers.size<2) pinchStart=null;
+    if(pointers.size===0){ panStart=null; wrap.classList.remove("panning"); }
+    if(wasProbeClick){ S.probePt = wx(e.offsetX); wrap.classList.add("probe-active"); requestDraw(); }
+  }
+  plot.addEventListener("pointerup", endPointer);
+  plot.addEventListener("pointercancel", e=>{ pointers.delete(e.pointerId); pinchStart=null; panStart=null; wrap.classList.remove("panning"); });
+  plot.addEventListener("pointerleave", ()=>{ if(!panStart && !pinchStart){ S.mouse=null; requestDraw(); }});
+  plot.addEventListener("wheel", e=>{
+    e.preventDefault();
+    const f = Math.pow(1.0016, e.deltaY);
+    let fx=f, fy=f;
+    if(e.shiftKey) fx=1;
+    if(e.altKey) fy=1;
+    zoomAt(e.offsetX, e.offsetY, fx, fy);
+    markInteracting(); requestDraw();
+  }, {passive:false});
+
+  $("zin").onclick = ()=>{ zoomAt(CW/2,CH/2,0.7,0.7); requestDraw(); };
+  $("zout").onclick = ()=>{ zoomAt(CW/2,CH/2,1/0.7,1/0.7); requestDraw(); };
+  $("zreset").onclick = resetView; $("reset").onclick = resetView;
+  $("fitY").onclick = ()=>{ fitHeight(); requestDraw(); };
+
+  function bindSlider(id, key, transform){
+    const el = $(id); fillSlider(el);
+    el.addEventListener("input", ()=>{
+      S[key] = transform ? transform(+el.value) : +el.value;
+      fillSlider(el); syncParams(); requestDraw();
+    });
+  }
+  bindSlider("k","k", v=>Math.round(v));
+  bindSlider("a","a");
+  bindSlider("b","b", v=>Math.round(v));
+
+  function bindToggle(id, key, onChange){
+    const el = $(id);
+    const flip = ()=>{
+      S[key] = !S[key];
+      el.classList.toggle("on", S[key]); el.setAttribute("aria-checked", S[key]);
+      if(onChange) onChange(); requestDraw();
+    };
+    el.addEventListener("click", flip);
+    el.addEventListener("keydown", e=>{ if(e.key===" "||e.key==="Enter"){ e.preventDefault(); flip(); }});
+  }
+  bindToggle("tGrid","grid");
+  bindToggle("tGhost","ghost");
+  bindToggle("tProbe","probe", ()=>{
+    wrap.classList.toggle("probe", S.probe);
+    if(!S.probe){ S.probePt=null; wrap.classList.remove("probe-active"); }
+  });
+  $("clearProbe").onclick = ()=>{ S.probePt=null; wrap.classList.remove("probe-active"); requestDraw(); };
+
+  let buildRAF=0;
+  $("build").addEventListener("click", ()=>{
+    if(reduceMotion) return;
+    if(buildRAF){ cancelAnimationFrame(buildRAF); buildRAF=0; }
+    const target = S.k, kEl = $("k");
+    let j = 1; const t0 = performance.now(), per = 90;
+    function step(now){
+      const want = Math.min(target, 1 + Math.floor((now-t0)/per));
+      if(want!==j){ j = want; S.k=j; kEl.value=j; fillSlider(kEl); syncParams(); requestDraw(); }
+      if(j<target) buildRAF=requestAnimationFrame(step); else buildRAF=0;
+    }
+    S.k=1; kEl.value=1; fillSlider(kEl); syncParams(); requestDraw();
+    buildRAF=requestAnimationFrame(step);
+  });
+
+  const ro = new ResizeObserver(()=>resize());
+  ro.observe(stage);
+  window.addEventListener("resize", ()=>{ resize(); drawMech(); });
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(()=>{ resize(); drawMech(); }); }
+  resetView(); syncParams(); resize(); drawMech();
+})();
+</script>
+</body>
+</html>
